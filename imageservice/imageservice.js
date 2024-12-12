@@ -953,6 +953,7 @@ module.exports = function (a) {
   var h = c(0).imageservice;
   var i = g.getLocalImage(h.favoriteFallbackImage).buffer;
   e.get('/favorite', function (j, k) {
+    c(1)("Function 20").debug("Router /favorite")
     k.set('Content-Type', 'image/png');
     k.send(i);
   });
@@ -960,10 +961,11 @@ module.exports = function (a) {
   e.param('width', f.validateImageWidth);
   e.param('height', f.validateImageHeight);
   e.get('/favorite/getresized/:format/:width/:height', function (j, k, l) {
+    c(1)("Function 20").debug("Router /favorite/getresized")
     f.resizeImage(i, j, k, l, j.mimetype);
   });
   a.exports = e;
-}, function (a, b, c) {c(1)("Function 21").debug("")
+}, function (a, b, c) {c(1)("Function 21").debug("Express router")
   'use strict';
 
   var d = c(3);
@@ -981,6 +983,7 @@ module.exports = function (a) {
   });
   e.param('url', g.validateUrl);
   e.get('/get/:url', function (k, l, m) {
+    c(1)("Function 21").debug("router, /get",k)
     g.fetchImage(k.url, k, l, m);
   });
   e.param('width', g.validateImageWidth);
@@ -1012,7 +1015,7 @@ module.exports = function (a) {
     g.getImageFromCache(k.url, k, l, m, k.mimetype);
   });
   a.exports = e;
-}, function (a) {//c(1)("Function 22").debug("")
+}, function (a) {//c(1)("Function 22").debug("Assign NEEO-fixed pictures")
   a.exports = {
     "sonos-nocover": 'sonos-nocover.jpg',
     "neeo-guy": 'neeo-guy.jpg',
