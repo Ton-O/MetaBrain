@@ -1,7 +1,6 @@
 "use strict";
-//const { metaMessage, LOG_TYPE, LOG_LEVEL } = require("/opt/meta/metaMessage");
+const moment = require('moment');
 const { metaMessage, LOG_TYPE, LOG_LEVEL,initialiseLogComponents, initialiseLogSeverity,OverrideLoglevel, getLoglevels } = require("/opt/meta/metaMessage");
-
 var CloudReplacement   = ""; // "http://192.168.73.194"
 var CloudReplacementUrl   = ""; // "http://192.168.73.194:6468/download"
 console.log("Starting CP6")
@@ -14,8 +13,29 @@ function metaLog(message) {
 
 initialiseLogSeverity("QUIET"); 
 OverrideLoglevel("DEBUG","CP6") 
+//var BrainBroadLink;
+var BrainBroadLink;
+const fs = require("fs");
+var BrainBroadLinkFile = __dirname + '/BrainBroadLink.json'
+console.log("Checking BroadlinkFile:",BrainBroadLinkFile)
+fs.readFile(BrainBroadLinkFile, (err, data) => {
+        if (err) {
+          metaLog({type:LOG_TYPE.ERROR, content:'No BrainBroadLink.json file, cannot send IR-DATA'});
+          }
+        else 
+          if (data && (data != '')) 
+            try {
+                metaLog({type:LOG_TYPE.DEBUG, content:'Parsing BrainBroadLink.json file'});
+                BrainBroadLink = JSON.parse(data);
+                metaLog({type:LOG_TYPE.ALWAYS,content:"We've got the data! "+BrainBroadLink})
+            }
+            catch (err) 
+                    {metaLog({type:LOG_TYPE.ERROR, content:'Invalid BrainBroadLink.json file '+err});
+                    BrainBroadLink = {}
+                    }
+        })
 ! function(e) {
-    function t(n) {
+    function t(n) { 
         if (r[n]) return r[n].exports;
         var o = r[n] = {
             i: n,
@@ -84,12 +104,11 @@ OverrideLoglevel("DEBUG","CP6")
             let t;
             const r = Array.prototype.shift.call(arguments);
             let n = Array.prototype.slice.call(arguments);
-            if (n.length == 0||n[0] == false)
+            if (n.length == 0||(n.length == 1 && n[0] == false))
                 t = r
-            else
-                if  (n = 1 === n.length ? n[0] : n) { // to enable logging, set PM2 env paramater LOG_CONSOLE: true and LOG_LEVEL to anything but "silent"
+            else 
+                if  (n = 1 === n.length ? n[0] : n)  // to enable logging, set PM2 env paramater LOG_CONSOLE: true and LOG_LEVEL to anything but "silent"
                     t = r + " " + JSON.stringify(n);
-                }
             metaLog({type:e, content:"["+ this.label + "] "+t,deviceId:"_"})
         
             const o = {
@@ -916,7 +935,7 @@ OverrideLoglevel("DEBUG","CP6")
 }, function(e) {// Function 16 exports = require("lodash")
     e.exports = require("lodash")
 }, function(e) {// Function 17 exports = require("request-promise")
-    e.exports = require("request-promise")
+    e.exports = require("request-promise") 
 }, function(e, t) {// Function 18 Define various fields for adapters
     "use strict";
     t.SOURCE_DUIRO = "duiro", t.SOURCE_ADAPTER = "adapter", t.SOURCE_SDK = "sdk", t.SOURCES = [t.SOURCE_DUIRO, t.SOURCE_ADAPTER, t.SOURCE_SDK], t.ILLEGAL_SDK_ADAPTERNAMES = ["sonos", "zwave", "hue", "cec"].concat(t.SOURCES), t.HDMI_CONNECTIONS = ["HDMI", "HDMI 1 Arc", "HDMI 2 Arc", "HDMI 3 Arc", "HDMI 4 Arc"], t.PLAYER_SENSORS = ["PLAYING_SENSOR", "REPEAT_SENSOR", "SHUFFLE_SENSOR", "MUTE_SENSOR", "VOLUME_SENSOR", "COVER_ART_SENSOR", "TITLE_SENSOR", "DESCRIPTION_SENSOR"]
@@ -1844,8 +1863,6 @@ OverrideLoglevel("DEBUG","CP6")
     let h, g, m = !1;
     e.exports.bootstrapJn5168 = function() {
         function e() {
-            AllFunctions(0)("Function 31").debug("bootstrapJn5168 e:",e);
-            AllFunctions(0)("Function 31").debug("bootstrapJn5168 t:",t);
             return a.debug("try to read (updated) NBR file"), (e = t, s(e, "UTF8").then(e => JSON.parse(e)).catch(t => (a.debug(e, " not found, no ipv6 addr found yet", {
                 error: t.message
             }), o.reject(new Error("NBR_FILE_NOT_FOUND_OR_VALID"))))).then(e => {
@@ -1858,13 +1875,15 @@ OverrideLoglevel("DEBUG","CP6")
             var e
         }
         a.debug("BOOTSTRAP_JN5168");
-        AllFunctions(0)("Function 31").debug("bootstrapJn5168 II");
-        const t = c.jn5168RestIpv6File;
+        //AllFunctions(0)("Function 31").debug("bootstrapJn5168 II");
+        AllFunctions(0)("Function 31 (Outdated)").debug("bootstrapJn5168 e:",e);
+        return o.resolve();
+/*    const t = c.jn5168RestIpv6File;
         return h = setInterval(() => {
             e().catch(() => {})
         }, c.jn5168RestIpv6FilePollingTimeMs), g = setInterval(() => {
             d.updateStatistics()
-        }, c.nbrStatisticsIntervalInMs), e()
+        }, c.nbrStatisticsIntervalInMs), e()*/
     }, e.exports.stopPolling = function() {
         h && clearInterval(h), g && clearInterval(g)
     }
@@ -4886,10 +4905,11 @@ OverrideLoglevel("DEBUG","CP6")
     }), l.get("/checkAirkey", function(e, t) {
         AllFunctions(0)("Function 108").debug("get checkAirKey");
         const r = e.query.airkey;
-        a.checkAirkey(r).then(() => {
+        a.checkAirkey(r).then(() => {AllFunctions(0)("Function 108").debug("airkey ok"),
             t.status(200).send("OK")
-        }).catch(() => {
-            t.status(200).send("NOT_THE_BRAIN_YOU_ARE_LOOKING_FOR")
+        }).catch(() => { 
+            //t.status(200).send("NOT_THE_BRAIN_YOU_ARE_LOOKING_FOR")
+            t.status(200).send("OK")
         })
     }), l.get("/:project_key/gdpr", function(e, t) {
         AllFunctions(0)("Function 108").debug("get project gdpr");
@@ -5212,7 +5232,7 @@ OverrideLoglevel("DEBUG","CP6")
                 name: e.name,
                 baseUrl: e.baseUrl
             };
-            if (CloudReplacement  =='' &&  e.baseUrl.substring(0,16) != "http://127.0.0.1" )
+            if (CloudReplacementUrl  =='' &&  e.baseUrl.substring(0,16) != "http://127.0.0.1" )
                 {var urlComponents = e.baseUrl.split(':')
                 CloudReplacement = urlComponents[0]+":"+urlComponents[1];
                 CloudReplacementUrl   = CloudReplacement+":6468/download"
@@ -7251,6 +7271,9 @@ OverrideLoglevel("DEBUG","CP6")
         },
         checkAirkey: function(e, t) {
             const r = e.airkey;
+            console.log(e)
+            AllFunctions(0)("Function 155").debug("checkAirKey",c.h64(r, 42).toString(16));
+            AllFunctions(0)("Function 155").debug("Result",{"TR2 uses brain airkey":t,"Brain uses airkey":c.h64(r, 42).toString(16),baseId:r})           
             return t === c.h64(r, 42).toString(16) ? a.resolve() : a.reject(new Error("AIRKEY_NOT_MATCH"))
         }
     }
@@ -8640,6 +8663,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 
     function i() {
+        AllFunctions(0)("Function 185").debug("bootstrap successful, now start notificatiopnlistener (f,h,S,w,E,v,L and D)")
         return I.debug("INIT_LISTENERS"), c.all([f.startNotificationListener(), h.startNotificationListener(), R.get().then(e => S.startNotificationListener(e)), w.startNotificationListener(), E.startNotificationListener(), v.startNotificationListener(), L.startNotificationListener(), D.startNotificationListener()]).catch(e => {
             I.warn("ERROR_INIT_LISTENERS", e.message)
         })
@@ -12668,7 +12692,6 @@ return this._syncFileList();
                 maxSockets: 1
             }), a.debug("MAXIMAL_JN_SEND_DURATION_MS", this.irMaxRetries * this.irRetryDelay)
         };
-        let BrainBroadlink;
     p.prototype._retryPostAfterDelay = function(e, t, r) {
         return d.increaseCounter("jn5168-call-busy"), i.delay(r.retryDelay).then(() => this._postRequestHelper(e, t, r))
     }, p.prototype._postRequest = function(e, t, r) {
@@ -12676,23 +12699,26 @@ return this._syncFileList();
         // that means we do not have a JN5168-chip. This chip is used by mens of it;s GPIO for IR, blink and for 6LowPan (wit remote).
         // For now, we're just signaling what needs to happen here, then return.
         // First / next step will be to send IR over a broadlink device.   
-        if (!this.baseUrl) 
-            {AllFunctions(0)("Function 288").debug("We need to post a request to our jn5168, but failed to locate JN5168");
-            if (e == "/sendir")
-                {} // we'll handle IR-send lateer in this function
-            else
-            if (e == "/blink")
-                {AllFunctions(0)("Function 288").debug("Request to blink... if it was an IR-request, Broadlink will blink, otherwise: no blinky-blink for now")
-                return  i.resolve();
-                }
-            else            
-            if (e == "/discovery")
-                {AllFunctions(0)("Function 288").debug("Short touchbutton press detected, discovery started via JN5168")
-		        return  i.resolve();
-                }
-            else
-                AllFunctions(0)("Function 288").debug("Unknown request")
+        console.log("in _postrequest")
+        if (BrainBroadLink.broadlinkIp == undefined) 
+            {AllFunctions(0)("Function 288").debug("We need to post a request to Brain's Broadlink, but no BrainBroadLink.js found");
+            return  i.reject();
             }
+        if (e == "/sendir")
+            {} // we'll handle IR-send lateer in this function
+        else
+        if (e == "/blink")
+            {AllFunctions(0)("Function 288").debug("Request to blink... if it was an IR-request, Broadlink will blink, otherwise: no blinky-blink for now")
+            return  i.resolve();
+            }
+        else            
+        if (e == "/discovery")
+            {AllFunctions(0)("Function 288").debug("Short touchbutton press detected, discovery started via JN5168")
+            return  i.resolve();
+            }
+        else
+            AllFunctions(0)("Function 288").debug("Unknown request")
+            //}
         //if (!this.baseUrl) return d.increaseCounter("jn5168-missing-baseurl"), i.reject(new Error("JN5168 baseUrl not set yet"));
         r = function(e, t) {
             return s(e || {}, {
@@ -12718,8 +12744,13 @@ return this._syncFileList();
         let params=t.split("&")
         if (params.length!=5)
             {AllFunctions(0)("Function 288").debug("Incorrect number of IR-arguments",params)
-            return i.reject(new Error("BrainBroadlink incorrect number of IR-arguments"))
+            return i.reject(new Error("BrainBroadLink incorrect number of IR-arguments"))
             }
+
+        // create Uri to call Broadlink-device. Address is obrtained from BrainBroadLink.json file, content is delivered by driver.
+        // get Url and Bradlink-type (+mac) from json file first
+        var BrainBroadLinkUri=CloudReplacement+":5384/xmitGC?host="+BrainBroadLink.broadlinkIp+"&&type="+BrainBroadLink.broadlinktype+"&&mac="+BrainBroadLink.broadlinkMac+"&stream=sendir,1:1,1,"
+        // Driver-part
         params.forEach((element) => 
             {let theVar=element.split("=")
             switch(theVar[0]) {
@@ -12727,18 +12758,17 @@ return this._syncFileList();
                 case 'c': IRc=theVar[1];break;
                 case 'o': IRo=theVar[1];break;
                 case 's': IRs=theVar[1];break;
-                //default: return i.reject(new Error("BrainBroadlink invalid IR-argument"))
+                //default: return i.reject(new Error("BrainBroadLink invalid IR-argument"))
             }
             })
-        BrainBroadlink="http://127.0.0.1:5384/xmitGC?host=<ip<broadlink-type>&mac=<Broadlink-mac>&stream=sendir,1:1,1,"
-        BrainBroadlink=BrainBroadlink+IRf+","+IRc+","+IRo+","+IRs.replace(".",",")
-        AllFunctions(0)("Function 288").debug("http-call to broadlink:",BrainBroadlink)
+        BrainBroadLinkUri=BrainBroadLinkUri+IRf+","+IRc+","+IRo+","+IRs.replace(/["."]/g, ",") //         (".",",")
+        AllFunctions(0)("Function 288").debug("http-call to broadlink:",BrainBroadLinkUri)
         //return i.resolve();
         }
         const o = n({
             //uri: this.baseUrl + e,
-            uri: BrainBroadlink,
-            method: "POST",
+            uri: BrainBroadLinkUri,
+            method: "GET",
             pool: this._httpAgent,
             timeout: 4e3,
             headers: {
@@ -12763,7 +12793,7 @@ return this._syncFileList();
                 path: e,
                 err: o.message,
                 payload: t
-            }), i.reject(n)) : (d.increaseCounter("jn5168-error"), a.error("Broadlink_UNEXPECTED_ANSWER", {
+            }), i.reject(n)) : (d.increaseCounter("jn5168-error"), AllFunctions(0)("Function 288").error("Error executing Broadlink gcxmit:",o.message),a.error("Broadlink_UNEXPECTED_ANSWER", {
                 statusCode: o.statusCode,
                 path: e
             }), i.reject(n))
@@ -14795,11 +14825,14 @@ return this._syncFileList();
             country: t.country
         }
     }
-}, function(e, t, r) {// Function 344 Discovery (start and stop)
+}, function(e, t, r) {// Function 344 Obsolete - Make Brain discoverable via cloud (start and stop)
     "use strict";
 
     function n(e) {
         s.debug("registering Brain for discovery", e), d.increaseCounter("lookup-register-brain");
+        r(0)("Function 344 Obsolete").debug("Make Brain discoverable via cloud (start and stop)");
+ /*
+        return i.resolve(); 
         const t = {
             hostname: l.hostname(),
             lanip: l.getLanAddress(),
@@ -14833,7 +14866,7 @@ return this._syncFileList();
                     uptime: t.uptime
                 }), void s.error("DISCOVERY_REGISTRATION_FAILED", o))
             })
-        }(t, !0)
+        }(t, !0)*/
     }
     const o = r(2).discovery,
         i = r(1),
@@ -18558,7 +18591,7 @@ return this._syncFileList();
                 sendAcksForNonConfirmablePackets: !0 === e.coapSendAcksForNonConfirmablePackets
             }, n.updateTiming(r), s("CoAP max RTT in seconds:", n.parameters.maxRTT), s("CoAP max time in seconds from the first transmission (CON) to its last retransmission:", n.parameters.maxTransmitSpan), s("CoAP max waiting time (CON) in seconds until sender gives up:", n.parameters.maxTransmitWait)
         };
-    i.inherits(a, o.EventEmitter), a.prototype.bind = function() {AllFunctions(0)("Function 449 i.inherits 1")
+    i.inherits(a, o.EventEmitter), a.prototype.bind = function() {AllFunctions(0)("Function 449 i.inherits 1"),
         s("start coap server %o", this.coapOptions), this.coapServer = n.createServer(this.coapOptions), this.coapServer.on("request", (e, t) => {
             AllFunctions(0)("Function 449").debug("i.request")
             this._handleCoAPMessage(e, t)
@@ -19347,12 +19380,12 @@ return this._syncFileList();
               keepAliveMsecs: 8e3
         });
         AllFunctions(0)("Function 463").debug("invoking express router (17)for flushimage")
-        g({             // send http://brainurl:3004/v1/imagecache/flushImagecache/; this will be routed to imageservice.js
+         g({             // send http://brainurl:3004/v1/imagecache/flushImagecache/; this will be routed to imageservice.js
             url: s.getBaseUrl()+"v1/imagecache/flushImagecache/",
             agent: agnt,
             encoding: null,
             timeout: 4e3
-        }).then(() => AllFunctions(0)("Function 463").debug("Returned from request 463"),t.json({"Result":"Cache cleared!"}))
+        }).then(() => AllFunctions(0)("Function 463").debug("Returned from request 463"),t.json({"Result":"Cache cleared!!"}))
 
     }), o.get("/TouchButton", (e, t) => {
         AllFunctions(0)("Function 463").debug("TOUCHBUTTON simulated"),
@@ -20657,11 +20690,11 @@ return this._syncFileList();
         const r = e.params.host;
         g.debug("overrideBrainHost", r), d.overrideBrainHost(r), t.send("WITH_GREAT_POWER_COMES_GREAT_RESPONSIBILITY")
     }), s.get("/zero_conf_xml", function(e, t, r) {
-        AllFunctions(0)("Function 490").debug("TR2 get /zero_conf_xml")
+        AllFunctions(0)("Function 490").debug("TR2 get /zero_conf_xml (connection request by TR2)")
         g.debug("server zeroconf.xml");
         try {
             const n = d.zeroConfXml();
-            t.set("Content-Type", f), t.send(n)
+            t.set("Content-Type", f),  t.send(n)
         } catch (e) {
             g.error("ZEROCONF_XML_ERROR", {
                 msg: e.message
@@ -21322,13 +21355,13 @@ return this._syncFileList();
             putCurrFavo: function(fullCurrChannel, deviceId) {
                 AllFunctions(0)("Function 506").debug("fullCurrChannel",fullCurrChannel, deviceId)
                 if (!fullCurrChannel || !deviceId) 
-                    {AllFunctions(0)("Function 506").debug("fullCurrChannel - MISSING channel or deviceId")
+                    {AllFunctions(0)("Function 506").debug("fullCurrChannel - MISSING channel or deviceId");
                     return -1;
                     }
-                let thisMoment = moment()
-                AllFunctions(0)("Function  506").debug("Storing",fullCurrChannel)
-                this.storeChannelInfo(fullCurrChannel, deviceId,"FAVO") 
-                return 1
+                let thisMoment = moment();
+                AllFunctions(0)("Function  506").debug("Storing",fullCurrChannel);
+                this.storeChannelInfo(fullCurrChannel, deviceId,"FAVO") ;
+                return 1;
             },           }
     }
 ]);
