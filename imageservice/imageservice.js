@@ -983,7 +983,7 @@ module.exports = function (a) {
   });
   e.param('url', g.validateUrl);
   e.get('/get/:url', function (k, l, m) {
-    c(1)("Function 21").debug("router, /get",k)
+    c(1)("Function 21").debug("router, /get",k.url)
     g.fetchImage(k.url, k, l, m);
   });
   e.param('width', g.validateImageWidth);
