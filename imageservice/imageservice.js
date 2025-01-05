@@ -549,9 +549,9 @@ module.exports = function (a) {
     try {
       c(1)("Function 13").debug("Flusing image cache; current content:",this.cache.keys());
       this.cache.flushAll();
-    c(1)("Function 13").debug("And now keys look like this:",this.cache.keys());
-    return 
-  } 
+      c(1)("Function 13").debug("And now keys look like this:",this.cache.keys());
+      return 
+    } 
   catch (err) {c(1)("Function 13").debug("keys did not work",err)};
   };
 
@@ -710,7 +710,7 @@ module.exports = function (a) {
     e.info('IMAGESERVICE_SIMD_STATUS', m);
   };
   j.prototype._getMimeType = function (l) {
-    c(1)("Function 16").debug("_getMimeType:",l)
+    c(1)("Function 16").debug("_getMimeType")
     var m = this.filetype(l);
     return m && m.mime ? h.includes(m.mime) ? m.mime : void e.warn('INVALID_MIME_TYPE', l[0] + ' ' + l[1] + ' ' + l[2]) : void e.warn('NO_MIME_TYPE_FOUND');
   };
@@ -983,6 +983,7 @@ module.exports = function (a) {
   });
   e.param('url', g.validateUrl);
   e.get('/get/:url', function (k, l, m) {
+    console.log("function 21",k.url);
     c(1)("Function 21").debug("router, /get",k.url)
     g.fetchImage(k.url, k, l, m);
   });
@@ -995,8 +996,10 @@ module.exports = function (a) {
     g.fetchImageAndResize(k.params.url, k, l, m, 'application/x-lzip');
   });
   e.get('/flushImageCache', function (k, l, m) { //$$$
-    c(1)("Function 21").debug(" get flushImageCache");
+    c(1)("Function 21").debug("FlushImageCache");
     g.flushImageCache();
+    l.json('{}');
+    return;
   });
   e.get('/getresized/format/:format/:width/:height', function (k, l) {
     l.status(404).send('Not found');
