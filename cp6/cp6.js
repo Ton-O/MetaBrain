@@ -19387,6 +19387,35 @@ return this._syncFileList();
             timeout: 4e3
         }).then(() => AllFunctions(0)("Function 463").debug("Returned from request 463"),t.json({"Result":"Cache cleared!!"}))
 
+    }), o.get("/GetLogLevels", (e, t) => {
+        AllFunctions(0)("Function 463").debug("GetLogLevels received");
+        try {
+            const n = e.query.Module;
+            const o = e.query.logLevel;
+            var MyLogLevels = getLoglevels() 
+            t.json(MyLogLevels)
+            }
+        catch (err) {
+            t.json({
+                msg: "Loglevel NOT adjusted "+err
+                })
+        }
+    }), o.get("/OverrideLogLevel", (e, t) => {
+        AllFunctions(0)("Function 463").debug("OverrideLogLevel received");
+        try {
+            const n = e.query.Module;
+            const o = e.query.logLevel;
+            OverrideLoglevel(o,n) 
+            t.json({
+                msg: "Loglevel was adjusted"
+            })
+            }
+        catch (err) {
+            t.json({
+                msg: "Loglevel NOT adjusted "+err
+                })
+        }
+
     }), o.get("/TouchButton", (e, t) => {
         AllFunctions(0)("Function 463").debug("TOUCHBUTTON simulated"),
         r(10).send({
