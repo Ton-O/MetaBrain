@@ -19221,8 +19221,7 @@ return this._syncFileList();
         fst: r(504)
     };
     p.use("/api", h.api), p.use("/systeminfo", h.systeminfo), p.use("/firmware", h.firmware), p.use("/notifications",  h.notification), p.use("/account", h.account), p.use("/wifi", h.wifi), p.use("/projects", h.project), p.use("/devicespecs", h.devicespec), p.use("/deviceadapter", h.deviceadapter), p.use("/devicetest", h.devicetest), p.use("/directoryadapter", h.directoryadapter), p.use("/channels", h.channel), p.use("/irblaster", h.irblaster), p.use("/statistics", h.statistics), p.use("/shorturl", h.shorturl), p.use("/curl", h.curl), p.use("/forwardactions", h.forwardactions), p.use("/guilogger", h.guilogger), p.use("/secure", h.crypto), p.use("/neeoremote", h.neeoremote), p.use("/events", h.events), p.use("/homekit", h.homekit), p.use("/fst", h.fst), d && p.use("/dui", h.dui), u.use(function(e, t, r) 
-    {   AllFunctions(0)("Function 460").debug("last resort u.use" )
-        AllFunctions(0)("Function 460").debug("last resort u.use, D:",d )
+        {AllFunctions(0)("Function 460").debug("last resort u.use, d:",d )
         const n = new Error("Not Found");
         n.status = 404, r(n)
     }), d  ? (u.use(function(e, t, r, n) { // changed this to test debug fucntionality
@@ -19388,12 +19387,14 @@ return this._syncFileList();
         }).then(() => AllFunctions(0)("Function 463").debug("Returned from request 463"),t.json({"Result":"Cache cleared!!"}))
 
     }), o.get("/GetLogLevels", (e, t) => {
-        AllFunctions(0)("Function 463").debug("GetLogLevels received");
+        AllFunctions(0)("Function 463").verbose("GetLogLevels received");
         try {
             const n = e.query.Module;
             const o = e.query.logLevel;
             var MyLogLevels = getLoglevels() 
-            t.json(MyLogLevels)
+            MyLogLevels = {"result":MyLogLevels }
+            AllFunctions(0)("Function 463").debug("GetLogLevels obtained:",MyLogLevels);
+            t.send(MyLogLevels)
             }
         catch (err) {
             t.json({
