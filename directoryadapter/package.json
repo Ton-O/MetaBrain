@@ -1,0 +1,62 @@
+{
+  "name": "directoryadapter",
+  "version": "0.53.8",
+  "description": "NEEO Directory Adapter",
+  "private": true,
+  "dependencies": {
+    "bluebird": "^3.5.2",
+    "body-parser": "^1.18.3",
+    "debug": "^4.1.0",
+    "express": "^4.16.3",
+    "jfs": "^0.2.6",
+    "lodash": "^4.17.11",
+    "loggly": "neophob/node-loggly#bumped-request-dep",
+    "q": "^1.5.1",
+    "request": "^2.85.0",
+    "simple-event-statistics": "^1.0.0",
+    "spotify-web-api-node": "^4.0.0",
+    "validate.js": "^0.3.2"
+  },
+  "devDependencies": {
+    "babili-webpack-plugin": "0.1.2",
+    "backpack-core": "0.0.7",
+    "chai": "^4.2.0",
+    "eslint": "^5.9.0",
+    "mocha": "^5.1.1",
+    "mockery": "^2.1.0",
+    "nyc": "^13.1.0",
+    "rewire": "^4.0.1",
+    "sinon": "^7.1.1",
+    "sinon-chai": "^3.3.0"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "scripts": {
+    "test": "LOG_LEVEL=silent STORE_DATAFILE=/tmp/dia nyc mocha --exit \"test/**/*.js\"",
+    "test:dbg": "LOG_LEVEL=debug STORE_DATAFILE=/tmp/dia mocha --exit \"test/**/*.js\"",
+    "eslint": "node ./node_modules/eslint/bin/eslint.js app/**/ test/**/",
+    "clean": "rm -fr ./dist && rm -fr ./coverage",
+    "dist": "npm test && npm run eslint && npm run clean && npm run dist:mkdir && npm run dist:copy && backpack build",
+    "dist:mkdir": "mkdir -p dist",
+    "dist:copy": "cp package.json ./dist",
+    "start": "npm run eslint && NODE_ENV=development LOG_LEVEL=debug node app/index.js",
+    "start:dbg": "npm run eslint && NODE_ENV=development LOG_LEVEL=debug DEBUG=express:* node app/index.js",
+    "start:prod": "NODE_ENV=production LOG_LEVEL=info node app/server.js"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "lines": 57,
+    "statements": 58,
+    "functions": 59,
+    "branches": 64,
+    "include": [
+      "app/**/*.js"
+    ],
+    "all": true,
+    "reporter": [
+      "text",
+      "lcov"
+    ]
+  }
+}
