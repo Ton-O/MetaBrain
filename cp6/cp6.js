@@ -1,4 +1,5 @@
 "use strict";
+process.env.StartupPath = __dirname;
 const moment = require('moment');
 const { metaMessage, LOG_TYPE, LOG_LEVEL,initialiseLogComponents, initialiseLogSeverity,OverrideLoglevel, getLoglevels } = require("/opt/meta/metaMessage");
 var CloudReplacement   = ""; // "http://192.168.73.194"

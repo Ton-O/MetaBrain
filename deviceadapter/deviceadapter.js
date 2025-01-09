@@ -1,5 +1,6 @@
 console.empty = console.log ////function(){};
 function getTime() {
+const MyLogLevel= "log-function debug"
 return moment().format('D MMM HH:mm:ss')
 }
 
@@ -121,7 +122,6 @@ module.exports = function(t) {
         g = o(144),
         y = o(0)('DeviceAdapter:SDK');
     t.exports = u, t.exports.brainNotificationSdk = p, t.exports.buildSDKDevice = function(S) {
-        console.empty("Function Function 3 DeviceAdapter:SDK ==> enableDiscovery");
         if ('object' !== ('undefined' == typeof S ? 'undefined' : c(S))) throw new Error('INVALID_DEVICEPROFILE');
         y.debug('BUILD_SDK_DEVICE', {
             name: S.name,
@@ -1923,7 +1923,7 @@ module.exports = function(t) {
 }, function(t) {console.empty("Function 32 exports = require('http')");
     t.exports = require('http')
 }, function(t) {console.empty("Function 33 exports = require('node-cec')");
-    t.exports = require('node-cec') //was node-cec'
+    t.exports = require('os') //was node-cec'
 }, function(t) {console.empty("Function 34 exports = require('os')");
     t.exports = require('os')
 }, function(t) {console.empty("Function 35 exports = require('util')");
