@@ -1,9 +1,14 @@
-console.empty = console.log ////function(){};
-function getTime() {
-const MyLogLevel= "log-function debug"
-return moment().format('D MMM HH:mm:ss')
-}
-
+const logModule = "deviceadapter";
+process.env.StartupPath = __dirname;
+const { metaMessage, LOG_TYPE, LOG_LEVEL,initialiseLogComponents, initialiseLogSeverity,OverrideLoglevel, getLoglevels } = require("/opt/meta/metaMessage");
+function metaLog(message) {
+    let initMessage = { component:logModule, type:LOG_TYPE.ERROR, content:'', deviceId: "" };
+    let myMessage = {...initMessage, ...message}
+    return metaMessage (myMessage);
+  } 
+initialiseLogSeverity("QUIET"); 
+OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
+//OverrideLoglevel("DEBUG",logModule) // but activate this line if you want DEBUG logging
 module.exports = function(t) {
     function r(n) {
         if (o[n]) return o[n].exports;
@@ -32,12 +37,12 @@ module.exports = function(t) {
         return r.d(d, 'a', d), d
     }, r.o = function(n, d) {
         return Object.prototype.hasOwnProperty.call(n, d)
-    }, r.p = '/', r(r.s = 212)
+    }, LogFunc=r(0),AllFunctions = r, r.p = '/', r(r.s = 212)
 }
 ([ 
-    function(t, r, o) {console.empty("Function 0");
+    function(t, r, o) {
     'use strict';
-
+    //o(0)("Function 0").verbose("");
     function n() {
         S || /true/.test(p.network) && (f = u.createClient({
             token: p.token,
@@ -69,15 +74,18 @@ module.exports = function(t) {
         return function() {
             var A = Array.prototype.shift.call(arguments),
                 C = Array.prototype.slice.call(arguments);
-            if (C.length && (C = 1 === C.length ? C[0] : C), g) {
-                var D = C ? A + ' ' + JSON.stringify(C) : A;
-                console.log('%s - %s: [ %s ] %s', new Date().toISOString(), T, this.label, D)
+            if (C.length && (C = 1 === C.length ? C[0] : C)) {
+//                if (C.length && (C = 1 === C.length ? C[0] : C), g) {
+                    var D = C ? A + ' ' + JSON.stringify(C) : A;
+                //console.log('%s - %s: [ %s ] %s', new Date().toISOString(), T, this.label, D)
+                metaLog({type:T, content:"["+ this.label + "] "+D,deviceId:"_"})
             }
+    
             var R = {
                 host: m,
                 app: p.tag,
                 version: E,
-                level: T.toUpperCase(),
+                level: T, // T.toUpperCase(),
                 source: this.label,
                 message: A,
                 timestamp: Date.now()
@@ -86,16 +94,17 @@ module.exports = function(t) {
                 msg: C
             } : C, N && f && (O++, O < p.maximalUpstreamLogMessagePerHour ? f.log(R) : O === p.maximalUpstreamLogMessagePerHour && (R.source = 'LOG', R.message = 'LOG_COUNT_EXCEEDED', R.level = 'WARN', R.params = void 0, f.log(R))), 'error' === T && I && I(R)
         }
-    }, d.prototype.debug = d._log('debug', !1), d.prototype.verbose = d._log('verbose', !1), d.prototype.info = d._log('info', !0), d.prototype.warn = d._log('warn', !0), d.prototype.error = d._log('error', !0), t.exports = function(T) {
+//    }, d.prototype.debug = d._log('debug', !1), d.prototype.verbose = d._log('verbose', !1), d.prototype.info = d._log('info', !0), d.prototype.warn = d._log('warn', !0), d.prototype.error = d._log('error', !0), t.exports = function(T) {
+    }, d.prototype.always = d._log(LOG_TYPE.ALWAYS, !1), d.prototype.debug = d._log(LOG_TYPE.DEBUG, !1), d.prototype.verbose = d._log(LOG_TYPE.VERBOSE, !1), d.prototype.info = d._log(LOG_TYPE.INFO, !0), d.prototype.warn = d._log(LOG_TYPE.WARNING, !0), d.prototype.error = d._log(LOG_TYPE.ERROR, !0), t.exports = function(T) {
         return S || (n(), S = !0), new d(T)
     }, t.exports.registerErrorCallback = function(T) {
         I = T
     }
-}, function(t) {console.empty("Function 1 exports = require('bluebird')");
+}, function(t) {//o(0)("Function 1").verbose("");
     t.exports = require('bluebird')
-}, function(t) {console.empty("Function 2 exports = require('debug')");
+}, function(t) {//o(0)("Function 2").verbose("");
     t.exports = require('debug')
-}, function(t, r, o) {console.empty("Function 3 DeviceAdapter:SDK");
+}, function(t, r, o) {o(0)("Function 3").verbose("");
     'use strict';
 
     function d(S, f) {
@@ -141,7 +150,7 @@ module.exports = function(t) {
             return f.addButton(I)
         }), S.deviceSubscriptionHandler && f.registerDeviceSubscriptionHandler(S.deviceSubscriptionHandler), f
     }, t.exports.DeviceController = E, t.exports.Subscriptions = g, t.exports.dynamicDeviceSdk = m
-}, function(t, r, o) {console.empty("Function 4 CEC-Service buildCECDevice, buildButtonMap, buildCECController, forcePowerScan");
+}, function(t, r, o) {o(0)("Function 4").verbose("CEC-Service buildCECDevice, buildButtonMap, buildCECController, forcePowerScan");
     'use strict';
 
     function d(L, U) {
@@ -246,7 +255,7 @@ module.exports = function(t) {
     var R = 12000,
         P = 5e3,
         w = 0
-}, function(t) {console.empty("Function 5 default process.env variables ");
+}, function(t) {
     'use strict';
     var n = process.env.IP || '127.0.0.1',
         d = process.env.PORT || 3002,
@@ -320,7 +329,7 @@ module.exports = function(t) {
             flushIntervalSeconds: p
         }
     }
-}, function(t, r, o) {console.empty("Function 6 neeo:lib:statistics STATISTICS_KPI_DEA_APP");
+}, function(t, r, o) {o(0)("Function  6").verbose("neeo:lib:statistics STATISTICS_KPI_DEA_APP");
     'use strict';
     var d = o(5).statistics,
         c = o(207),
@@ -350,9 +359,9 @@ module.exports = function(t) {
             }, 1e3 * d.flushIntervalSeconds)
         }
     }
-}, function(t) {console.empty("Function 7 exports = require('express')");
+}, function(t) {
     t.exports = require('express')
-}, function(t) {console.empty("Function 8 naming sensor/actuator functions");
+}, function(t) {
     'use strict';
 
     function n(c, u) {
@@ -385,7 +394,7 @@ module.exports = function(t) {
         }
         return c
     }
-}, function(t) {console.empty("Function 9 transformSensorResult");
+}, function(t) {
     'use strict';
 
     function n(c, u) {
@@ -429,11 +438,11 @@ module.exports = function(t) {
             value: function() {}
         }]), c
     }()
-}, function(t) {console.empty("Function 10 exports = require('events')");
+}, function(t) {
     t.exports = require('events')
-}, function(t) {console.empty("Function 11 exports = require('lodash/flattenDeep')");
+}, function(t) {
     t.exports = require('lodash/flattenDeep')
-}, function(t, r, o) {console.empty("Function 12 neeo:lib:cec:powerstate");
+}, function(t, r, o) {o(0)("Function  12").verbose("neeo:lib:cec:powerstate");
     'use strict';
 
     function n(U) {
@@ -535,7 +544,7 @@ module.exports = function(t) {
                 I('CLEAR_POWERSTATE_CACHE'), d()
             })
         }()
-}, function(t, r, o) {console.empty("Function 13 some neeo-0functions, many 'needs to be implemented'");
+}, function(t, r, o) {o(0)("Function  13").verbose("some neeo-0functions, many 'needs to be implemented'");
     'use strict';
     var n = o(1),
         d = o(5).adapters,
@@ -625,7 +634,7 @@ module.exports = function(t) {
             type: this.type
         })
     }
-}, function(t, r, o) {console.empty("Function 14 neeo:sdk:deviceadpater init of neeo-services");
+}, function(t, r, o) {o(0)("Function  14").verbose("neeo:sdk:deviceadpater init of neeo-services");
     'use strict';
     var g = o(0)('NEEO_ADAPTER'),
         y = o(5),
@@ -694,7 +703,7 @@ module.exports = function(t) {
             return G
         }
     }
-}, function(t, r, o) {console.empty("Function 15 neeo:lib:repo");
+}, function(t, r, o) {o(0)("Function  15").verbose("neeo:lib:repo");
     'use strict';
     var n = o(2)('neeo:lib:repo'),
         d = void 0,
@@ -731,7 +740,7 @@ module.exports = function(t) {
     }, c.prototype.delete = function(u) {
         d && d.deleteSync(this.prefix + u)
     }
-}, function(t, r, o) {console.empty("Function 16 com.prosyst.mbs.services.zwave.deviceclasses.*");
+}, function(t, r, o) {o(0)("Function  16").verbose("com.prosyst.mbs.services.zwave.deviceclasses.*");
     'use strict';
 
     function n(y) {
@@ -791,7 +800,7 @@ module.exports = function(t) {
         });
         return f ? f.transformActuatorValue(y) : y
     }
-}, function(t, r, o) {console.empty("Function 17 ZWave:Sensorbuilder");
+}, function(t, r, o) {o(0)("Function  17").verbose("ZWave:Sensorbuilder");
     'use strict';
 
     function n(X) {
@@ -1189,7 +1198,7 @@ module.exports = function(t) {
         }
         return J
     }
-}, function(t, r, o) {console.empty("Function 18 getRequestParameters");
+}, function(t, r, o) {o(0)("Function  18").verbose("getRequestParameters");
     'use strict';
 
     function n(c, u, p, m) {
@@ -1212,7 +1221,7 @@ module.exports = function(t) {
         var E = n(c, u, p, m);
         return parseFloat(E)
     }
-}, function(t, r, o) {console.empty("Function 19 neeo:lib:cec:AddressMapper");
+}, function(t, r, o) {o(0)("Function  19").verbose("neeo:lib:cec:AddressMapper");
     'use strict';
 
     function p(N, A) {
@@ -1242,13 +1251,13 @@ module.exports = function(t) {
         },
         getRefreshedCecAddessObject: function(N, A) {
             if (!N) return !1;
-            console.empty(getTime(),"CP6 Function 19 cec:AddressMappe getRefreshedCecAddessObject")
+            o(0)("Function  19").verbose("cec:AddressMappe getRefreshedCecAddessObject")
             var C = N.split(':'),
                 D = C[y],
                 R = parseInt(C[S], 10),
                 P = !g.isPhysicalAddressValid(D),
                 w = !g.isLogicalAddressValid(R);
-            console.empty(getTime(),"CP6 Function 19 getRefreshedCecAddessObject done")
+            o(0)("Function 19").verbose("getRefreshedCecAddessObject done")
 
             if (P || w) return !1;
             return p({
@@ -1284,7 +1293,7 @@ module.exports = function(t) {
         I = new Map,
         O = new Map,
         T = void 0
-}, function(t, r, o) {console.empty("Function 20 notification of powerstate");
+}, function(t, r, o) {o(0)("Function  20").verbose("notification of powerstate");
     'use strict';
 
     function n(S, f) {
@@ -1340,7 +1349,7 @@ module.exports = function(t) {
         POWERSTATE_INITIALISED: m,
         POWERSTATE_CHANGED: E
     }
-}, function(t, r, o) {console.empty("Function 21 neeo:lib:cec:nodeCecWrapper CEC-Wrapper");
+}, function(t, r, o) {o(0)("Function  21").verbose("neeo:lib:cec:nodeCecWrapper CEC-Wrapper");
     'use strict';
 
     function n() {
@@ -1368,34 +1377,34 @@ module.exports = function(t) {
         },
         initializeLibCEC: n,
         failsafeStopLibCEC: function() {
-            console.empty(getTime(),"CP6 Function 21 failsafeStopLibCEC")
+            o(0)("Function  21").verbose("failsafeStopLibCEC")
             return N.debug('failsafeStopLibCEC'), f.stopCECAdapter().catch(function(L) {
                 N.error('CEC_STOP_FAILED', L.message)
             })
         },
         power: function(L) {
-            console.empty(getTime(),"CP6 Function 21 nodeCecWrapper power")
+            o(0)("Function  21").verbose("nodeCecWrapper power")
 
             return n().then(function() {
                 return f.power(L)
             })
         },
         standBy: function(L) {
-            console.empty(getTime(),"CP6 Function 21 nodeCecWrapper standby")
+            o(0)("Function  21").verbose("nodeCecWrapper standby")
 
             return n().then(function() {
                 return f.standBy(L)
             })
         },
         sendKeyPressRelease: function(L, U) {
-            console.empty(getTime(),"CP6 Function 21 nodeCecWrapper sendKeyPressRelease")
+            o(0)("Function  21").verbose("nodeCecWrapper sendKeyPressRelease")
 
             return A.updateLastCecKeyAction(), n().then(function() {
                 return f.sendKeyPressRelease(L, U)
             })
         },
         scan: function() {
-            console.empty(getTime(),"CP6 Function 21 nodeCecWrapper scan")
+            o(0)("Function  21").verbose("nodeCecWrapper scan")
 
             return n().then(function() {
                 return f.scan()
@@ -1404,14 +1413,14 @@ module.exports = function(t) {
             })
         },
         powerScan: function() {
-            console.empty(getTime(),"CP6 Function 21 nodeCecWrapper powerscan")
+            o(0)("Function  21").verbose("nodeCecWrapper powerscan")
 
             return N.debug('POWER SCAN'), n().then(function() {
                 return f.powerScan()
             })
         },
         setStreamPath: function(L) {
-            console.empty(getTime(),"CP6 Function 21 nodeCecWrapper setStreamOath")
+            o(0)("Function  21").verbose("nodeCecWrapper setStreamOath")
 
             return n().then(function() {
                 var U = R.getSetStreamPathPayload(L);
@@ -1420,17 +1429,17 @@ module.exports = function(t) {
         }
     };
     var w = 0
-}, function(t, r, o) {console.empty("Function 22 new db");
+}, function(t, r, o) {o(0)("Function  22").verbose("new db");
     'use strict';
     var n = o(71),
         d = o(5).db;
     t.exports = new n(d)
-}, function(t, r, o) {console.empty("Function 23 new hue");
+}, function(t, r, o) {o(0)("Function  23").verbose("new hue");
     'use strict';
     var n = o(72),
         d = o(5).hue;
     t.exports = new n(d)
-}, function(t) {console.empty("Function 24 some definitions on  POWER and brightness");
+}, function(t) {
     'use strict';
     t.exports = {
         MACRO_POWER_ON: 'POWER ON',
@@ -1439,7 +1448,7 @@ module.exports = function(t) {
         COMPONENT_BRIGHTNESS: 'brightness',
         COMPONENT_POWER: 'power'
     }
-}, function(t, r, o) {console.empty("Function 25 neeo:mystrom:service");
+}, function(t, r, o) {o(0)("Function  25").verbose("neeo:mystrom:service");
     'use strict';
 
     function n() {
@@ -1643,7 +1652,7 @@ module.exports = function(t) {
             }), x.resolve(re)
         }
     }
-}, function(t) {console.empty("Function 26 browseUriPrefix");
+}, function(t) {
     'use strict';
 
     function n(c, u) {
@@ -1678,7 +1687,7 @@ module.exports = function(t) {
             }
         }]), c
     }()
-}, function(t, r, o) {console.empty("Function 27 SonosDiscovery");
+}, function(t, r, o) {o(0)("Function  27").verbose("SonosDiscovery");
     'use strict';
     var n = o(208),
         d = o(146),
@@ -1688,14 +1697,14 @@ module.exports = function(t) {
         discovery: new n(c),
         listLimit: c.listLimit
     })
-}, function(t, r, o) {console.empty("Function 28 new zwave");
+}, function(t, r, o) {o(0)("Function  28").verbose("new zwave");
     'use strict';
     var n = o(158),
         d = o(206),
         c = o(5).zwave,
         u = new d(c);
     t.exports = new n(u, c)
-}, function(t, r, o) {console.empty("Function 29 com.prosyst.mbs.services.zwave.deviceclasses.Basic basicswitch");
+}, function(t, r, o) {o(0)("Function  29").verbose("com.prosyst.mbs.services.zwave.deviceclasses.Basic basicswitch");
     'use strict';
 
     function n(N, A) {
@@ -1790,7 +1799,7 @@ module.exports = function(t) {
             }
         }]), A
     }(m)
-}, function(t, r, o) {console.empty("Function 30 com.prosyst.mbs.services.hdm.deviceclasses.BinarySliderSwitch'");
+}, function(t, r, o) {o(0)("Function  30").verbose("com.prosyst.mbs.services.hdm.deviceclasses.BinarySliderSwitch'");
     'use strict';
 
     function n(S, f) {
@@ -1893,7 +1902,7 @@ module.exports = function(t) {
             }
         }]), f
     }(m)
-}, function(t) {console.empty("Function 31 hdm:ZWave:");
+}, function(t) {
     'use strict';
     var n = 'hdm:ZWave:',
         d = t.exports.convertToNodeId = function(c) {
@@ -1920,15 +1929,15 @@ module.exports = function(t) {
     }, t.exports.isUidSecure = function(c) {
         return c && -1 < c.indexOf(':secure')
     }
-}, function(t) {console.empty("Function 32 exports = require('http')");
+}, function(t) {
     t.exports = require('http')
-}, function(t) {console.empty("Function 33 exports = require('node-cec')");
+}, function(t) {
     t.exports = require('os') //was node-cec'
-}, function(t) {console.empty("Function 34 exports = require('os')");
+}, function(t) {
     t.exports = require('os')
-}, function(t) {console.empty("Function 35 exports = require('util')");
+}, function(t) {
     t.exports = require('util')
-}, function(t, r, o) {console.empty("Function 36 Hue Adapter");
+}, function(t, r, o) {o(0)("Function  36").verbose("Hue Adapter");
     'use strict';
 
     function n(y) {
@@ -2097,7 +2106,7 @@ module.exports = function(t) {
             S.waitingOnPollingAnswer = !1
         })
     }
-}, function(t, r, o) {console.empty("Function 37 duplicate of 46 with smaller list of buttons ");
+}, function(t, r, o) {o(0)("Function  37").verbose("duplicate of 46 with smaller list of buttons ");
     'use strict';
     var n = o(4),
         d = n.keyCodes,
@@ -2115,7 +2124,7 @@ module.exports = function(t) {
             }
         };
     t.exports = n.buildButtonMap(c)
-}, function(t, r, o) {console.empty("Function 38 duplicate of 46?");
+}, function(t, r, o) {o(0)("Function  38").verbose("duplicate of 46?");
     'use strict';
     var n = o(4),
         d = n.keyCodes,
@@ -2162,7 +2171,7 @@ module.exports = function(t) {
             "CEC ACTIVATE": d.UNKNOWN
         };
     t.exports = n.buildButtonMap(c)
-}, function(t, r, o) {console.empty("Function 39 neeo:myStrom:Controller");
+}, function(t, r, o) {o(0)("Function  39").verbose("neeo:myStrom:Controller");
     'use strict';
 
     function n(y, S) {
@@ -2278,7 +2287,7 @@ module.exports = function(t) {
             }
         }]), y
     }()
-}, function(t) {console.empty("Function 40 getRoundedPowerUsage");
+}, function(t) {
     'use strict';
     t.exports = {
         getRoundedPowerUsage: function(d) {
@@ -2286,12 +2295,12 @@ module.exports = function(t) {
             return isNaN(c) ? '0.0' : c.toFixed(1)
         }
     }
-}, function(t) {console.empty("Function 41 exsports DEVICE_NAME: 'Brain'");
+}, function(t) {
     'use strict';
     t.exports = {
         DEVICE_NAME: 'Brain'
     }
-}, function(t, r, o) {console.empty("Function 42 CEC ACTIVATE");
+}, function(t, r, o) {o(0)("Function  42").verbose("CEC ACTIVATE");
     'use strict';
     var n = o(4),
         d = n.keyCodes,
@@ -2300,7 +2309,7 @@ module.exports = function(t) {
             return u['CEC ' + p] = m, u
         }, {});
     c['CEC ACTIVATE'] = d.UNKNOWN, t.exports = n.buildButtonMap(c)
-}, function(t) {console.empty("Function 43 Defines some actions with brain - REBOOT_BRAIN, LED_OFF, LED_ON, ONBOOT");
+}, function(t) {
     'use strict';
     t.exports = {
         MACRO_REBOOT_BRAIN: 'REBOOT_BRAIN',
@@ -2308,7 +2317,7 @@ module.exports = function(t) {
         MACRO_LEDON: 'LED_ON',
         ONBOOT_SENSOR: 'ONBOOT'
     }
-}, function(t, r, o) {console.empty("Function 44 duplicate of 46?");
+}, function(t, r, o) {o(0)("Function  44").verbose(" duplicate of 46?");
     'use strict';
     var n = o(4),
         d = n.keyCodes,
@@ -2356,7 +2365,7 @@ module.exports = function(t) {
             "POWER TOGGLE": d.POWER_TOGGLE_FUNCTION
         };
     t.exports = n.buildButtonMap(c)
-}, function(t, r, o) {console.empty("Function 45 duplicate of 46?");
+}, function(t, r, o) {o(0)("Function  45").verbose(" duplicate of 46?");
     'use strict';
     var n = o(4),
         d = n.keyCodes,
@@ -2404,7 +2413,7 @@ module.exports = function(t) {
             "POWER TOGGLE": d.POWER_TOGGLE_FUNCTION
         };
     t.exports = n.buildButtonMap(c)
-}, function(t, r, o) {console.empty("Function 46 Buold a map of buttons");
+}, function(t, r, o) {o(0)("Function  46").verbose(" Buold a map of buttons");
     'use strict';
     var n = o(4),
         d = n.keyCodes,
@@ -2438,7 +2447,7 @@ module.exports = function(t) {
             "POWER OFF": d.POWER_OFF_FUNCTION
         };
     t.exports = n.buildButtonMap(c)
-}, function(t) {console.empty("Function 47 some initialization  for player");
+}, function(t) {
     'use strict';
     var u = 'playerVolume:1';
     t.exports = {
@@ -2448,13 +2457,13 @@ module.exports = function(t) {
         NS_PLAYERVOLUME: u,
         PLAYER_SPECIFIC_NS_LIST: [u]
     }
-}, function(t, r, o) {console.empty("Function 48 buildInstance");
+}, function(t, r, o) {o(0)("Function  48").verbose(" buildInstance");
     'use strict';
     var n = o(198).default;
     t.exports = n, t.exports.buildInstance = function(d, c) {
         return new n(d, c)
     }
-}, function(t, r, o) {console.empty("Function 49 directory-functions");
+}, function(t, r, o) {o(0)("Function  49").verbose(" directory-functions");
     'use strict';
 
     function n(f) {
@@ -2499,7 +2508,7 @@ module.exports = function(t) {
             return new E
         }
     }
-}, function(t) {console.empty("Function 50 see if uri is a stream / is a spotifyuri");
+}, function(t) {
     'use strict';
     var c = ['x-sonosapi-stream:', 'x-sonosapi-radio:', 'pndrradio:', 'x-sonosapi-hls:', 'x-sonosapi-hls-static:', 'x-sonosprog-http:'];
     t.exports = {
@@ -2512,7 +2521,7 @@ module.exports = function(t) {
             return /^(spotify\:|me\:tracks)/.test(u)
         }
     }
-}, function(t, r, o) {console.empty("Function 51 neeo:deviceadapter:lib:sonos:group");
+}, function(t, r, o) {o(0)("Function  51").verbose(" neeo:deviceadapter:lib:sonos:group");
     'use strict';
 
     function n(g) {
@@ -2555,7 +2564,7 @@ module.exports = function(t) {
             return [].concat(n(E.keys()))
         }
     }
-}, function(t, r, o) {console.empty("Function 52 neeo:deviceadapter:lib:sonos:instantFavorites");
+}, function(t, r, o) {o(0)("Function  52").verbose(" neeo:deviceadapter:lib:sonos:instantFavorites");
     'use strict';
 
     function n(E, g) {
@@ -2634,12 +2643,12 @@ module.exports = function(t) {
             }
         }]), E
     }()
-}, function(t, r, o) {console.empty("Function 53 Store creation");
+}, function(t, r, o) {o(0)("Function  53").verbose(" Store creation");
     'use strict';
     var n = o(5).store,
         d = o(156);
     t.exports = new d(n)
-}, function(t, r, o) {console.empty("Function 54 mapNeeoDeviceClassToProsystDeviceClass and buildNeeoActuator");
+}, function(t, r, o) {o(0)("Function  54").verbose(" mapNeeoDeviceClassToProsystDeviceClass and buildNeeoActuator");
     'use strict';
 
     function n(O) {
@@ -2701,7 +2710,7 @@ module.exports = function(t) {
             R = u(O);
         return C && D ? m(O, T, N, A) : C && R ? E(O, T, N, A) : p(O) ? g(O, T, N, A) : O.DeviceClass === I ? y(O, T, N) : []
     }
-}, function(t, r, o) {console.empty("Function 55 com.prosyst.mbs.services.hdm.deviceclasses.MultiLevelSwitch");
+}, function(t, r, o) {o(0)("Function  55").verbose(" com.prosyst.mbs.services.hdm.deviceclasses.MultiLevelSwitch");
     'use strict';
 
     function n(T, N) {
@@ -2808,7 +2817,7 @@ module.exports = function(t) {
             }
         }]), N
     }(m)
-}, function(t, r, o) {console.empty("Function 56 some simple validation routines");
+}, function(t, r, o) {o(0)("Function  56").verbose(" some simple validation routines");
     'use strict';
     var n = o(210),
         d = t.exports = function() {
@@ -2825,7 +2834,7 @@ module.exports = function(t) {
         var c = n.isString.apply(this, arguments);
         if (!c) throw new Error('Validation failed: no string')
     }
-}, function(t, r, o) {console.empty("Function 57 neeo:routes:sdkadapter");
+}, function(t, r, o) {o(0)("Function  57").verbose(" neeo:routes:sdkadapter");
     'use strict';
 
     function n(f, I) {
@@ -2843,6 +2852,7 @@ module.exports = function(t) {
         y = m.COMPONENTS,
         S = void 0;
     u.param('adapterid', function(f, I, O, T) {
+        console.log("deviceadapter routes:",u)
         return p.getAdapter(T).then(function(N) {
             return N ? (f.adapter = N, O(), null) : void n('ADAPTER_NOT_FOUND', O)
         }).catch(function(N) {
@@ -2950,15 +2960,15 @@ module.exports = function(t) {
     }), t.exports = u, t.exports.registerHandler = function(f) {
         m.registerHandler(f), S = f, d('REQUEST_HANDLER_REGISTERED')
     }
-}, function(t) {console.empty("Function 58 exports = require('axios')");
+}, function(t) {
     t.exports = require('axios')
-}, function(t) {console.empty("Function 59 exports = require('lodash')");
+}, function(t) {
     t.exports = require('lodash')
-}, function(t) {console.empty("Function 60 exports = require('lodash/isArray')");
+}, function(t) {
     t.exports = require('lodash/isArray')
-}, function(t) {console.empty("Function 61 exports = require('request')");
+}, function(t) {
     t.exports = require('request')
-}, function(t, r, o) {console.empty("Function 62 deviceadapter error handler");
+}, function(t, r, o) {o(0)("Function  62").verbose(" deviceadapter error handler");
     'use strict';
     var n = o(0)('deviceadapter'),
         d = o(64),
@@ -2979,7 +2989,7 @@ module.exports = function(t) {
             stack: E
         })
     })
-}, function(t, r, o) {console.empty("Function 63 some high level router");
+}, function(t, r, o) {o(0)("Function  63").verbose(" some high level router");
     'use strict';
     var n = o(7),
         d = o(179),
@@ -3011,12 +3021,14 @@ module.exports = function(t) {
         y.json({
             success: !0
         })
-    }), m.use('/db', E.db), m.use('/config', E.config), m.use('/capability', E.capability), m.use('/', E.manager), m.use('/hue', E.hue), m.use('/sonos', E.sonos), m.use('/zwave', E.zwave), m.use('/neeodeviceadapter', E.sdkAdapterDb), m.use('/device', E.sdkAdapter), m.use('/cec', E.cec), p.use(function(g, y, S) {
-        c.error('INVALID_URL_REQUESTED', {
-            url: g.url
-        });
-        var f = new Error('Not Found');
-        f.status = 404, S(f)
+    }), m.use('/db', E.db), m.use('/config', E.config), m.use('/capability', E.capability), m.use('/', E.manager), m.use('/hue', E.hue), m.use('/sonos', E.sonos), m.use('/zwave', E.zwave), m.use('/neeodeviceadapter', E.sdkAdapterDb), m.use('/device', E.sdkAdapter), 
+            m.use('/cec', E.cec), 
+            p.use(function(g, y, S) {
+                                        c.error('INVALID_URL_REQUESTED', {
+                                        url: g.url
+                                        });
+                                        var f = new Error('Not Found');
+                                        f.status = 404, S(f)
     }), 'development' === p.get('env') ? p.use(function(g, y, S, f) {
         f || c.debug('EXPRESS_NEEDS_NEXT_PARAMETER_WEBPACK_TOO'), c.error('SERVER_ERROR', {
             url: y.url,
@@ -3037,7 +3049,7 @@ module.exports = function(t) {
             error: {}
         })
     }), t.exports = p
-}, function(t, r, o) {console.empty("Function 64 neeo:bootstrap - initializeServices, shutdownServices");
+}, function(t, r, o) {o(0)("Function  64").verbose(" neeo:bootstrap - initializeServices, shutdownServices");
     'use strict';
 
     function c() {
@@ -3093,7 +3105,7 @@ module.exports = function(t) {
             m('TERMINATE_SERVICES'), R.shutdownLibCEC(), U.close(), N.shutdownService(), I.shutdown(), T.shutdown(), O.shutdown()
         }
     }
-}, function(t) {console.empty("Function 65 something with power on / off, not sure what yet");
+}, function(t) {
     'use strict';
 
     function n(p, m) {
@@ -3155,7 +3167,7 @@ module.exports = function(t) {
             }
         }]), p
     }()
-}, function(t, r, o) {console.empty("Function 66 CEC ACTIVATE DEVICE");
+}, function(t, r, o) {o(0)("Function  66").verbose(" CEC ACTIVATE DEVICE");
     'use strict';
 
     function n(N, A) {
@@ -3313,7 +3325,7 @@ module.exports = function(t) {
             }
         }]), N
     }()
-}, function(t, r, o) {console.empty("Function 67 neeo:lib:cec:parser - parseReportPowerStatus, parseStandby, parseActiveSource");
+}, function(t, r, o) {o(0)("Function  67").verbose(" neeo:lib:cec:parser - parseReportPowerStatus, parseStandby, parseActiveSource");
     'use strict';
 
     function n(g) {
@@ -3351,7 +3363,7 @@ module.exports = function(t) {
             })
         }
     }
-}, function(t, r, o) {console.empty("Function 68 CEC-Logger; ipcCallbackFunction, registerTriggerScanFunction");
+}, function(t, r, o) {o(0)("Function  68").verbose(" CEC-Logger; ipcCallbackFunction, registerTriggerScanFunction");
     'use strict';
 
     function c(f, I) {
@@ -3398,7 +3410,7 @@ module.exports = function(t) {
         }
     };
     var S = void 0
-}, function(t) {console.empty("Function 69 an internal functiopn: getSetStreamPathPayload");
+}, function(t) {
     'use strict';
 
     function n(y) {
@@ -3422,7 +3434,7 @@ module.exports = function(t) {
             return I + u + '86' + u + S
         }
     }
-}, function(t, r, o) {console.empty("Function 70 CEC-Scheduler - scheduler");
+}, function(t, r, o) {o(0)("Function  70").verbose(" CEC-Scheduler - scheduler");
     'use strict';
 
     function d(C) {
@@ -3496,7 +3508,7 @@ module.exports = function(t) {
         scheduleRecurringPowerScan: d,
         clearSchedules: p
     }
-}, function(t, r, o) {console.empty("Function 71 DB, Looks like internal functions: _loadAdaptersFromJson,_buildDevices, search, findAdapterWithCapability, findFirstExactMatch, getDevice");
+}, function(t, r, o) {o(0)("Function  71").verbose("DB, Looks like functions to load (deviceadapter's) adapters, build devices for them");
     'use strict';
     var n = o(184),
         d = o(0)('db'),
@@ -3569,7 +3581,7 @@ module.exports = function(t) {
         var E = c.clone(this.devices[m]);
         return E.capabilities = this.adapters[E.adapterName].capabilities, E
     }
-}, function(t, r, o) {console.empty("Function 72 Hue Device main functions");
+}, function(t, r, o) {o(0)("Function  72").verbose(" Hue Device main functions");
     'use strict';
     var n = o(1),
         d = o(35),
@@ -3686,7 +3698,7 @@ module.exports = function(t) {
     }, S.prototype.shutdown = function() {
         this.pollingIntervalId && (y.debug('STOP_HUE_POLLING'), clearInterval(this.pollingIntervalId), this.pollingIntervalId = void 0)
     }
-}, function(t, r, o) {console.empty("Function 73 Hue Factory; buildHueAdapter, discoverHue");
+}, function(t, r, o) {o(0)("Function  73").verbose(" Hue Factory; buildHueAdapter, discoverHue");
     'use strict';
 
     function n(y) {
@@ -3729,7 +3741,7 @@ module.exports = function(t) {
             }), d()
         })
     }
-}, function(t, r, o) {console.empty("Function 74 neeo:lib:internaladapter:BrainDriver; stop, getDeviceAdapter, getAdapterDefinition, searchDevice, getDevice,  setWireRequestHandlerCallback");
+}, function(t, r, o) {o(0)("Function  74").verbose(" neeo:lib:internaladapter:BrainDriver; stop, getDeviceAdapter, getAdapterDefinition, searchDevice, getDevice,  setWireRequestHandlerCallback");
     'use strict';
     var n = o(2)('neeo:lib:internaladapter:BrainDriver'),
         d = void 0,
@@ -3762,7 +3774,7 @@ module.exports = function(t) {
     }, t.exports.setWireRequestHandlerCallback = function(u) {
         d = u
     }
-}, function(t, r, o) {console.empty("Function 75 buildCECController('Chromecast'");
+}, function(t, r, o) {o(0)("Function  75").verbose(" buildCECController('Chromecast'");
     'use strict';
     var d = o(4),
         c = o(37),
@@ -3770,7 +3782,7 @@ module.exports = function(t) {
     t.exports = d.buildCECController('Chromecast', c, function(m) {
         return u.includes(m.osdName)
     })
-}, function(t, r, o) {console.empty("Function 76 Chromecast:SDK buildCECDevice(m)");
+}, function(t, r, o) {o(0)("Function  76").verbose(" Chromecast:SDK buildCECDevice(m)");
     'use strict';
     var d = o(4),
         c = o(75),
@@ -3799,7 +3811,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t) {console.empty("Function 77 initializeDevices ??");
+}, function(t) {
     'use strict';
     t.exports = {
         initializeDevices: function(d) {
@@ -3811,7 +3823,7 @@ module.exports = function(t) {
             })
         }
     }
-}, function(t, r, o) {console.empty("Function 78 Amazon FireTV', 'Fire TV Stick', 'Fire TV Cube' buildCECController('FireTV'");
+}, function(t, r, o) {o(0)("Function  78").verbose(" Amazon FireTV', 'Fire TV Stick', 'Fire TV Cube' buildCECController('FireTV'");
     'use strict';
     var c = o(4),
         u = o(38),
@@ -3829,7 +3841,7 @@ module.exports = function(t) {
             room: '(' + E.name + ')'
         }
     })
-}, function(t, r, o) {console.empty("Function 79 FireTV:SDK buildCECDevice");
+}, function(t, r, o) {o(0)("Function  79").verbose(" FireTV:SDK buildCECDevice");
     'use strict';
     var d = o(4),
         c = o(78),
@@ -3857,7 +3869,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 80 neeo:ikea-tradfri:tradfri buildCustomDevice('Tr\xE5dfri').setSpecificName('myStrom Switch')");
+}, function(t, r, o) {o(0)("Function  80").verbose(" neeo:ikea-tradfri:tradfri buildCustomDevice('Tr\xE5dfri').setSpecificName('myStrom Switch')");
     'use strict';
     var d = o(3),
         c = o(0)('neeo:ikea-tradfri:tradfri'),
@@ -3922,7 +3934,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 81 neeo:ikea-tradfri:lib:grouphandling");
+}, function(t, r, o) {o(0)("Function  81").verbose(" neeo:ikea-tradfri:lib:grouphandling");
     'use strict';
 
     function n(E, g) {
@@ -3989,7 +4001,7 @@ module.exports = function(t) {
             return new m(E)
         }
     }
-}, function(t, r, o) {console.empty("Function 83 neeo:ikea-tradfri:controller");
+}, function(t, r, o) {o(0)("Function 82 neeo:ikea-tradfri:controller");
     'use strict';
 
     function n(T, N) {
@@ -4202,7 +4214,7 @@ module.exports = function(t) {
             }
         }]), T
     }()
-}, function(t, r, o) {console.empty("Function 84 neeo:ikea-tradfri:deps'");
+}, function(t, r, o) {o(0)("Function  83").verbose(" neeo:ikea-tradfri:deps'");
     'use strict';
     var m = 'function' == typeof Symbol && 'symbol' == typeof Symbol.iterator ? function(T) {
             return typeof T
@@ -4257,7 +4269,7 @@ module.exports = function(t) {
             failedPingCountUntilOffline: 3
         }
     }
-}, function(t, r, o) {console.empty("Function 85 neeo:ikea-tradfri:service buildFromNewGateway, buildFromStoredGateway, buildProxyFallback");
+}, function(t, r, o) {o(0)("Function  84").verbose(" neeo:ikea-tradfri:service buildFromNewGateway, buildFromStoredGateway, buildProxyFallback");
     'use strict';
 
     function n(D, R) {
@@ -4520,7 +4532,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 86 LIFX:SDK buildCustomDevice('Smart Light').setManufacturer('LIFX')");
+}, function(t, r, o) {o(0)("Function  85").verbose(" LIFX:SDK buildCustomDevice('Smart Light').setManufacturer('LIFX')");
     'use strict';
     var d = o(3),
         c = o(0)('LIFX:SDK'),
@@ -4563,7 +4575,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 87 neeo:lifx-local:controller (light)");
+}, function(t, r, o) {o(0)("Function  86").verbose(" neeo:lifx-local:controller (light)");
     'use strict';
 
     function m(F, M, x) {
@@ -4638,7 +4650,7 @@ module.exports = function(t) {
     }, t.exports.initialise = function() {
         return k ? (g('already initialised, ignore call'), !1) : void(g('initialise LIFX service, start polling'), L = new y(w), k = setInterval(E, 4e3))
     }
-}, function(t, r, o) {console.empty("Function 88 buildLifxClientInstance");
+}, function(t, r, o) {o(0)("Function  87").verbose(" buildLifxClientInstance");
     'use strict';
     var d = o(204).Client;
     t.exports = {
@@ -4646,7 +4658,7 @@ module.exports = function(t) {
             return new d
         }
     }
-}, function(t, r, o) {console.empty("Function 89 neeo:lifx-local:service");
+}, function(t, r, o) {o(0)("Function  88").verbose(" neeo:lifx-local:service");
     'use strict';
 
     function n(N, A) {
@@ -4797,7 +4809,7 @@ module.exports = function(t) {
             }]), N
         }();
     t.exports = T
-}, function(t, r, o) {console.empty("Function 90 neeo:myStrom:lampController'");
+}, function(t, r, o) {o(0)("Function  89").verbose(" neeo:myStrom:lampController'");
     'use strict';
 
     function n(T, N) {
@@ -4907,7 +4919,7 @@ module.exports = function(t) {
             }
         }]), N
     }(g)
-}, function(t, r, o) {console.empty("Function 91 neeo:myStrom:switchController");
+}, function(t, r, o) {o(0)("Function  90").verbose(" neeo:myStrom:switchController");
     'use strict';
 
     function n(N, A) {
@@ -5004,7 +5016,7 @@ module.exports = function(t) {
             }
         }]), A
     }(g)
-}, function(t, r, o) {console.empty("Function 92 neeo:myStrom buildCustomDevice('WiFi Switch', mystrom switch");
+}, function(t, r, o) {o(0)("Function 91").verbose(" neeo:myStrom buildCustomDevice('WiFi Switch', mystrom switch");
     'use strict';
     var d = o(3),
         c = o(90),
@@ -5070,7 +5082,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 93 unclear");
+}, function(t, r, o) {o(0)("Function  92").verbose(" unclear");
     'use strict';
 
     function n(g, y, S) {
@@ -5143,7 +5155,7 @@ module.exports = function(t) {
             }
         }]), y
     }(E)
-}, function(t, r, o) {console.empty("Function 94 WSB and WRS, BULB-actions");
+}, function(t, r, o) {o(0)("Function  93").verbose(" WSB and WRS, BULB-actions");
     'use strict';
 
     function c(A, C) {
@@ -5211,7 +5223,7 @@ module.exports = function(t) {
             return S + (D + '000000')
         }
     }
-}, function(t, r, o) {console.empty("Function 95  neeo:mystrom:discovery udpDiscovery");
+}, function(t, r, o) {o(0)("Function  94").verbose("  neeo:mystrom:discovery udpDiscovery");
     'use strict';
 
     function d(N) {
@@ -5317,7 +5329,7 @@ module.exports = function(t) {
         },
         parseUdpPacket: c
     }
-}, function(t, r, o) {console.empty("Function 96 Looks like some functions for advanced power-plugs (power measure)");
+}, function(t, r, o) {o(0)("Function  95").verbose(" Looks like some functions for advanced power-plugs (power measure)");
     'use strict';
     var d = o(40),
         u = 'relay',
@@ -5353,7 +5365,7 @@ module.exports = function(t) {
             })
         }
     }
-}, function(t) {console.empty("Function 87 -- Looks like a debug structure");
+}, function(t) {
     'use strict';
     var c = 'default';
     t.exports = {
@@ -5374,7 +5386,7 @@ module.exports = function(t) {
         }],
         UPDATE_INTERVAL_MS: 1e3
     }
-}, function(t, r, o) {console.empty("Function 98 neeo:blackcat:controller");
+}, function(t, r, o) {o(0)("Function 97").verbose("neeo:blackcat:controller");
     'use strict';
 
     function n(j, K) {
@@ -5515,13 +5527,13 @@ module.exports = function(t) {
             R('setNotificationCallbacks %O', K), W = j, K && K.powerOnNotificationFunction && (H = K.powerOnNotificationFunction), K && K.powerOffNotificationFunction && (Y = K.powerOffNotificationFunction)
         }
     }
-}, function(t) {console.empty("Function 99 Location for folderIcon and fileIcon");
+}, function(t) {
     'use strict';
     t.exports = {
         folderIcon: 'https://neeo-sdk.neeo.io/folder.jpg',
         fileIcon: 'https://neeo-sdk.neeo.io/file.jpg'
     }
-}, function(t, r, o) {console.empty("Function 100 BlackCat:SDK buildDevices Black Cat");
+}, function(t, r, o) {o(0)("Function 99").verbose("BlackCat:SDK buildDevices Black Cat");
     'use strict';
     var d = o(3),
         c = o(97),
@@ -5600,7 +5612,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 101 neeo:blackcat:listhandler: handleAction, handleBrowse");
+}, function(t, r, o) {o(0)("Function 100").verbose("neeo:blackcat:listhandler: handleAction, handleBrowse");
     'use strict';
 
     function n(U) {
@@ -5787,7 +5799,7 @@ module.exports = function(t) {
             })
         }
     }
-}, function(t, r, o) {console.empty("Function 102 neeo:braindriver:controller: onButtonPressed, executeFavorite, discover, getDeviceSubscriptionHandler");
+}, function(t, r, o) {o(0)("Function 101").verbose("neeo:braindriver:controller: onButtonPressed, executeFavorite, discover, getDeviceSubscriptionHandler");
     'use strict';
 
     function n(f) {
@@ -5856,7 +5868,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 103 neeo:braindriver:discover'");
+}, function(t, r, o) {o(0)("Function 102").verbose("neeo:braindriver:discover'");
     'use strict';
 
     function d(y) {
@@ -5886,7 +5898,7 @@ module.exports = function(t) {
             })
         }
     }
-}, function(t, r, o) {console.empty("Function 104 neeo:braindriver:mdns ,discoverBrains");
+}, function(t, r, o) {o(0)("Function 103").verbose("neeo:braindriver:mdns ,discoverBrains");
     'use strict';
     var d = o(2)('neeo:braindriver:mdns'),
         c = o(1),
@@ -5903,7 +5915,7 @@ module.exports = function(t) {
             })
         }
     }
-}, function(t, r, o) {console.empty("Function 105 neeo:braindriver:index buildCustomDevice setSpecificName('NEEO Brain'");
+}, function(t, r, o) {o(0)("Function 104").verbose("neeo:braindriver:index buildCustomDevice setSpecificName('NEEO Brain'");
     'use strict';
     var d = o(3),
         c = o(101),
@@ -5924,7 +5936,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 106 neeo:braindriver:service");
+}, function(t, r, o) {o(0)("Function 105").verbose("neeo:braindriver:service");
     'use strict';
     var g = o(11),
         y = o(1),
@@ -5978,7 +5990,7 @@ module.exports = function(t) {
         }
     };
     var O = new Map
-}, function(t, r, o) {console.empty("Function 107 neeo:braindriver:brainDataFetcher getRestRequest");
+}, function(t, r, o) {o(0)("Function 106").verbose("neeo:braindriver:brainDataFetcher getRestRequest");
     'use strict';
     var d = o(58),
         c = o(2)('neeo:braindriver:brainDataFetcher');
@@ -5991,7 +6003,7 @@ module.exports = function(t) {
             })
         }
     }
-}, function(t, r, o) {console.empty("Function 108 neeo:braindriver:projectConverter: convertProjectToSdkDevices, convertBrainObjectToSdkDevices");
+}, function(t, r, o) {o(0)("Function 107").verbose("neeo:braindriver:projectConverter: convertProjectToSdkDevices, convertBrainObjectToSdkDevices");
     'use strict';
 
     function n(D, R) {
@@ -6134,7 +6146,7 @@ module.exports = function(t) {
             }
         }]), D
     }()
-}, function(t) {console.empty("Function 109 getSpecificDeviceName");
+}, function(t) {
     'use strict';
 
     function d() {
@@ -6154,7 +6166,7 @@ module.exports = function(t) {
         }
     };
     var c = ' '
-}, function(t, r, o) {console.empty("Function 110 neeo:braindriver:dns : resolveBonjourNameToIp, addResolvedIP4BonjourEntry, invalidateEntry");
+}, function(t, r, o) {o(0)("Function 109").verbose("neeo:braindriver:dns : resolveBonjourNameToIp, addResolvedIP4BonjourEntry, invalidateEntry");
     'use strict';
     var u = o(183),
         p = o(2)('neeo:braindriver:dns');
@@ -6185,7 +6197,7 @@ module.exports = function(t) {
         }
     };
     var m = new Map
-}, function(t, r, o) {console.empty("Function 111 neeo:neeobrain:services: getDevicesFromBrainAndRegisterCallbacks,convertSpecificBrainDevice, triggerMacroByComponentName, triggerFavoriteByChannelNr, parseId");
+}, function(t, r, o) {o(0)("Function 110").verbose("neeo:neeobrain:services: getDevicesFromBrainAndRegisterCallbacks,convertSpecificBrainDevice, triggerMacroByComponentName, triggerFavoriteByChannelNr, parseId");
     'use strict';
 
     function d(R) {
@@ -6277,7 +6289,7 @@ module.exports = function(t) {
         }
     };
     var D = 'IPv4'
-}, function(t, r, o) {console.empty("Function 112 neeo:braindriver:serialiseId stringify and parse");
+}, function(t, r, o) {o(0)("Function 111").verbose("neeo:braindriver:serialiseId stringify and parse");
     'use strict';
     var c = o(2)('neeo:braindriver:serialiseId');
     t.exports = {
@@ -6298,7 +6310,7 @@ module.exports = function(t) {
         }
     };
     var u = ':'
-}, function(t) {console.empty("Function 113 buildTriggerMacroByNameUrl, buildTriggerFavoriteByChannelUrl, buildProjectJsonUrl");
+}, function(t) {
     'use strict';
 
     function u(y, S) {
@@ -6324,7 +6336,7 @@ module.exports = function(t) {
         m = ':3000',
         E = '/projects/home/rooms/',
         g = '/projects/home'
-}, function(t, r, o) {console.empty("Function 114 NEEO BrainbuildCECController('NEEO CEC Cat'");
+}, function(t, r, o) {o(0)("Function 113").verbose("NEEO BrainbuildCECController('NEEO CEC Cat'");
     'use strict';
     var d = o(4),
         c = o(42),
@@ -6332,7 +6344,7 @@ module.exports = function(t) {
     t.exports = d.buildCECController('NEEO CEC Cat', c, function(m) {
         return !p.includes(m.osdName)
     })
-}, function(t, r, o) {console.empty("Function 115 CECCat:SDK buildCECDevice");
+}, function(t, r, o) {o(0)("Function 114").verbose("CECCat:SDK buildCECDevice");
     'use strict';
     var d = o(4),
         c = o(113),
@@ -6360,7 +6372,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 116 neeo:cranium:controller' onButtonPressed, getBootSensor, setNotificationCallbacks, getDeviceSubscriptionHandler");
+}, function(t, r, o) {o(0)("Function 115").verbose("neeo:cranium:controller' onButtonPressed, getBootSensor, setNotificationCallbacks, getDeviceSubscriptionHandler");
     'use strict';
 
     function c() {
@@ -6432,7 +6444,7 @@ module.exports = function(t) {
         w = function() {
             return y.reject(new Error('NOT INITIALIZED'))
         }
-}, function(t, r, o) {console.empty("Function 117 buildCustomDevice neeo:cranium:index");
+}, function(t, r, o) {o(0)("Function 116").verbose("buildCustomDevice neeo:cranium:index");
     'use strict';
     var d = o(3),
         c = o(115),
@@ -6473,7 +6485,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 118 PS3:SDK buildCECDevice");
+}, function(t, r, o) {o(0)("Function 117").verbose("PS3:SDK buildCECDevice");
     'use strict';
     var d = o(4),
         c = o(118),
@@ -6505,7 +6517,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 119 buildCECController('PlayStation3");
+}, function(t, r, o) {o(0)("Function 118").verbose(" buildCECController('PlayStation3");
     'use strict';
     var d = o(4),
         c = o(44),
@@ -6513,7 +6525,7 @@ module.exports = function(t) {
     t.exports = d.buildCECController('PlayStation3', c, function(E) {
         return u.includes(E.osdName) && E.vendorId === 524358
     })
-}, function(t, r, o) {console.empty("Function 120 PS4:SDK buildCECDevice");
+}, function(t, r, o) {o(0)("Function 119").verbose(" PS4:SDK buildCECDevice");
     'use strict';
     var d = o(4),
         c = o(120),
@@ -6545,7 +6557,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 122 buildCECController('PlayStation4");
+}, function(t, r, o) {o(0)("Function 120").verbose("buildCECController('PlayStation4");
     'use strict';
     var d = o(4),
         c = o(45),
@@ -6553,7 +6565,7 @@ module.exports = function(t) {
     t.exports = d.buildCECController('PlayStation4', c, function(m) {
         return u.includes(m.osdName)
     })
-}, function(t, r, o) {console.empty("Function 122 REPO_WRAPPER");
+}, function(t, r, o) {o(0)("Function 121").verbose("REPO_WRAPPER");
     'use strict';
 
     function n(E, g) {
@@ -6605,7 +6617,7 @@ module.exports = function(t) {
             }
         }]), E
     }()
-}, function(t, r, o) {console.empty("Function 123 SHIELD TV:SDK buildCECDevice");
+}, function(t, r, o) {o(0)("Function 122").verbose("SHIELD TV:SDK buildCECDevice");
     'use strict';
     var d = o(4),
         c = o(123),
@@ -6637,7 +6649,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 124 buildCECController nvidea Shield");
+}, function(t, r, o) {o(0)("Function 123").verbose("buildCECController nvidea Shield");
     'use strict';
     var d = o(4),
         c = o(46),
@@ -6645,7 +6657,7 @@ module.exports = function(t) {
     t.exports = d.buildCECController('Shield TV', c, function(m) {
         return u.includes(m.osdName)
     })
-}, function(t, r, o) {console.empty("Function 125 Connect/communicate Sonos:SDK:Service");
+}, function(t, r, o) {o(0)("Function 124").verbose("Connect/communicate Sonos:SDK:Service");
     'use strict';
 
     function n(k, F) {
@@ -6937,7 +6949,7 @@ module.exports = function(t) {
             }
         }]), F
     }(S)
-}, function(t, r, o) {console.empty("Function 126 unknown so far");
+}, function(t, r, o) {o(0)("Function 125").verbose("unknown so far");
     'use strict';
 
     function n(g, y, S) {
@@ -7014,7 +7026,7 @@ module.exports = function(t) {
             }
         }]), y
     }(E)
-}, function(t) {console.empty("Function 127 My Sonos - main");
+}, function(t) {//#o(0)("Function 126").verbose("My Sonos - main");
     'use strict';
 
     function n(O) {
@@ -7123,7 +7135,7 @@ module.exports = function(t) {
             }))
         }
     }
-}, function(t) {console.empty("Function 128 Control-items - looks like player");
+}, function(t) {//#o(0)("Function 127").verbose("Control-items - looks like player");
     'use strict';
     t.exports = {
         buttons: [{
@@ -7196,7 +7208,7 @@ module.exports = function(t) {
             callbackName: 'groupSensor'
         }]
     }
-}, function(t) {console.empty("Function 129 getActionFrom  favorite");
+}, function(t) {//#(0)("Function 128 getActionFrom  favorite");
     'use strict';
     var d = function() {
             function m(E, g) {
@@ -7244,7 +7256,7 @@ module.exports = function(t) {
     var p = {
         type: null
     }
-}, function(t, r, o) {console.empty("Function 130 Sonos:SDK buildDevices");
+}, function(t, r, o) {o(0)("Function 129").verbose("Sonos:SDK buildDevices");
     'use strict';
 
     function d(y) {
@@ -7307,7 +7319,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t) {console.empty("Function 131 Struct with rawQueueButtonsDefinitions");
+}, function(t) {//#o(0)("Function 130").verbose("Struct with rawQueueButtonsDefinitions");
     'use strict';
     t.exports = {
         rawQueueButtonsDefinitions: [{
@@ -7322,7 +7334,7 @@ module.exports = function(t) {
             actionIdentifier: 'QUEUE_SHUFFLE'
         }]
     }
-}, function(t, r, o) {console.empty("Function 132 Player implementations");
+}, function(t, r, o) {o(0)("Function 131").verbose("Player implementations");
     'use strict';
     var c = o(47),
         u = c.NS_GROUPVOLUME,
@@ -7389,7 +7401,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 133  o lcue at all.");
+}, function(t, r, o) {o(0)("Function 132").verbose(" o lcue at all.");
     'use strict';
 
     function n(U) {
@@ -7523,7 +7535,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 134 Sensor Sonos:SDK:Controler neeo:internaladapter:sonos:SonosController");
+}, function(t, r, o) {o(0)("Function 133").verbose("Sensor Sonos:SDK:Controler neeo:internaladapter:sonos:SonosController");
     'use strict';
 
     function n(D, R) {
@@ -7820,7 +7832,7 @@ module.exports = function(t) {
             }
         }]), R
     }(f)
-}, function(t, r, o) {console.empty("Function 135 neeo:virtualSwitch:controller");
+}, function(t, r, o) {o(0)("Function 134").verbose("neeo:virtualSwitch:controller");
     'use strict';
 
     function n(I, O) {
@@ -7927,7 +7939,7 @@ module.exports = function(t) {
             }
         }]), O
     }(y)
-}, function(t, r, o) {console.empty("Function 136 neeo:virtualSwitch");
+}, function(t, r, o) {o(0)("Function 135").verbose("neeo:virtualSwitch");
     'use strict';
     var d = o(3),
         c = o(134),
@@ -7961,7 +7973,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 137 neeo:wemo:controller / wemo-handler");
+}, function(t, r, o) {o(0)("Function 136").verbose("neeo:wemo:controller / wemo-handler");
     'use strict';
 
     function n(T, N) {
@@ -8126,7 +8138,7 @@ module.exports = function(t) {
             }
         }]), N
     }(y)
-}, function(t, r, o) {console.empty("Function 138 neeo:wemo:service BackgroundDiscovery");
+}, function(t, r, o) {o(0)("Function 137").verbose("neeo:wemo:service BackgroundDiscovery");
     'use strict';
 
     function n(k, F) {
@@ -8337,7 +8349,7 @@ module.exports = function(t) {
             }]), F
         }(g);
     U.EVENTS = Object.assign({}, w), t.exports = U
-}, function(t, r, o) {console.empty("Function 139 discover wemo-devices ");
+}, function(t, r, o) {o(0)("Function 138").verbose("discover wemo-devices ");
     'use strict';
     var d = o(3),
         c = o(136),
@@ -8375,7 +8387,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 140 determine device_type");
+}, function(t, r, o) {o(0)("Function 139").verbose("determine device_type");
     'use strict';
     var d = o(211);
     t.exports = {
@@ -8384,7 +8396,7 @@ module.exports = function(t) {
         },
         DEVICE_TYPE: d.DEVICE_TYPE
     }
-}, function(t, r, o) {console.empty("Function 141 neeo:lib:manager getadapter");
+}, function(t, r, o) {o(0)("Function 140").verbose("neeo:lib:manager getadapter");
     'use strict';
     var n = o(2)('neeo:lib:manager'),
         d = {
@@ -8400,12 +8412,12 @@ module.exports = function(t) {
         if (!d[p]) throw new Error('no such adapter: ' + p);
         return d[p]
     }
-}, function(t, r, o) {console.empty("Function 142 main function  send notification ");
+}, function(t, r, o) {o(0)("Function 141").verbose("main function  send notification ");
     'use strict';
     var n = o(142),
         d = o(5).notification;
     t.exports = new n(d)
-}, function(t, r, o) {console.empty("Function 143 Send notifications");
+}, function(t, r, o) {o(0)("Function 142").verbose("Send notifications");
     'use strict';
     var n = o(0)('Notification'),
         d = o(61),
@@ -8433,7 +8445,7 @@ module.exports = function(t) {
             0 < y.queueSize && y.queueSize--, S || 200 !== I ? p.increaseCounter('SEND_NOTIFICATION_FAILED') : p.increaseCounter('SEND_NOTIFICATION_SUCCEEDED'), g && g(S, f)
         })) : void n.debug('empty notification ignored')
     }
-}, function(t, r, o) {console.empty("Function 144 neeo:deviceadapter:sdk:devicecontroller");
+}, function(t, r, o) {o(0)("Function 143").verbose("neeo:deviceadapter:sdk:devicecontroller");
     'use strict';
 
     function n(p, m) {
@@ -8494,7 +8506,7 @@ module.exports = function(t) {
             }
         }]), p
     }()
-}, function(t, r, o) {console.empty("Function 145 neeo:deviceadapter:sdk:subscriptions");
+}, function(t, r, o) {o(0)("Function 144").verbose("neeo:deviceadapter:sdk:subscriptions");
     'use strict';
 
     function n(p) {
@@ -8558,7 +8570,7 @@ module.exports = function(t) {
             }
         }]), p
     }()
-}, function(t, r, o) {console.empty("Function 146 sonos adapter");
+}, function(t, r, o) {o(0)("Function 145").verbose("sonos adapter");
     'use strict';
     var n = o(1),
         d = o(193),
@@ -8847,7 +8859,7 @@ module.exports = function(t) {
     }, f.prototype.removeInstantFavoritesByKey = function(I) {
         return g.deleteAllByKey(I)
     }
-}, function(t, r, o) {console.empty("Function 147 sonos masin driver");
+}, function(t, r, o) {o(0)("Function 146").verbose("sonos main driver");
     'use strict';
     var n = o(1),
         d = o(35),
@@ -8932,7 +8944,7 @@ module.exports = function(t) {
     }, E.prototype.initialize = function() {
         return m.debug('Initializing'), this._loadSubscriptions(), this.enableNotifications(), n.resolve()
     }, E.prototype.shutdown = function() {}
-}, function(t, r, o) {console.empty("Function 148 SONOS_FAVORITE_DIRECTORY");
+}, function(t, r, o) {o(0)("Function 147").verbose("SONOS_FAVORITE_DIRECTORY");
     'use strict';
 
     function n(S, f) {
@@ -9005,7 +9017,7 @@ module.exports = function(t) {
     t.exports.buildBrowseResults = function(S, f, I, O) {
         return new y(S, f, I, O)
     }, t.exports.SONOS_FAVORITE_DIRECTORY = u
-}, function(t, r, o) {console.empty("Function 149 Sonos parse input fields");
+}, function(t, r, o) {o(0)("Function 148").verbose("Sonos parse input fields");
     'use strict';
     var d = o(150),
         c = [{
@@ -9069,7 +9081,7 @@ module.exports = function(t) {
             }
         }
     }
-}, function(t, r, o) {console.empty("Function 150 browse neeo:lib:sonos:directory");
+}, function(t, r, o) {o(0)("Function 149").verbose("browse neeo:lib:sonos:directory");
     'use strict';
 
     function n(A, C) {
@@ -9189,7 +9201,7 @@ module.exports = function(t) {
             }))
         }
     }
-}, function(t, r, o) {console.empty("Function 151 Musicplayer?");
+}, function(t, r, o) {o(0)("Function 150").verbose("Musicplayer?");
     'use strict';
 
     function n(S) {
@@ -9275,7 +9287,7 @@ module.exports = function(t) {
             })
         }
     }
-}, function(t, r, o) {console.empty("Function 152 Directory");
+}, function(t, r, o) {o(0)("Function 151").verbose("Directory");
     'use strict';
 
     function n(p) {
@@ -9329,7 +9341,7 @@ module.exports = function(t) {
             _meta: this._buildMetadata(p)
         }
     }
-}, function(t, r, o) {console.empty("Function 153 Directory-item");
+}, function(t, r, o) {o(0)("Function 152").verbose("Directory-item");
     'use strict';
 
     function n(m, E) {
@@ -9389,7 +9401,7 @@ module.exports = function(t) {
             }
         }]), E
     }(p)
-}, function(t, r, o) {console.empty("Function 154 Build header??");
+}, function(t, r, o) {o(0)("Function 153").verbose("Build header??");
     'use strict';
 
     function n(m, E) {
@@ -9437,7 +9449,7 @@ module.exports = function(t) {
             }
         }]), E
     }(p)
-}, function(t, r, o) {console.empty("Function 155 Unclear... panel?");
+}, function(t, r, o) {o(0)("Function 154").verbose("Unclear... panel?");
     'use strict';
 
     function n(m, E) {
@@ -9493,7 +9505,7 @@ module.exports = function(t) {
             }
         }]), E
     }(p)
-}, function(t, r, o) {console.empty("Function 156 sonos-spotify main implementaion of functions");
+}, function(t, r, o) {o(0)("Function 155").verbose("sonos-spotify main implementaion of functions");
     'use strict';
 
     function n(S) {
@@ -9585,7 +9597,7 @@ module.exports = function(t) {
             })
         })
     }, t.exports = new y
-}, function(t, r, o) {console.empty("Function 157 Super expression See also Super()");
+}, function(t, r, o) {o(0)("Function 156").verbose("Super expression See also Super()");
     'use strict';
 
     function n(g, y) {
@@ -9639,7 +9651,7 @@ module.exports = function(t) {
             }]), y
         }(p);
     t.exports = E
-}, function(t, r, o) {console.empty("Function 158 ZWave:Adapter  main implementaion of functions");
+}, function(t, r, o) {o(0)("Function 157").verbose("ZWave:Adapter  main implementaion of functions");
     'use strict';
 
     function n(R) {
@@ -9884,7 +9896,7 @@ module.exports = function(t) {
             actuatorName: F
         }), this.api.invokeDCOOperation(k, M, F, {})
     }
-}, function(t, r, o) {console.empty("Function 159 ZWave:Device main implementaion of functions");
+}, function(t, r, o) {o(0)("Function 158").verbose("ZWave:Device main implementaion of functions");
     'use strict';
 
     function n(O, T, N) {
@@ -9966,7 +9978,7 @@ module.exports = function(t) {
             })
         })
     }, I.prototype.shutdown = function() {}
-}, function(t, r, o) {console.empty("Function 160 ZWave:Eventhandler ");
+}, function(t, r, o) {o(0)("Function 159").verbose("ZWave:Eventhandler ");
     'use strict';
 
     function n(f, I) {
@@ -10222,7 +10234,7 @@ module.exports = function(t) {
             }
         }]), f
     }()
-}, function(t, r, o) {console.empty("Function 161 ZWave:Devicelookup");
+}, function(t, r, o) {o(0)("Function 160").verbose("ZWave:Devicelookup");
     'use strict';
     var n = o(0)('ZWave:Devicelookup'),
         d = o(22),
@@ -10245,7 +10257,7 @@ module.exports = function(t) {
             prosystProperties: y
         }), S
     }
-}, function(t, r, o) {console.empty("Function 162 Zwave:Capabilities");
+}, function(t, r, o) {o(0)("Function 161").verbose("Zwave:Capabilities");
     'use strict';
     var n = o(60),
         d = o(190),
@@ -10292,7 +10304,7 @@ module.exports = function(t) {
             return w
         })
     }
-}, function(t, r, o) {console.empty("Function 163 com.prosyst.mbs.services.hdm.deviceclasses.BinarySensor");
+}, function(t, r, o) {o(0)("Function 162").verbose("com.prosyst.mbs.services.hdm.deviceclasses.BinarySensor");
     'use strict';
 
     function n(g, y) {
@@ -10352,7 +10364,7 @@ module.exports = function(t) {
             }
         }]), y
     }(m)
-}, function(t, r, o) {console.empty("Function 164 com.prosyst.mbs.services.hdm.deviceclasses.BinarySwitch");
+}, function(t, r, o) {o(0)("Function 163").verbose("com.prosyst.mbs.services.hdm.deviceclasses.BinarySwitch");
     'use strict';
 
     function n(y, S) {
@@ -10464,7 +10476,7 @@ module.exports = function(t) {
             }
         }]), S
     }(m)
-}, function(t, r, o) {console.empty("Function 165 com.prosyst.mbs.services.zwave.deviceclasses.ColorSwitch");
+}, function(t, r, o) {o(0)("Function 164").verbose("com.prosyst.mbs.services.zwave.deviceclasses.ColorSwitch");
     'use strict';
 
     function n(g, y) {
@@ -10541,7 +10553,7 @@ module.exports = function(t) {
             }
         }]), y
     }(m)
-}, function(t, r, o) {console.empty("Function 166 com.prosyst.mbs.services.zwave.deviceclasses.Keypad");
+}, function(t, r, o) {o(0)("Function 165").verbose("com.prosyst.mbs.services.zwave.deviceclasses.Keypad");
     'use strict';
 
     function n(E, g) {
@@ -10603,7 +10615,7 @@ module.exports = function(t) {
             }
         }]), g
     }(p)
-}, function(t, r, o) {console.empty("Function 167 com.prosyst.mbs.services.hdm.deviceclasses.MultiLevelSensor");
+}, function(t, r, o) {o(0)("Function 166").verbose("com.prosyst.mbs.services.hdm.deviceclasses.MultiLevelSensor");
     'use strict';
 
     function n(g, y) {
@@ -10663,7 +10675,7 @@ module.exports = function(t) {
             }
         }]), y
     }(m)
-}, function(t, r, o) {console.empty("Function 168 Lookup or add entry from list; unclear what list");
+}, function(t, r, o) {o(0)("Function 167").verbose("Lookup or add entry from list; unclear what list");
     'use strict';
     var n = o(5).zwave,
         d = n.prosystNotificationCacheTimeoutMs,
@@ -10684,7 +10696,7 @@ module.exports = function(t) {
     }, t.exports.clear = function() {
         u.length = 0, p = 0
     }
-}, function(t, r, o) {console.empty("Function 169 Router:  Capability");
+}, function(t, r, o) {o(0)("Function 168").verbose("Router:  Capability");
     'use strict';
     var n = o(7),
         d = n.Router(),
@@ -10696,18 +10708,19 @@ module.exports = function(t) {
         });
         m.json(c.findAdapterWithCapability(E))
     }), t.exports = d
-}, function(t, r, o) {console.empty("Function 170 Router: /powerscan/:scanDurationMs ");
+}, function(t, r, o) {o(0)("Function 169").verbose("Router: /powerscan/:scanDurationMs ");
     'use strict';
     var n = o(7),
         d = n.Router(),
         c = o(4);
+
     d.get('/powerscan/:scanDurationMs', function(u, p) {
         var m = u.params.scanDurationMs;
         c.forcePowerScan(m).then(function() {
             p.json()
         })
     }), t.exports = d
-}, function(t, r, o) {console.empty("Function 171 Router: Config get and post");
+}, function(t, r, o) {o(0)("Function 170").verbose("Router: Config get and post");
     'use strict';
     var n = o(7),
         d = n.Router(),
@@ -10722,7 +10735,7 @@ module.exports = function(t) {
             success: !0
         }), u.info('EXIT_DEVICEADAPTER'), process.exit(0)
     }), t.exports = d
-}, function(t, r, o) {console.empty("Function 172 Router: search and /:device_id");
+}, function(t, r, o) {o(0)("Function 171").verbose("Router: search and /:device_id");
     'use strict';
     var n = o(7),
         d = n.Router(),
@@ -10737,7 +10750,7 @@ module.exports = function(t) {
         });
         m.json(c.getDevice(E))
     }), t.exports = d
-}, function(t) {console.empty("Function 173 parseItemParam (check input for '.' then parseint on 2nd part of item)");
+}, function(t) {//#o(0)("Function 172").verbose("parseItemParam (check input for '.' then parseint on 2nd part of item)");
     'use strict';
     t.exports.parseItemParam = function(d) {
         if (!d || 'string' != typeof d) throw new Error('invalid item param');
@@ -10751,7 +10764,7 @@ module.exports = function(t) {
             index: 0 <= m ? m : void 0
         }
     }
-}, function(t, r, o) {console.empty("Function 174 Router: Hue");
+}, function(t, r, o) {o(0)("Function 173").verbose("Router: Hue");
     'use strict';
 
     function n(g) {
@@ -10868,7 +10881,7 @@ module.exports = function(t) {
             error: {}
         })
     }), t.exports = c
-}, function(t, r, o) {console.empty("Function 175 router: Route manager");
+}, function(t, r, o) {o(0)("Function 174").verbose("router: Route manager");
     'use strict';
 
     function n(m) {
@@ -10910,7 +10923,12 @@ module.exports = function(t) {
                 error: {}
             })
         })
-    }), c.use('/:adapterName/unregister', n('unregister')), c.get('/:adapterName/subscribe/:deviceId/:eventUriPrefix', function(m, E, g) {
+
+    }),
+    c.post('/deviceadapter/metaMessageHandler',function (req, res) {res.json(metaMessageHandler(req,res,u))}),
+    // above express route handles dynamic loglevel (changes)
+
+    c.use('/:adapterName/unregister', n('unregister')), c.get('/:adapterName/subscribe/:deviceId/:eventUriPrefix', function(m, E, g) {
         var y = m.params.deviceId,
             S = m.params.eventUriPrefix;
         return 'function' == typeof m.adapter.subscribe ? void m.adapter.subscribe(y, S).then(function() {
@@ -10934,7 +10952,7 @@ module.exports = function(t) {
             success: !0
         }))
     }), c.get('/unsubscribeall', n('unsubscribeAll')), t.exports = c
-}, function(t, r, o) {console.empty("Function 176 Router: db");
+}, function(t, r, o) {o(0)("Function 175").verbose("Router: db");
     'use strict';
     var n = o(7),
         d = n.Router(),
@@ -10955,7 +10973,7 @@ module.exports = function(t) {
         var g = c.getRequestParameter(m, 'device_id', p);
         E.json(u.getDevice(g))
     }), t.exports = d
-}, function(t, r, o) {console.empty("Function 177 Router: Sonos Route");
+}, function(t, r, o) {o(0)("Function 176").verbose("Router: Sonos Route");
     'use strict';
 
     function d(I) {
@@ -11124,7 +11142,7 @@ module.exports = function(t) {
             error: {}
         })
     }), t.exports = E
-}, function(t, r, o) {console.empty("Function 178 Router: zwave");
+}, function(t, r, o) {o(0)("Function 177").verbose("Router: zwave");
     'use strict';
 
     function d(N, A) {
@@ -11286,74 +11304,98 @@ module.exports = function(t) {
             error: {}
         })
     }), t.exports = S
-}, function(t) {console.empty("Function 179 exports = require('blocked')");
+}, function(t) {
     t.exports = require('blocked')
-}, function(t) {console.empty("Function 180 exports = require('body-parser')");
+}, function(t) {
     t.exports = require('body-parser')
-}, function(t) {console.empty("Function 181 exports = require('bonjour')");
+}, function(t) {
     t.exports = require('bonjour')
-}, function(t) {console.empty("Function 182 exports = require('child_process')");
+}, function(t) {
     t.exports = require('child_process')
-}, function(t) {console.empty("Function 183 exports = require('dgram')");
+}, function(t) {
     t.exports = require('dgram')
-}, function(t) {console.empty("Function 184 exports = require('dns')");
+}, function(t) {
     t.exports = require('dns')
-}, function(t) {console.empty("Function 185 exports = require('fs')");
+}, function(t) {
     t.exports = require('fs')
-}, function(t) {console.empty("Function 186exports = require('jfs')");
+}, function(t) {
     t.exports = require('jfs') 
-}, function(t) {console.empty("Function 187 exports = require('lodash/flatten')");
+}, function(t) {
     t.exports = require('lodash/flatten')
-}, function(t) {console.empty("Function 188 exports = require('lodash/forEach')");
+}, function(t) {
     t.exports = require('lodash/forEach')
-}, function(t) {console.empty("Function 189 exports = require('lodash/get')");
+}, function(t) {
     t.exports = require('lodash/get')
-}, function(t) {console.empty("Function 190 exports = require('lodash/isNil')");
+}, function(t) {
     t.exports = require('lodash/isNil')
-}, function(t) {console.empty("Function 191 exports = require('lodash/remove')");
+}, function(t) {
     t.exports = require('lodash/remove')
-}, function(t) {console.empty("Function 192 exports = require('lodash/uniq')");
+}, function(t) {
     t.exports = require('lodash/uniq')
-}, function(t) {console.empty("Function 193 exports = require('lodash/uniqBy')");
+}, function(t) {
     t.exports = require('lodash/uniqBy')
-}, function(t) {console.empty("Function 194 exports = require('lodash/values')");
+}, function(t) {
     t.exports = require('lodash/values')
-}, function(t) {console.empty("Function 195 exports = require('loggly')");
+}, function(t) {
     t.exports = require('loggly')
-}, function(t) {console.empty("Function 196 exports = require('neeo-sdk')");
+}, function(t) {
     t.exports = require('neeo-sdk')
-}, function(t) {console.empty("Function 197 exports = require('neeo-sdk/dist/lib/device')");
+}, function(t) {
     t.exports = require('neeo-sdk/dist/lib/device')
-}, function(t) {console.empty("Function 198 exports = require('neeo-sdk/dist/lib/device/brain')");
+}, function(t) {
     t.exports = require('neeo-sdk/dist/lib/device/brain')
-}, function(t) {console.empty("Function 199 exports = require('neeo-sdk/dist/lib/device/implementationservices/promiseCache')");
+}, function(t) {
     t.exports = require('neeo-sdk/dist/lib/device/implementationservices/promiseCache')
-}, function(t) {console.empty("Function 200 exports = require('neeo-sdk/dist/lib/dynamicDevice/dynamicDevice')");
+}, function(t) {
     t.exports = require('neeo-sdk/dist/lib/dynamicDevice/dynamicDevice')
-}, function(t) {console.empty("Function 201 exports = require('neeo-sonos')");
+}, function(t) {
     t.exports = require('neeo-sonos')
-}, function(t) {console.empty("Function 202 exports = require('net')");
+}, function(t) {
     t.exports = require('net')
-}, function(t) {console.empty("Function 203 exports = require('node-cec/lib/CecKeyCodes')");
+}, function(t) {
     t.exports = require('node-cec/lib/CecKeyCodes')
-}, function(t) {console.empty("Function 204 exports = require('node-hue-api')");
+}, function(t) {
     t.exports = require('node-hue-api')
-}, function(t) {console.empty("Function 205 exports = require('node-lifx')");
+}, function(t) {
     t.exports = require('node-lifx')
-}, function(t) {console.empty("Function 206 exports = require('node-tradfri-client')");
+}, function(t) {
     t.exports = require('node-tradfri-client')
-}, function(t) {console.empty("Function 207 exports = require('prosysapi')");
-    t.exports = require('prosysapi')
-}, function(t) {console.empty("Function 208 exports = require('simple-event-statistics')");
+}, function(t) {
+    t.exports = require('prosysapi') 
+}, function(t) {
     t.exports = require('simple-event-statistics')
-}, function(t) {console.empty("Function 209 exports = require('sonos-discovery')");
+}, function(t) {
     t.exports = require('sonos-discovery')
-}, function(t) {console.empty("Function 210 exports = require('tokensearch.js')");
+}, function(t) {
     t.exports = require('tokensearch.js')
-}, function(t) {console.empty("Function 211 exports = require('validate.js')");
+}, function(t) {
     t.exports = require('validate.js') 
-}, function(t) {console.empty("Function 212 exports = require('wemo-client')");
+}, function(t) {
     t.exports = require('wemo-client')
-}, function(t, r, o) {console.empty("Function 213 exports = o(62)");
+}, function(t, r, o) {o(0)("Function 213").verbose("exports = o(62)");
     t.exports = o(62)
-}]);
+}
+
+]);
+function metaMessageHandler(req, res)
+{    metaLog({type:LOG_TYPE.DEBUG,content:"metaMessageHandler"});
+    if (req.query.doFunc == undefined)
+    { metaLog({type:LOG_TYPE.ERROR,content:'imageservice missing function for messagehandler routine '+req.doFunc});
+      return  "imageservice missing function for messagehandler routine"
+    };
+    var doFunc = req.query.doFunc;
+    if (doFunc.toUpperCase() == "GETLOGLEVEL")
+    {   metaLog({type:LOG_TYPE.VERBOSE,content:"Getting loglevel"})
+        return getLoglevels(logModule);
+     }
+  
+    if (doFunc.toUpperCase() == "OVERRIDELOGLEVEL")
+      {metaLog({type:LOG_TYPE.VERBOSE,content:"Setting loglevel"})
+        const o = req.query.logLevel;
+        return OverrideLoglevel(o,logModule.toLowerCase())
+      }
+  
+    metaLog({type:LOG_TYPE.ERROR,content:"Unknown function requestedmetaMessageHandler "+req.query.doFunc});
+    metaLog({type:LOG_TYPE.ERROR,content:"logLevel passed "+req.query.logLevel});
+    return "Returning error"
+  }

@@ -1,24 +1,27 @@
 "use strict";
+const logModule = "cp6";
 process.env.StartupPath = __dirname;
-const moment = require('moment');
+const StartupPath = process.env.StartupPath;
+const path = require('path');
+const logmodules = require(path.join(StartupPath,'logComponents'));
+
 const { metaMessage, LOG_TYPE, LOG_LEVEL,initialiseLogComponents, initialiseLogSeverity,OverrideLoglevel, getLoglevels } = require("/opt/meta/metaMessage");
-var CloudReplacement   = ""; // "http://192.168.73.194"
-var CloudReplacementUrl   = ""; // "http://192.168.73.194:6468/download"
-console.log("Starting CP6")
-var AllFunctions;
 function metaLog(message) {
-    let initMessage = { component:'CP6', type:LOG_TYPE.ERROR, content:'', deviceId: "" };
+    let initMessage = { component:logModule, type:LOG_TYPE.ERROR, content:'', deviceId: "" };
     let myMessage = {...initMessage, ...message}
     return metaMessage (myMessage);
   } 
-
 initialiseLogSeverity("QUIET"); 
-OverrideLoglevel("DEBUG","CP6") 
-//var BrainBroadLink;
-var BrainBroadLink;
+OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
+//OverrideLoglevel("DEBUG",logModule) // but activate this line if you want DEBUG logging
+
+const moment = require('moment');
 const fs = require("fs");
+var AllFunctions;
+var CloudReplacement;
+var CloudReplacementUrl = '';
+var BrainBroadLink;
 var BrainBroadLinkFile = __dirname + '/BrainBroadLink.json'
-console.log("Checking BroadlinkFile:",BrainBroadLinkFile)
 fs.readFile(BrainBroadLinkFile, (err, data) => {
         if (err) {
           metaLog({type:LOG_TYPE.ERROR, content:'No BrainBroadLink.json file, cannot send IR-DATA'});
@@ -28,7 +31,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             try {
                 metaLog({type:LOG_TYPE.DEBUG, content:'Parsing BrainBroadLink.json file'});
                 BrainBroadLink = JSON.parse(data);
-                metaLog({type:LOG_TYPE.ALWAYS,content:"We've got the data! "+BrainBroadLink})
+                metaLog({type:LOG_TYPE.DEBUG,content:"We've got the data! "+BrainBroadLink})
             }
             catch (err) 
                     {metaLog({type:LOG_TYPE.ERROR, content:'Invalid BrainBroadLink.json file '+err});
@@ -143,7 +146,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
 }, function(e) { // Function 2 Fill constant with NEEO environment variables
     "use strict";
     
-    (function(t) {//AllFunctions(0)("Function 2").debug("")
+    (function(t) {//AllFunctions(0)("Function 2").verbose("")
         const r = "127.0.0.1",
             n = process.env.IP || "0.0.0.0",
             o = process.env.PORT || 3001,
@@ -418,7 +421,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }).call(this, "/")
 }, function(e, t, r) { // Function 3 looks like main watchdog, based on statistics
     "use strict";
-    AllFunctions(0)("Function 3").debug("")
+    AllFunctions(0)("Function 3").verbose("")
     const n = r(2).statistics,
         o = r(190),
         i = new o(n),
@@ -441,7 +444,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     })
 }, function(e, t, r) {// Function 4 Parse/render TR2
     "use strict";
-    AllFunctions(0)("Function 4").debug("Parse/render TR2")
+    AllFunctions(0)("Function 4").verbose("Parse/render TR2")
 
     function n(e) {
         return o.parse(e), t => o.render(e, t)
@@ -456,7 +459,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
 }, function(e) {// Function 6 exports = require("debug")
     e.exports = require("debug")
 }, function(e, t, r) {// Function 7 set various defaults
-    "use strict";AllFunctions(0)("Function 7").debug("")
+    "use strict";AllFunctions(0)("Function 7").verbose("")
     const n = r(35);
     e.exports = {
         screen: {
@@ -652,7 +655,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports.COMPONENT_SWITCH_TYPE_NAME = "switch", e.exports.COMPONENT_SLIDER_TYPE_NAME = "slider", e.exports.COMPONENT_MACRO_TYPE_NAME = "button", e.exports.COMPONENT_TEXTLABEL_TYPE_NAME = "textlabel", e.exports.COMPONENT_IMAGEURL_TYPE_NAME = "imageurl", e.exports.COMPONENT_DIRECTORY_TYPE_NAME = "directory", e.exports.COMPONENT_SENSOR_TYPE_NAME = "sensor", e.exports.COMPONENT_WIDGET_TYPE_NAME = "widget", e.exports.COMPONENT_PROCEDURE_TYPE_NAME = "procedure", e.exports.COMPONENT_GAP_TYPE_NAME = "Spacer"
 }, function(e, t, r) {// Function 9 Array with error-messages
     "use strict";
-    AllFunctions(0)("Function 9").debug("")
+    AllFunctions(0)("Function 9").verbose("")
     const n = r(2),
         o = r(11),
         i = {
@@ -719,7 +722,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 10 notificationfacade
     "use strict";
-    AllFunctions(0)("Function 10").debug("")
+    AllFunctions(0)("Function 10").verbose("")
     const n = r(6)("cp6:lib:notificationfacade"),
         o = r(69),
         i = r(187),
@@ -734,7 +737,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
         constructor() {
             super(), this.notificationSender = new c, this.zwaveEventLog = new i, this.powerSensorListener = new s(this), this.sensorListener = new a(this), this.setMaxListeners(40), this.on(u.NOTIFICATION_PROJECT_CHANGED, () => {
                 this.powerSensorListener.activatePowerStateSensors()
-            }), setInterval(() => {AllFunctions(0)("Function 10").debug("Timer expired")
+            }), setInterval(() => {AllFunctions(0)("Function 10").verbose("Timer expired")
                 const e = this.eventNames().reduce((e, t) => e + this.listenerCount(t), 0);
                 d.setValue("notification-listener", e)
             }, l)
@@ -747,7 +750,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
                 p.error("INIT_FAILED", e.message)
             }
         }
-        socketioinit(e) {AllFunctions(0)("Function 10").debug("socketioinit");
+        socketioinit(e) {AllFunctions(0)("Function 10").verbose("socketioinit");
             this.notificationSender.socketioinit(e)
         }
         registerIfNotYetRegistered(e, t) {
@@ -769,7 +772,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
                 data: t.sensorValue
             })
         }
-        send(e) {AllFunctions(0)("Function 10").debug("send"+e.type+" "+e.data);
+        send(e) {AllFunctions(0)("Function 10").verbose("send"+e.type+" "+e.data);
             return !(!e || !e.type) && (this.isInternalNotification(e) ? this.handleInternalNotification(e) : (this.zwaveEventLog.logZWaveEvents(e), this.emit(e.type, e.data), this.needsLegacyNotification(e) ? this.sendLegacySensorNotification(e) : this.notificationSender.send(e)))
         }
         resendAll() {
@@ -778,23 +781,23 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     };
     e.exports = h
 }, function(e) {// Function 11 exports = require("util")
-    AllFunctions(0)("Function 11").debug("")
+    AllFunctions(0)("Function 11").verbose("")
     e.exports = require("util")
 }, function(e, t, r) {// Function 12 start systeminfo statistics using r(286))
     "use strict";
-    AllFunctions(0)("Function 12").debug("socketstart systeminfo statistics using r(286))ioinit");
+    AllFunctions(0)("Function 12").verbose("socketstart systeminfo statistics using r(286))ioinit");
     const n = r(2).systeminfo,
         o = new(r(286))(n),
         i = r(6)("cp6:lib:systeminfo:index");
     e.exports = o, e.exports.startTask = function() {
-        AllFunctions(0)("Function 12").debug("perform exported functions");
+        AllFunctions(0)("Function 12").verbose("perform exported functions");
         return i("start systeminfo staticstics, intervalS", n.flushIntervalSeconds), setInterval(() => {
             i("systemInfo.logAndFlushStatistics"), o.logAndFlushStatistics()
         }, 1e3 * n.flushIntervalSeconds)
     }
 }, function(e, t, r) {// Function 13 Define priojects/home directories for various actions/objects
     "use strict";
-    AllFunctions(0)("Function 13").debug("")
+    AllFunctions(0)("Function 13").verbose("")
 
     function n(e) {
         const t = e.getRoom();
@@ -862,10 +865,10 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 14 validation routine (single, integer,array,string,lessthanorequal)
     "use strict";
-    AllFunctions(0)("Function 14").debug("")
+    AllFunctions(0)("Function 14").verbose("")
     const n = r(111),
         o = e.exports = function() {
-            AllFunctions(0)("Function 14").debug("export")
+            AllFunctions(0)("Function 14").verbose("export")
             const e = n.apply(this, arguments);
             if (e) throw new Error("Validation failed: " + JSON.stringify(e))
         };
@@ -891,7 +894,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 15 get boolean and integer parm
     "use strict";
-    AllFunctions(0)("Function 15").debug("");
+    AllFunctions(0)("Function 15").verbose("");
 
     function n(e, t, r, n) {
         let i = o(e, t);
@@ -945,7 +948,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     t.TYPE_TV = "TV", t.TYPE_DVD = "DVD", t.TYPE_VOD = "VOD", t.TYPE_ACCESSOIRE = "ACCESSOIRE", t.TYPE_PROJECTOR = "PROJECTOR", t.TYPE_DVB = "DVB", t.TYPE_SONOS = "SONOS", t.TYPE_AVRECEIVER = "AVRECEIVER", t.TYPE_AUDIO = "AUDIO", t.TYPE_HDMISWITCH = "HDMISWITCH", t.TYPE_GAMECONSOLE = "GAMECONSOLE", t.TYPE_MEDIAPLAYER = "MEDIAPLAYER", t.TYPE_MUSICPLAYER = "MUSICPLAYER", t.TYPE_SOUNDBAR = "SOUNDBAR", t.TYPE_TUNER = "TUNER", t.TYPE_LIGHT = "LIGHT", t.TYPE_THERMOSTAT = "THERMOSTAT", t.TYPE_HVAC = "CLIMA", t.TYPE_UNKNOWN = "UNKNOWN", t.TYPES = [t.TYPE_TV, t.TYPE_DVD, t.TYPE_VOD, t.TYPE_ACCESSOIRE, t.TYPE_PROJECTOR, t.TYPE_DVB, t.TYPE_SONOS, t.TYPE_AVRECEIVER, t.TYPE_AUDIO, t.TYPE_GAMECONSOLE, t.TYPE_MEDIAPLAYER, t.TYPE_MUSICPLAYER, t.TYPE_SOUNDBAR, t.TYPE_TUNER, t.TYPE_LIGHT, t.TYPE_THERMOSTAT, t.TYPE_HDMISWITCH, t.TYPE_HVAC, t.TYPE_UNKNOWN], t.VOLUME_DEVICE_TYPE_PRIORITY = [t.TYPE_HDMISWITCH, t.TYPE_AVRECEIVER, t.TYPE_SOUNDBAR]
 }, function(e, t, r) {// Function 20 interface towards zwave (and rpc)
     "use strict";
-    AllFunctions(0)("Function 20").debug("");
+    AllFunctions(0)("Function 20").verbose("");
     const n = r(6)("cp6:lib:adapter:index"),
         o = r(2),
         i = r(214),
@@ -979,8 +982,8 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 21 DeviceCapability
     "use strict";
-    AllFunctions(0)("Function 21").debug("e",e)
-    AllFunctions(0)("Function 21").debug("t",t)
+    AllFunctions(0)("Function 21").verbose("e",e)
+    AllFunctions(0)("Function 21").verbose("t",t)
 
     function n(e) {
         this.name = e.name, this.check = e.check, this.options = e.options || {}
@@ -1305,7 +1308,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 22 key handler
     "use strict";
-    AllFunctions(0)("Function 22").debug("");
+    AllFunctions(0)("Function 22").verbose("");
     const n = r(260);
     let o = n;
     const i = e.exports = function(e, t) {
@@ -1337,7 +1340,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 23 fill local variables based on params
     "use strict";
-    AllFunctions(0)("Function 23").debug("");
+    AllFunctions(0)("Function 23").verbose("");
     const n = r(11),
         o = r(22),
         i = e.exports = function(e) {
@@ -1354,19 +1357,19 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 24 new r(186))(r(2).account)
     //"use strict";
-    AllFunctions(0)("Function 24").debug("");
+    AllFunctions(0)("Function 24").verbose("");
     const n = r(2).account,   //account: {duiroFormatVersion: "V1"},
         o = new(r(186))(n);   //new(entire Cloud-handler)(){duiroFormatVersion: "V1"})
     e.exports = o
 }, function(e, t) {// Function 25 set (init?) various notificatio fields 
     //"use strict";
-    //AllFunctions(0)("Function 25").debug("");
+    //AllFunctions(0)("Function 25").verbose("");
     t.NOTIFICATION_ACTIVE_NOW_CHANGED = "active-now-changed", t.NOTIFICATION_ACTIVE_SCENARIOS_CHANGED = "active-scenarios", t.NOTIFICATION_PUSH_ACTION = "push-action", t.NOTIFICATION_PROJECT_CHANGED = "projectchanged", t.NOTIFICATION_DEVICE_SENSOR_UPDATE = "DEVICE_SENSOR_UPDATE", t.NOTIFICATION_CEC_POWERSTATE = "NEEO_CEC_POWERSTATE", t.PROJECT_NAME = "home", t.PROJECT_VERSION = "1.0.10"
 }, function(e) {// Function 26 exports = require("fs")
     e.exports = require("fs")
 }, function(e, t, r) {// Function 27 Looks like HUGE!!! general "activation / setup" routines.
     "use strict";
-    AllFunctions(0)("Function 27").debug("");
+    AllFunctions(0)("Function 27").verbose("");
 
     function n(e) {
         return p.resolve(U.build(e.project)).then(e => (e.setActive(), e.activate()))
@@ -1433,7 +1436,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             t.addRoom(E.build(e))
         }), y.validateAndClean(t), O.increaseCounter("project-build"), t
     }, U.load = function() {
-        AllFunctions(0)("Function 27").debug("Load project",{} );
+        AllFunctions(0)("Function 27").verbose("Load project",{} );
         return A.loadLatestProject().then(e => U.build(e.project))
     }, U.createDefault = function(e) {
         const t = new U({
@@ -1606,9 +1609,9 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }, U.prototype.getDeviceByKey = function(e) {
         return this.getDevices().find(t => t.getKey() === e)
     }, U.prototype.getDeviceByName = function(e) {
-        return AllFunctions(0)("27").debug("in getbyname"),this.getDevices().find(t =>t.getName() === e)
+        return AllFunctions(0)("27").verbose("in getbyname"),this.getDevices().find(t =>t.getName() === e)
     }, U.prototype.getDeviceByadapterDeviceId = function(e) {
-        return AllFunctions(0)("27").debug("in getDeviceByadapterDeviceId"),this.getDevices().find(t => t.adapterDeviceId.trim() === e.trim() )
+        return AllFunctions(0)("27").verbose("in getDeviceByadapterDeviceId"),this.getDevices().find(t => t.adapterDeviceId.trim() === e.trim() )
     }, U.prototype.getSensors = function(e) {
         return u(this.getDevices().map(t => t.getSensors(e)))
     }, U.prototype.getSensorByEventKey = function(e) {
@@ -1652,7 +1655,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 28 Get various layout settings
     "use strict";
-    AllFunctions(0)("Function 29").debug("");
+    AllFunctions(0)("Function 29").verbose("");
 
     function n() {
         return o.useProUI()
@@ -1824,7 +1827,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = require("lodash/values")
 }, function(e, t, r) {// Function 30 roles?
     "use strict";
-    AllFunctions(0)("Function 30").debug("");
+    AllFunctions(0)("Function 30").verbose("");
     const n = r(125),
         o = r(229),
         i = r(19);
@@ -1837,11 +1840,11 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 31 JN5168 Bootstrap
     "use strict";
-    AllFunctions(0)("Function 31").debug("JN5168 Bootstrap");
+    AllFunctions(0)("Function 31").verbose("JN5168 Bootstrap");
 
     function n(e) {
         return function(e) {
-            AllFunctions(0)("Function 31").debug("function n "+  c.port + " "+ c.jn5168Port,e);
+            AllFunctions(0)("Function 31").verbose("function n "+  c.port + " "+ c.jn5168Port,e);
 
             return e ? o.resolve("http://" + e.nbr_web_server + ":" + c.jn5168Port) : o.reject(new Error("INVALID_NBR_FILE_DETECTED"))
         }(e).then(e => (d.baseUrl = e, a.debug("NBR_IPV6_ADDR_FOUND", d.baseUrl), d.sendAirkey())).then(() => {
@@ -1876,8 +1879,8 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             var e
         }
         a.debug("BOOTSTRAP_JN5168");
-        //AllFunctions(0)("Function 31").debug("bootstrapJn5168 II");
-        AllFunctions(0)("Function 31 (Outdated)").debug("bootstrapJn5168 e:",e);
+        //AllFunctions(0)("Function 31").verbose("bootstrapJn5168 II");
+        AllFunctions(0)("Function 31 (Outdated)").verbose("bootstrapJn5168 e:",e);
         return o.resolve();
 /*    const t = c.jn5168RestIpv6File;
         return h = setInterval(() => {
@@ -1890,7 +1893,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 32 Analyse json structure for returncode
     "use strict";
-    AllFunctions(0)("Function 32").debug("");
+    AllFunctions(0)("Function 32").verbose("");
     const n = r(1),
         o = r(117),
         i = /application\/json;/;
@@ -1924,13 +1927,13 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t) {// Function 33 Set (init) various power-fields
     "use strict";
-    AllFunctions(0)("Function 33").debug("");
+    AllFunctions(0)("Function 33").verbose("");
     t.MACRO_POWER_ON = "POWER ON", t.MACRO_POWER_OFF = "POWER OFF", t.MACRO_POWER_TOGGLE = "POWER TOGGLE", t.MACRO_POWER_TOGGLE_ON = "POWER TOGGLE ON", t.MACRO_POWER_TOGGLE_OFF = "POWER TOGGLE OFF", t.MACRO_VOLUME_UP = "VOLUME UP", t.MACRO_VOLUME_DOWN = "VOLUME DOWN", t.MACRO_MUTE_OFF = "MUTE OFF", t.MACRO_MUTE_ON = "MUTE ON", t.MACRO_MUTE_TOGGLE = "MUTE TOGGLE", t.MACRO_INPUT_TV = "INPUT TUNER 1", t.DISCRETE_POWER_ON_MACROS = [t.MACRO_POWER_ON, t.MACRO_POWER_TOGGLE_ON], t.DISCRETE_POWER_OFF_MACROS = [t.MACRO_POWER_OFF, t.MACRO_POWER_TOGGLE_OFF], t.DISCRETE_POWER_MACROS = [...t.DISCRETE_POWER_ON_MACROS, ...t.DISCRETE_POWER_OFF_MACROS], t.TEST_IS_POWER_ON = /POWER ON/, t.TEST_IS_POWER_OFF = /POWER OFF/, t.TEST_IS_POWER_TOGGLE = /POWER TOGGLE/, t.TEST_IS_SOURCE_SWITCH = /INPUT .+/, t.TEST_IS_VOLUME = /^(VOLUME|MUTE)/, t.isVolume = function(e) {
         return t.TEST_IS_VOLUME.test(e)
     }
 }, function(e, t, r) {// Function 34 execute ... generic function to execute (scropts in a?) file
     "use strict";
-    AllFunctions(0)("Function 34").debug("");
+    AllFunctions(0)("Function 34").verbose("");
     const n = r(1),
         o = r(138).execFile,
         i = r(0)("execute");
@@ -1964,7 +1967,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e) {// Function 35 default settings for a room.. .and much more.....
     "use strict";
-    AllFunctions(0)("Function 35").debug("");
+    AllFunctions(0)("Function 35").verbose("");
 
     function t(e) {
         if (this.chr = e.chr, this.font = e.font || i, this.color = e.color || s, this.activeColor = e.activeColor || a, !this.chr) throw new Error("icon char is required!")
@@ -2371,7 +2374,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }, e.exports.touchActiveColor = a
 }, function(e) {// Function 36 some default settings... structure unknown
     "use strict";
-    AllFunctions(0)("Function 36").debug("");
+    AllFunctions(0)("Function 36").verbose("");
     const t = "manual",
         r = "assumption",
         n = "smartener";
@@ -2385,7 +2388,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 37 sync-read various files 
     "use strict";
-    AllFunctions(0)("Function 37").debug("e",e);
+    AllFunctions(0)("Function 37").verbose("e",e);
     const n = r(26),
         o = r(2).fileRepoPath;
     t.loadNoCloudFile = function(e) {
@@ -2393,7 +2396,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
         return n.readFileSync(e, {
             encoding: "utf-8"
         })}
-        catch (err) {AllFunctions(0)("Function 37").debug("Catch",err)}
+        catch (err) {AllFunctions(0)("Function 37").verbose("Catch",err)}
 },     t.loadTr2File = function(e) {
         return n.readFileSync(o + "/tr2/" + e, {
             encoding: "utf-8"
@@ -2416,7 +2419,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e) {// Function 38 safeDecodeName (decodeURIComponent)
     "use strict";
-    AllFunctions(0)("Function 38").debug("");
+    AllFunctions(0)("Function 38").verbose("");
     e.exports = {
         safeDecodeName: function(e) {
             try {
@@ -2428,7 +2431,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 39  Router: routes.device
     "use strict";
-    AllFunctions(0)("Function 39").debug("");
+    AllFunctions(0)("Function 39").verbose("");
 
     function n(e) {
         return {
@@ -2467,7 +2470,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }), i.get("/", function(e, t) {
         /true/.test(e.query.nocomponents) ? t.json(e.room.getDevices().map(n)) : t.json(e.room.getDevices())
     }), i.get("/:device_key/subscribe", function(e, t, r) {
-        AllFunctions(0)("Function 39").debug("Router: route devices -subscribe");
+        AllFunctions(0)("Function 39").verbose("Router: route devices -subscribe");
         l.subscribe(e.device).then(() => {
             t.json(_)
         }).catch(r)
@@ -2476,7 +2479,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             t.json(_)
         }).catch(r)
     }), i.get("/:device_key/getdirectoryrootitems", function(e, t) {
-        AllFunctions(0)("Function 39").debug("Router: routes.device - getdirectoryrootitems");
+        AllFunctions(0)("Function 39").verbose("Router: routes.device - getdirectoryrootitems");
         e.device.getDirectoryRootItems().then(e => {
             t.json(e)
         })
@@ -2608,7 +2611,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = require("crypto")
 }, function(e, t, r) {// Function 42 SETTINGSREPO; check various errors from e.message
     "use strict";
-    AllFunctions(0)("Function 42").debug("");
+    AllFunctions(0)("Function 42").verbose("");
 
     function n(e, t) {
         return u.load(l).then(r => {
@@ -2711,19 +2714,19 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 43 retrieve various localc stored variables (this.)
     "use strict";
-    AllFunctions(0)("Function 43").debug("");
+    AllFunctions(0)("Function 43").verbose("");
     const n = r(77),
         o = r(33),
         i = e.exports = function(e, t) {
             this.name = e, t.actions ? (this.actions = t.actions, this.component = null, 1 === t.actions.length && t.actions[0].label && (this.label = t.actions[0].label)) : (this.component = t.component, this.actions = null), this.execArg = t.execArg, this.delay = t.delay || 0, this.smartAction = "boolean" != typeof t.smartAction || t.smartAction
         };
     i.buildActionOfActions = function(e, t) {
-        AllFunctions(0)("Function 43").debug("buildActionOfActions");
+        AllFunctions(0)("Function 43").verbose("buildActionOfActions");
         return new i(e, {
             actions: t
         })
     }, i.buildActionOfComponent = function(e, t, r, s) {
-        AllFunctions(0)("Function 43").debug("buildActionOfComponent");
+        AllFunctions(0)("Function 43").verbose("buildActionOfComponent");
         const a = t && t.getDevice();
         if (n(s) && a) {
             const e = t.getName();
@@ -2736,7 +2739,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             delay: s
         })
     }, i.buildFavoriteAction = function(e, t, r) {
-        AllFunctions(0)("Function 43").debug("buildFavoriteAction");
+        AllFunctions(0)("Function 43").verbose("buildFavoriteAction");
         return new i(e, {
             component: t,
             delay: r,
@@ -2776,7 +2779,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 44 startNotificationListener (various), initialise pm2 statistics, reloadAvahi, disableAccesspointMode, UserBlink 
     "use strict";
-    AllFunctions(0)("Function 44").debug("");
+    AllFunctions(0)("Function 44").verbose("");
     const n = r(2),
         o = r(347),
         i = r(348),
@@ -2794,7 +2797,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
         wifi: g,
         finalsystemtest: c,
         startNotificationListener: function(e) {
-            AllFunctions(0)("Function 44").debug("StartNotificationListeners");
+            AllFunctions(0)("Function 44").verbose("StartNotificationListeners");
             l("startNotificationListener", d.NOTIFICATION_PROJECT_CHANGED), u.on(d.NOTIFICATION_PROJECT_CHANGED, () => {
                 l("avahi notification"), h.notificationProjectReload({
                     projectLabel: e.label,
@@ -2821,7 +2824,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 45 startNotificationListener
     "use strict";
-    AllFunctions(0)("Function 45").debug("");
+    AllFunctions(0)("Function 45").verbose("");
     const n = r(6)("cp6:lib:devicespecs:index"),
         o = r(56),
         i = r(2).devicespecs,
@@ -2834,7 +2837,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
         })
     }
 }, function(e, t, r) {// Function 46 neeo:viewbuilder / setCustomLogger
-    AllFunctions(0)("Function 46").debug("");
+    AllFunctions(0)("Function 46").verbose("");
 
 
     "use strict";
@@ -2886,7 +2889,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = require("lodash/merge")
 }, function(e, t, r) {// Function 49 Macro interfaces
     "use strict";
-    AllFunctions(0)("Function 49").debug("");
+    AllFunctions(0)("Function 49").verbose("");
     const n = r(11),
         o = r(0)("Macro"),
         i = r(23),
@@ -2942,7 +2945,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 50 implementation of getDevice, getComponentType, triggered
     "use strict";
-    AllFunctions(0)("Function 50").debug("");
+    AllFunctions(0)("Function 50").verbose("");
     const n = r(11),
         o = r(22),
         i = r(3),
@@ -2960,7 +2963,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 51 implementation of reloadSchedulerService, buildRecipe, getRecipeCookBook
     "use strict";
-    AllFunctions(0)("Function 51").debug("");
+    AllFunctions(0)("Function 51").verbose("");
     const n = r(280),
         o = r(79),
         i = r(146),
@@ -2982,7 +2985,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }, e.exports.TYPE_LAUNCH = s.TYPE_LAUNCH, e.exports.TYPE_POWEROFF = s.TYPE_POWEROFF, e.exports.STEP_TYPE_CONTROLS = o.TYPE_CONTROLS, e.exports.STEP_TYPE_ACTION = s.STEP_TYPE_ACTION
 }, function(e, t, r) {// Function 52 o = new(r(305))(r(2).actionexecutor);
     "use strict";
-    AllFunctions(0)("Function 52").debug("");
+    AllFunctions(0)("Function 52").verbose("");
     const n = r(2).actionexecutor,
         o = new(r(305))(n);
     e.exports = o
@@ -2992,11 +2995,11 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = require("parse/node")
 }, function(e) {// Function 55 various "TYPE" definitions
     "use strict";
-    //AllFunctions(0)("Function 53").debug("");
+    //AllFunctions(0)("Function 53").verbose("");
     e.exports.TYPE_ARRAY = "array", e.exports.TYPE_RANGE = "range", e.exports.TYPE_BINARY = "binary", e.exports.TYPE_KEYPAD = "keypad", e.exports.TYPE_STRING = "string", e.exports.TYPE_CUSTOM = "custom", e.exports.TYPE_POWERSTATE = "power", e.exports.RECIPE_SUPPORTED_TYPES = [e.exports.TYPE_RANGE, e.exports.TYPE_BINARY, e.exports.TYPE_POWERSTATE], e.exports.TYPE_BINARY_TRUE = !0, e.exports.TYPE_BINARY_FALSE = !1, e.exports.SENSOR_BINARY_VALID_VALUES = [e.exports.TYPE_BINARY_TRUE, e.exports.TYPE_BINARY_FALSE]
 }, function(e, t) {// Function 56 DeviceFileManager ;set payhs for sync and synced
     "use strict";
-    AllFunctions(0)("Function 56").debug("");
+    AllFunctions(0)("Function 56").verbose("");
     const r = t.FILE_DEVICES = "devices.json",
         n = t.FILE_CHANNELS = "channels.json";
     t.FILE_LIST = [r, n];
@@ -3004,13 +3007,13 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     t.NOTIFICATION_SYNC = o + "sync", t.NOTIFICATION_SYNCED = o + "synced"
 }, function(e, t, r) {// Function 57 r(196))(r(2).store)
     "use strict";
-    AllFunctions(0)("Function 57").debug("");
+    AllFunctions(0)("Function 57").verbose("");
     const n = r(2),
         o = new(r(196))(n.store);
     e.exports = o
 }, function(e) {// Function 58 iconify function.
     "use strict";
-    AllFunctions(0)("Function 58").debug("");
+    AllFunctions(0)("Function 58").verbose("");
     e.exports = {
         iconify: function(e) {
             return void 0 === e || "string" != typeof e ? void 0 : e.toLowerCase()
@@ -3018,7 +3021,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 59 loadViewbuilderFile, viewbuilder
     "use strict";
-    AllFunctions(0)("Function 59").debug("");
+    AllFunctions(0)("Function 59").verbose("");
 
     function n(e) {
         return s.loadViewbuilderFile(`definitions/${e}.json`)
@@ -3072,7 +3075,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
 }, function(e) {// Function 60 implementation of getMacrosByNames, getMacrosByRegex, getGenericMacrosByRegex
     "use strict";
 
-    AllFunctions(0)("Function 60").debug("");
+    AllFunctions(0)("Function 60").verbose("");
     function t(e, t) {
         return e[t.name] = t, e
     }
@@ -3174,7 +3177,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = a
 }, function(e, t, r) {// Function 62 handler for sensors
     "use strict";
-    AllFunctions(0)("Function 62").debug("");
+    AllFunctions(0)("Function 62").verbose("");
     const n = r(1),
         o = r(11),
         i = r(0)("Sensor"),
@@ -3201,20 +3204,20 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }, u.prototype.getDeviceIcon = function() {
         return this.device ? this.device.getIconName().toLowerCase() : void 0
     }, u.prototype.setCachedValue = function(e) {
-        AllFunctions(0)("Function 62").debug("SetCachedValue ")
+        AllFunctions(0)("Function 62").verbose("SetCachedValue ")
         this._valueExpiration = void 0, i.debug("SENSOR_CACHED_VALUE_UPDATED", {
             name: this.name
         }), this._valuePromise = n.resolve(e)
     }, u.prototype.getCachedValue = function() {
-        AllFunctions(0)("Function 62").debug("GetCachedValue")
+        AllFunctions(0)("Function 62").verbose("GetCachedValue")
         return (this._valueExpiration == undefined || this._valueExpiration < Date.now()) && (i.debug("SENSOR_CACHED_EXPIRED"), this._valuePromise = void 0, this._valueExpiration = void 0), this._valuePromise ? this._valuePromise : (i.debug("SENSOR_CACHED_VALUE_NOT_SET", {
             name: this.name
         }),  this.getValue())
     }, u.prototype.getValue = function() {
-        AllFunctions(0)("Function 62").debug("getValue; now calling deviceadapter to get this value", this.name)
+        AllFunctions(0)("Function 62").verbose("getValue; now calling deviceadapter to get this value", this.name)
         return this._valuePromise = c.getValue(this), i.debug("SENSOR_CACHED_VALUE_USING_NEXT_GET_VALUE", { // ###
             name: this.name
-        }), this._valuePromise.catch(() => {AllFunctions(0)("Function 62").debug("Errcatch valuepromise");
+        }), this._valuePromise.catch(() => {AllFunctions(0)("Function 62").verbose("Errcatch valuepromise");
             this._valueExpiration = Date.now() + 6e4
         }),  this._valuePromise
     }, u.prototype.toJSON = function() {
@@ -3236,25 +3239,25 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 63 interval defaults
     "use strict";
-    AllFunctions(0)("Function 63").debug("");
+    AllFunctions(0)("Function 63").verbose("");
     const n = r(55);
     e.exports.VALID_INTERVAL_UNITS = {
         second: 1
     }, e.exports.MAXIMAL_INTERVAL_TIME_S = 2147482, e.exports.MINIMAL_INTERVAL_TIME_S = 60, e.exports.MAXIMAL_INTERVAL_TIME_MS = 2147483647, e.exports.MINIMAL_INTERVAL_TIME_MS = 6e4, e.exports.VALID_CONDITION_SENSOR_TYPES = [n.TYPE_POWERSTATE, n.TYPE_BINARY, n.TYPE_RANGE, n.TYPE_KEYPAD], e.exports.BINARY_SENSOR_TYPES = [n.TYPE_POWERSTATE, n.TYPE_BINARY], e.exports.CONDITION_COMPARISON_LT = "lt", e.exports.CONDITION_COMPARISON_GT = "gt", e.exports.CONDITION_COMPARISON_EQ = "equal", e.exports.CONDITION_SENSOR_COMPARISONS = [e.exports.CONDITION_COMPARISON_LT, e.exports.CONDITION_COMPARISON_GT, e.exports.CONDITION_COMPARISON_EQ], e.exports.VALID_BINARY_SENSOR_COMPARISONS = [e.exports.CONDITION_COMPARISON_EQ], e.exports.VALID_KEYPAD_SENSOR_COMPARISONS = [e.exports.CONDITION_COMPARISON_EQ], e.exports.CONDITION_TIME_COMPARISONS = [e.exports.CONDITION_COMPARISON_LT, e.exports.CONDITION_COMPARISON_GT], e.exports.CONDITION_TYPE_ICON = "icon", e.exports.CONDITION_TYPE_TIME = "time", e.exports.CONDITION_TYPE_INTERVAL = "interval", e.exports.CONDITION_TYPE_SENSOR = "sensor", e.exports.TRIGGER_CONDITION_TYPES = [e.exports.CONDITION_TYPE_ICON, e.exports.CONDITION_TYPE_TIME, e.exports.CONDITION_TYPE_INTERVAL, e.exports.CONDITION_TYPE_SENSOR], e.exports.OPTIONAL_CONDITION_TYPES = [e.exports.CONDITION_TYPE_TIME, e.exports.CONDITION_TYPE_SENSOR]
 }, function(e, t, r) {// Function 64 convert TR2-messages to/from coap communication ( called from (84)
     "use strict";
-    AllFunctions(0)("Function 64").debug("");
+    AllFunctions(0)("Function 64").verbose("");
     const n = r(0)("TR2_COAP_TRANSFORM"),
         o = r(380),
         i = r(163),
         s = r(114);
     e.exports = {
         answerForTr2: function(e, t) {
-            AllFunctions(0)("Function 64").debug("TR2 answerForTr2")
+            AllFunctions(0)("Function 64").verbose("TR2 answerForTr2")
 
             if (t && t.body && e) {
                 if (c(t)) {
-                    AllFunctions(0)("Function 64").debug("TR2 already xml",t.body)
+                    AllFunctions(0)("Function 64").verbose("TR2 already xml",t.body)
 
                     return n.debug("response is already xml, try to remove newlines and whitespaces between tags"), t.body.replace(/\>\s+</g, "><").replace(/\n/g, "")
                 }
@@ -3274,7 +3277,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             n.debug("no payload / payload.body / requestUrl")
         },
         transliterationToAscii: function(e) {
-            AllFunctions(0)("Function 64").debug("transliterationToAscii")
+            AllFunctions(0)("Function 64").verbose("transliterationToAscii")
 
             return e ? function(e) {
                 return e.split("").map(e => {
@@ -3284,7 +3287,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             }(e) : void 0
         },
         compress: function(e) {
-            AllFunctions(0)("Function 64-TR2").debug("deflatesync",e)
+            AllFunctions(0)("Function 64-TR2").verbose("deflatesync",e)
 
             return s.deflateSync(e)
         }
@@ -3321,7 +3324,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 66 TR2 get functions getTr2FunctionText, getTr2VisibleText, getTr2VisibleTextFromFunctionEncoded
     "use strict";
-    AllFunctions(0)("Function 66").debug("");
+    AllFunctions(0)("Function 66").verbose("");
     const n = r(406);
     e.exports = {
         getTr2FunctionText: function(e) {
@@ -3338,7 +3341,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 67 tr2-getsensorvalue 
     "use strict";
-    AllFunctions(0)("Function 67").debug("");
+    AllFunctions(0)("Function 67").verbose("");
     const n = r(0)("tr2-guidata-sensor");
     e.exports = {
         getSensorValue: function(e) {
@@ -3347,7 +3350,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
                 value: ""
             };
             const t = e.sensor;
-            AllFunctions(0)("Function 67").debug("calling t.getCachedValue() ( = F 62)");
+            AllFunctions(0)("Function 67").verbose("calling t.getCachedValue() ( = F 62)");
             return t.getCachedValue().then(t => ({
                 component: e,
                 value: t
@@ -3363,7 +3366,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 68 export new(r(437))
     "use strict";
-    AllFunctions(0)("Function 68").debug("")
+    AllFunctions(0)("Function 68").verbose("")
     const n = new(r(437));
     e.exports = n
 }, function(e) {// Function 69 exports = require("events")
@@ -3372,7 +3375,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = require("lodash/defaults")
 }, function(e, t, r) {// Function 71 key handler for NEEO.com
     "use strict";
-    AllFunctions(0)("Function 71").debug("")
+    AllFunctions(0)("Function 71").verbose("")
     const n = r(216),
         o = r(41),
         i = r(1),
@@ -3439,7 +3442,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 72 startNotificationListener for DeviceFileManager
     "use strict";
-    AllFunctions(0)("Function 72").debug("");
+    AllFunctions(0)("Function 72").verbose("");
     const n = r(2).devicefilemanager,
         o = r(225),
         i = r(56),
@@ -3454,7 +3457,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 73 generic comparison funcit0ns (not, or, and)
     "use strict";
-    AllFunctions(0)("Function 73").debug("");
+    AllFunctions(0)("Function 73").verbose("");
 
     function n(e) {
         return t => t instanceof Array ? !!t.length && t.some(e) : e(t)
@@ -3529,7 +3532,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = require("lodash/difference")
 }, function(e, t, r) {// Function 76 exports r(287))(r(2).firmware);
     "use strict";
-    AllFunctions(0)("Function 76").debug("");
+    AllFunctions(0)("Function 76").verbose("");
     const n = r(2).firmware,
         o = new(r(287))(n);
     e.exports = o
@@ -3539,7 +3542,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = require("fast-url-parser")
 }, function(e, t, r) {// Function 79 various functions for implementing recipestep
     "use strict";
-    AllFunctions(0)("Function 79").debug("");
+    AllFunctions(0)("Function 79").verbose("");
 
     function n(e) {
         this.label = e.label, this.validate()
@@ -3603,7 +3606,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
         if (!this.address) throw new Error("validation failed: `address` is missing");
         if (!this.text) throw new Error("validation failed: `text` is missing")
     }, o.prototype.execute = function() {
-        AllFunctions(0)("Function 79").debug("getAction");
+        AllFunctions(0)("Function 79").verbose("getAction");
         return p({
             getAction: () => ({
                 email: this.address,
@@ -3631,7 +3634,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
         if (!t) throw new Error("Could not execute `ActionStep`: device " + this.deviceKey + " not found");
         return t
     }, i.prototype.execute = function(e, t) {
-        AllFunctions(0)("Function 79").debug("execute");
+        AllFunctions(0)("Function 79").verbose("execute");
         const r = this.getDevice(t).getComponentByName(this.componentName, !0);
         if (!r) throw new Error("Could not execute `ActionStep`: component " + this.componentName + " not found");
         const n = this.execArg || r.execArg || null;
@@ -3700,7 +3703,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }, e.exports.TYPE_ACTION = i.TYPE, e.exports.TYPE_EMAIL = o.TYPE, e.exports.TYPE_DELAY = s.TYPE, e.exports.TYPE_VOLUME = a.TYPE, e.exports.TYPE_CONTROLS = c.TYPE
 }, function(e, t, r) {// Function 80 BaseTrigger
     "use strict";
-    AllFunctions(0)("Function 80").debug("");
+    AllFunctions(0)("Function 80").verbose("");
     const n = r(16),
         o = r(147);
     class i {
@@ -3733,7 +3736,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = i
 }, function(e, t, r) {// Function 81 various functions for implementing recipe
     "use strict";
-    AllFunctions(0)("Function 81").debug("");
+    AllFunctions(0)("Function 81").verbose("");
     const n = r(16),
         o = r(11),
         i = r(0)("recipe"),
@@ -3918,7 +3921,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 82 various functions for implementing ItemStore
     "use strict";
-    AllFunctions(0)("Function 82").debug("");
+    AllFunctions(0)("Function 82").verbose("");
     const n = r(16),
         o = r(22),
         i = e.exports = function(e) {
@@ -3977,7 +3980,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 83 projectnotification
     "use strict";
-    AllFunctions(0)("Function 83").debug("");
+    AllFunctions(0)("Function 83").verbose("");
     const n = r(10),
         o = r(25),
         i = r(6)("cp6:lib:projectnotification"),
@@ -4013,10 +4016,10 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 84 tr2coapserver (84)
     "use strict";
-    AllFunctions(0)("Function 84").debug("tr2coapserver");
+    AllFunctions(0)("Function 84").verbose("tr2coapserver");
 
     function n(e) {
-        AllFunctions(0)("Function 84").debug("handleWifiRequest=>443");
+        AllFunctions(0)("Function 84").verbose("handleWifiRequest=>443");
 
         return d.handleWifiRequest(e).catch(() => {})
     }
@@ -4047,7 +4050,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             })
         },
         startTask: function() {
-            AllFunctions(0)("Function 84").debug("START_TR2_SERVER");
+            AllFunctions(0)("Function 84").verbose("START_TR2_SERVER");
         
             i.debug("START_TR2_SERVER"), p.bind(), E.bind(), f.startNbrSync()
         },
@@ -4060,7 +4063,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }, E.on("ipv6coapaddress", e => {
         f.registerIpv6Address(e)
     }), E.on("serverstarted", () => {
-        AllFunctions(0)("Function 84").debug("TR2_COAPSERVER_STARTED");
+        AllFunctions(0)("Function 84").verbose("TR2_COAPSERVER_STARTED");
 
         i.debug("TR2_COAPSERVER_STARTED")
     }), E.on("error", e => {
@@ -4070,7 +4073,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }), E.on("invalidrequest", e => {
         i.warn("COAP_INVALID_PARAMETER", e)
     }), p.on("udprequest", (e, t) => {
-        AllFunctions(0)("Function 84").debug("TR2 Send UDP-request, payload",e.toString("utf8"),"from IP@",t.address + ":" + t.port)
+        AllFunctions(0)("Function 84").verbose("TR2 Send UDP-request, payload",e.toString("utf8"),"from IP@",t.address + ":" + t.port)
         i.debug("udp request from", t.address + ":" + t.port), n(e.toString("utf8"))
     }), p.on("serverstarted", e => {
         i.debug("TR2_UDPSERVER_STARTED", e)
@@ -4079,7 +4082,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     })
 }, function(e, t, r) {// Function 85  Router: routes.room 
     "use strict";
-    AllFunctions(0)("Function 85").debug("");
+    AllFunctions(0)("Function 85").verbose("");
     const n = r(5),
         o = r(14),
         i = n.Router(),
@@ -4155,7 +4158,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = require("lodash/isBoolean")
 }, function(e, t) {// Function 87 generic put/set/clear&getall functions
     "use strict";
-    AllFunctions(0)("Function 87").debug("");
+    AllFunctions(0)("Function 87").verbose("");
     const r = new Map,
         n = ".";
     t.put = function(e, t, o) {
@@ -4175,7 +4178,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = require("lodash/uniqBy")
 }, function(e, t, r) {// Function 89 deviceparser
     "use strict";
-    AllFunctions(0)("Function 89").debug("");
+    AllFunctions(0)("Function 89").verbose("");
     const n = r(18),
         o = r(14),
         i = r(218), 
@@ -4192,7 +4195,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             this.data = e.sourceData ? this._parseData(e.sourceData, this.sourceName, e.fallbackAdapterName) : e.data, this._validate()
         };
     l.prototype._parseData = function(e, t, r) {
-        AllFunctions(0)("Function 89").debug(" _parseData");
+        AllFunctions(0)("Function 89").verbose(" _parseData");
 
         const o = t === n.SOURCE_DUIRO ? s(e) : i(e),
             a = this._handleUnknownDevices(o, r);
@@ -4240,7 +4243,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 90 API: getAllRegisteredSdkAdapters
     "use strict";
-    AllFunctions(0)("Function 90").debug("");
+    AllFunctions(0)("Function 90").verbose("");
 
     function n() {
         const e = E.getRegisteredAdapters();
@@ -4355,7 +4358,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 91 deviceUpdate
     "use strict";
-    AllFunctions(0)("Function 91").debug("");
+    AllFunctions(0)("Function 91").verbose("");
     const n = r(21),
         o = r(256),
         i = r(264),
@@ -4380,13 +4383,13 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             clearInterval(c), c = void 0
         },
         checkForAndUpdateDevice: function(e) {
-            AllFunctions(0)("Function 92").debug("checkForAndUpdateDevice");
+            AllFunctions(0)("Function 92").verbose("checkForAndUpdateDevice");
             return e.hasCapability(n.SOURCE_DUIRO) ? o.checkForAndUpdateDevice(e) : e.hasCapability(n.SOURCE_SDK_ADAPTER) ? i.checkForAndUpdateDevice(e) : Promise.reject(new Error("DEVICE_UPDATE_FAILED"))
         }
     }
 }, function(e, t, r) {// Function 92 API: getScenarioViewStructure, generateDeviceViewStructure, getScenarioSlides
     "use strict";
-    AllFunctions(0)("Function 92").debug("");
+    AllFunctions(0)("Function 92").verbose("");
 
     function n(e) {
         return e.getDevices().reduce((e, t) => (e[t.key] = d.getWidgetsForDevice(t), e), {})
@@ -4427,9 +4430,9 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
         getWidgetsForDevice: d.getWidgetsForDevice,
         getWidgetByName: d.getWidgetByName,
         getScenarioViewStructure: function(e, t) {
-            AllFunctions(0)("Function 92").debug("getScenarioViewStructure");
+            AllFunctions(0)("Function 92").verbose("getScenarioViewStructure");
 //var xxx = n(e);
-//            AllFunctions(0)("Function 92").debug("getScenarioViewStructure xxx",xxx);
+//            AllFunctions(0)("Function 92").verbose("getScenarioViewStructure xxx",xxx);
             const r = n(e),
                 i = c.getSlides(e, r, e.mainDeviceKey),
                 {
@@ -4457,15 +4460,15 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             return a.getDuiStructure(u, s)
         },
         getScenarioSlides: function(e) {
-            AllFunctions(0)("Function 92").debug("getScenarioSlides");
+            AllFunctions(0)("Function 92").verbose("getScenarioSlides");
             const t = n(e);
-            AllFunctions(0)("Function 92").debug("getScenarioSlides",t);
+            AllFunctions(0)("Function 92").verbose("getScenarioSlides",t);
             return c.getSlideDescriptions(e, t, e.mainDeviceKey).map(t => Object.assign({}, t, e.slides[t.id]))
         }
     }
 }, function(e, t, r) {// Function 93 API: getKeymappingForDevice, loadDefinitions
     "use strict";
-    AllFunctions(0)("Function 93").debug("");
+    AllFunctions(0)("Function 93").verbose("");
     const n = r(231),
         o = r(232);
     e.exports = {
@@ -4594,7 +4597,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = s
 }, function(e, t, r) {// Function 98 device directory
     "use strict";
-    AllFunctions(0)("Function 98").debug("");
+    AllFunctions(0)("Function 98").verbose("");
     const n = r(11),
         o = r(22),
         i = r(20).directoryAdapter,
@@ -4705,17 +4708,17 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 99 exports = new r(289)r(57)
     "use strict";
-    AllFunctions(0)("Function 99").debug("");
+    AllFunctions(0)("Function 99").verbose("");
     const n = r(57),
         o = r(289);
     e.exports = new o(n)
 }, function(e) {// Function 100 some generic IR-definitions
     "use strict";
-    AllFunctions(0)("Function 100").debug("");
+    AllFunctions(0)("Function 100").verbose("");
     e.exports.IR_PAYLOAD_TYPE_NOP = 0, e.exports.IR_PAYLOAD_TYPE_SIMPLE = 1, e.exports.IR_PAYLOAD_TYPE_OFFSET = 2, e.exports.IR_PAYLOAD_TYPE_TOGGLE = 3, e.exports.MAX_IRREPEAT = 31, e.exports.IR_MAX_FREQ = 5e5, e.exports.IR_MIN_FREQ = 2e4, e.exports.MAX_SEQUENCE_ENTRIES = 500, e.exports.MAX_DURATION_MS = 8e3
 }, function(e, t, r) {// Function 101 functions for implemene=ting forward host
     "use strict";
-    AllFunctions(0)("Function 101").debug("");
+    AllFunctions(0)("Function 101").verbose("");
     const n = new(r(315)),
         o = r(42);
     e.exports.clear = function() {
@@ -4737,7 +4740,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 102 getters for conditions and actions
     "use strict";
-    AllFunctions(0)("Function 102").debug("");
+    AllFunctions(0)("Function 102").verbose("");
     const n = r(16),
         o = r(9),
         i = r(147),
@@ -4761,12 +4764,12 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 103 exports r(331)
     "use strict";
-    AllFunctions(0)("Function 103").debug("");
+    AllFunctions(0)("Function 103").verbose("");
     const n = r(331);
     e.exports = n
 }, function(e, t, r) {// Function 104 ResourceprefetcherFacade: startNotificationListener "project change notify" fetch tr2 xml files
     "use strict";
-    AllFunctions(0)("Function 104").debug("");
+    AllFunctions(0)("Function 104").verbose("");
     const n = r(17),
         o = r(2),
         i = r(371),
@@ -4791,7 +4794,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 105 shortenUrls
     "use strict";
-    AllFunctions(0)("Function 105").debug("");
+    AllFunctions(0)("Function 105").verbose("");
     const n = r(2),
         o = new(r(384))(n.urlshortener);
     e.exports = o;
@@ -4801,7 +4804,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 106 tr2-keyboardMappings
     "use strict";
-    AllFunctions(0)("Function 106").debug("");
+    AllFunctions(0)("Function 106").verbose("");
 
     function n(e) {
         let t = "";
@@ -4825,7 +4828,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 107 tr2-DynamicSlideFactory"
     "use strict";
-    AllFunctions(0)("Function 107").debug("");
+    AllFunctions(0)("Function 107").verbose("");
     const n = r(0)("tr2-DynamicSlideFactory"),
         o = r(412),
         i = r(7),
@@ -4878,7 +4881,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 108  Router: allow external access to project-fields
     "use strict";
-    AllFunctions(0)("Function 108").debug("");
+    AllFunctions(0)("Function 108").verbose("");
     const n = r(127),
         o = r(5),
         i = r(0)("routes.project"),
@@ -4889,7 +4892,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
         d = r(55),
         l = o.Router();
     l.param("project_key", function(e, t, r, n) {
-        AllFunctions(0)("Function 108").debug("l.param('project_key')");
+        AllFunctions(0)("Function 108").verbose("l.param('project_key')");
 
         a.get(n).then(t => {
             e.project = t, r()
@@ -4901,26 +4904,26 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             }), r(t)
         })
     }), l.get("/", function(e, t, r) {
-        AllFunctions(0)("Function 108").debug(" get / not implemented");
+        AllFunctions(0)("Function 108").verbose(" get / not implemented");
         r(new Error("not implemented"))
     }), l.get("/checkAirkey", function(e, t) {
-        AllFunctions(0)("Function 108").debug("get checkAirKey");
+        AllFunctions(0)("Function 108").verbose("get checkAirKey");
         const r = e.query.airkey;
-        a.checkAirkey(r).then(() => {AllFunctions(0)("Function 108").debug("airkey ok"),
+        a.checkAirkey(r).then(() => {AllFunctions(0)("Function 108").verbose("airkey ok"),
             t.status(200).send("OK")
         }).catch(() => { 
             //t.status(200).send("NOT_THE_BRAIN_YOU_ARE_LOOKING_FOR")
             t.status(200).send("OK")
         })
     }), l.get("/:project_key/gdpr", function(e, t) {
-        AllFunctions(0)("Function 108").debug("get project gdpr");
+        AllFunctions(0)("Function 108").verbose("get project gdpr");
 
         const r = e.project.gdprAccepted;
         return t.status(200).json({
             accepted: r
         })
     }), l.post("/:project_key/gdpr", function(e, t) {
-        AllFunctions(0)("Function 108").debug("post gdpr");
+        AllFunctions(0)("Function 108").verbose("post gdpr");
 
         e.project.acceptGDPR().then(() => {
             i.info("GDPR_ACCEPTED"), t.json({
@@ -4936,13 +4939,13 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             })
         })
     }), l.get("/:project_key/configured", function(e, t) {
-        AllFunctions(0)("Function 108").debug("get project_key configured");
+        AllFunctions(0)("Function 108").verbose("get project_key configured");
 
         t.json({
             configured: e.project.isConfigured()
         })
     }), l.get("/:project_key/activate", function(e, t) {
-        AllFunctions(0)("Function 108").debug("get project_key activate");
+        AllFunctions(0)("Function 108").verbose("get project_key activate");
 
         e.project.activate().then(() => {
             i.debug("PROJECT_ACTIVATED"), t.json({
@@ -4956,18 +4959,18 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             }), t.status(500).json(s(r, "project_activate"))
         })
     }), l.get("/:project_key/scheduleactivation", function(e, t) {
-        AllFunctions(0)("Function 108").debug("get project_key schedule activateion");
+        AllFunctions(0)("Function 108").verbose("get project_key schedule activateion");
 
         e.project.scheduleActivation(), t.json({})
     }), l.get("/:project_key/devices", function(e, t) {
-        AllFunctions(0)("Function 108").debug("get project_key devices");
+        AllFunctions(0)("Function 108").verbose("get project_key devices");
 
         const r = e.query.capability,
             n = e.query.roomKey;
         let o = e.project;
         return n && (o = e.project.getRoomByKey(n)), r ? t.json(o.getDevicesWithCapability(r)) : t.json(o.getDevices())
     }), l.get("/:project_key/discoverNewDevices/:sourceName/:adapterName/", function(e, t) {
-        AllFunctions(0)("Function 108").debug("get project_key discovernewdevices");
+        AllFunctions(0)("Function 108").verbose("get project_key discovernewdevices");
         const r = e.params.sourceName,
             n = e.params.adapterName,
             o = e.project.getDevices();
@@ -5006,17 +5009,17 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }), l.get("/:project_key/directories", function(e, t) {
         t.json(e.project.getDirectories())
     }), l.get("/:project_key/sensors", function(e, t) {
-        AllFunctions(0)("Function 108").debug("get project_key getsensors");
+        AllFunctions(0)("Function 108").verbose("get project_key getsensors");
 
         t.json(e.project.getSensors(e => d.RECIPE_SUPPORTED_TYPES.includes(e.type)))
     }), l.get("/:project_key/sensorvalue/:eventKey", function(e, t) {
-        AllFunctions(0)("Function 108").debug("get project_key getsensor value");
+        AllFunctions(0)("Function 108").verbose("get project_key getsensor value");
         const r = e.params.eventKey,
             n = e.project.getSensors(e => e.eventKey === r)[0];
         n || t.status(500).json(s(r, "sensor_eventkey"));
         const o = n.device && n.device.details && "zwave" === n.device.details.adapterName;
         n.getValue().then(e => {
-            AllFunctions(0)("Function 108").debug("get project_key getsensor value ",e);
+            AllFunctions(0)("Function 108").verbose("get project_key getsensor value ",e);
 
             t.json({
                 value: e
@@ -5059,7 +5062,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }), e.exports = l
 }, function(e, t, r) {// Function 109 addevent, clear and getallevents
     "use strict";
-    //AllFunctions(0)("Function 109").debug("");
+    //AllFunctions(0)("Function 109").verbose("");
     const n = new(r(183))(r(2).log.eventsBufferSize || 64);
     e.exports.addEvent = function(e) {
         n.addEntry(e)
@@ -5076,7 +5079,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = require("glob")
 }, function(e, t, r) {// Function 113 readAsync from MAC address
     "use strict";
-    //AllFunctions(0)("Function 113").debug("");
+    //AllFunctions(0)("Function 113").verbose("");
     const n = r(208).getMac,
         o = r(0)("SystemInfoMac"),
         i = r(1);
@@ -5091,7 +5094,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = require("zlib")
 }, function(e, t, r) {// Function 115 Session-info
     "use strict";
-    //AllFunctions(0)("Function 115").debug("");
+    //AllFunctions(0)("Function 115").verbose("");
 
     function n() {
         p = void 0, h = void 0, g = void 0
@@ -5136,7 +5139,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 116 validateBrowseResult 
     "use strict";
-    //AllFunctions(0)("Function 116").debug("");
+    //AllFunctions(0)("Function 116").verbose("");
     const n = r(2),
         o = r(14),
         i = n.tr2.listPageSize;
@@ -5176,7 +5179,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = require("lodash/isObject")
 }, function(e, t, r) {// Function 118 getSpotifyInfoForSonosProcedureIfNecessary
     "use strict";
-    //AllFunctions(0)("Function 118").debug("");
+    //AllFunctions(0)("Function 118").verbose("");
 
     function n() {
         return u ? u.getUserData("spotify").then(e => (d = e.username, d)).catch(() => {
@@ -5203,7 +5206,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 119 API Adapter Store"
     "use strict";
-    //AllFunctions(0)("Function 119").debug("");
+    //AllFunctions(0)("Function 119").verbose("");
     const n = r(69),
         o = r(0)("API Adapter Store"),
         i = r(3),
@@ -5221,6 +5224,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             return r && r.protected && r.baseUrl !== e.baseUrl ? (i.increaseCounter("sdkadapter-invalid-overwrite"), !0) : void 0
         }
         register(e) {
+            o.debug("Request to register SDK_ADAPTER", e )
             if (!e || !e.name || !e.baseUrl) return i.increaseCounter("sdkadapter-register-invalid-empty"), !1;
             if (this.sdkAdapters.size >= c) return o.debug("MAXIMAL_SDK_ADAPTER_COUNT_EXCEEDED", {
                 count: this.sdkAdapters.size
@@ -5266,14 +5270,14 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 120 constant containing ALLOWED_ICON_NAMES
     "use strict";
-    //AllFunctions(0)("Function 120").debug("");
+    //AllFunctions(0)("Function 120").verbose("");
     const n = r(19);
     t.ALLOWED_ICON_NAMES = [...n.TYPES.map(e => e.toLowerCase()), "appletv", "sonos", "neeo-brain"]
 }, function(e) {// Function 121 exports = require("tokensearch.js")
     e.exports = require("tokensearch.js")
 }, function(e, t, r) {// Function 122 DeviceSpecsSource
     "use strict";
-    //AllFunctions(0)("Function 122").debug("");
+    //AllFunctions(0)("Function 122").verbose("");
     const n = r(1),
         o = r(89),
         i = r(0)("DeviceSpecsSource"),
@@ -5281,19 +5285,19 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             i.debug("init:", e), this.id = e.id, this.name = e.name, this.type = e.type
         };
     s.parseId = function(e) {
-        AllFunctions(0)("Function 122").debug("parseId");
+        AllFunctions(0)("Function 122").verbose("parseId");
         return {
             sourceIdx: parseInt(e[0], 10),
             specId: e.slice(1)
         }
     }, s.prototype.getName = function() {
-        //AllFunctions(0)("Function 122").debug("getName");
+        //AllFunctions(0)("Function 122").verbose("getName");
         return this.name
     }, s.prototype._generateId = function(e) {
-        AllFunctions(0)("Function 122").debug("generateId");
+        AllFunctions(0)("Function 122").verbose("generateId");
         return this.id + e
     }, s.prototype.search = function(e) {
-        AllFunctions(0)("Function 122").debug("search");
+        AllFunctions(0)("Function 122").verbose("search");
         return this._search(e).then(e => (e = e || [], e.map(e => new o({
             sourceData: e.item,
             sourceName: this.getName(),
@@ -5303,24 +5307,24 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             }
         }))))
     }, s.prototype.getFullSpec = function(e, t) {
-        AllFunctions(0)("Function 122").debug("getFullSpec e",e);
-        AllFunctions(0)("Function 122").debug("getFullSpec t",t);
+        AllFunctions(0)("Function 122").verbose("getFullSpec e",e);
+        AllFunctions(0)("Function 122").verbose("getFullSpec t",t);
         return e && "undefined" !== e ? 
-        (AllFunctions(0)("Function 122").debug("getFullSpec calling  _getFullSpec(e)"),
+        (AllFunctions(0)("Function 122").verbose("getFullSpec calling  _getFullSpec(e)"),
             this._getFullSpec(e).then(t => {
                 if (!t) throw new Error("full spec not found: " + e);
                 return this.createNewDeviceSpec(t)
             })) 
             : n.resolve(this.createNewDeviceSpec({}, t))
     }, s.prototype.createNewDeviceSpec = function(e, t) {
-        AllFunctions(0)("Function 122").debug("createNewDeviceSpec");
+        AllFunctions(0)("Function 122").verbose("createNewDeviceSpec");
         return new o({
             sourceData: e,
             sourceName: this.getName(),
             fallbackAdapterName: t
         })
     }, s.prototype.getSpec = function(e) {
-        AllFunctions(0)("Function 122").debug("getSpec");
+        AllFunctions(0)("Function 122").verbose("getSpec");
         return this._getSpec(e).then(t => {
             if (!t) throw new Error("spec not found: " + e);
             return new o({
@@ -5336,10 +5340,10 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }, s.prototype._search = function() {
         throw new Error("to be implemented")
     }, s.prototype._getFullSpec = function() {
-        AllFunctions(0)("Function 122").debug("_getFullSpec");
+        AllFunctions(0)("Function 122").verbose("_getFullSpec");
         throw new Error("to be implemented")
     }, s.prototype._getSpec = function() {
-        AllFunctions(0)("Function 122").debug("_getSpec");
+        AllFunctions(0)("Function 122").verbose("_getSpec");
         throw new Error("to be implemented")
     }, s.prototype._getCapabilities = function() {
         throw new Error("to be implemented")
@@ -5356,7 +5360,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = require("lodash/find")
 }, function(e) {// Function 128 functions increaseCounter and  setStatisticsModule
     "use strict";
-    AllFunctions(0)("Function 128").debug("")
+    AllFunctions(0)("Function 128").verbose("")
     let t;
     e.exports = {
         increaseCounter: function(e) {
@@ -5368,7 +5372,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e) {// Function 129 addDataToWidget, match and getAdditionalInfo
     "use strict";
-    AllFunctions(0)("Function 129").debug("");
+    AllFunctions(0)("Function 129").verbose("");
 
     function t(e, t, s) {
         const a = r(s),
@@ -5423,7 +5427,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = require("lodash/flatMap")
 }, function(e, t, r) {// Function 131 verify sourcename = SOURCE_DUIRO
     "use strict";
-    //AllFunctions(0)("Function 131").debug("");
+    //AllFunctions(0)("Function 131").verbose("");
 
     function n(e, t) {
         function r(e, r) {
@@ -5551,7 +5555,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e) {// Function 132 getConnections, getPresetSettings, getHDMIVersion, getCommandSetInfos
     "use strict";
-    AllFunctions(0)("Function 132").debug("")
+    AllFunctions(0)("Function 132").verbose("")
 
     function t(e) {
         return e.map(e => e.type.replace(r, ""))
@@ -5567,21 +5571,21 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
         },
         i = ["input", "output"];
     e.exports = {
-        getConnections: function(e) {AllFunctions(0)("Function 132").debug("getconnections");
+        getConnections: function(e) {AllFunctions(0)("Function 132").verbose("getconnections");
             const r = Object.assign({}, n, e.connections);
             return i.reduce((e, n) => (e[o[n]] = t(r[n]), e), {})
         },
-        getPresetSettings: function(e) {AllFunctions(0)("Function 132").debug("getPresetSettingd");
+        getPresetSettings: function(e) {AllFunctions(0)("Function 132").verbose("getPresetSettingd");
             const t = e.type.toLowerCase(),
                 r = e[t];
             return r ? r.presetSettings : void 0
         },
-        getHDMIVersion: function(e) {AllFunctions(0)("Function 132").debug("getHDMI Version");
+        getHDMIVersion: function(e) {AllFunctions(0)("Function 132").verbose("getHDMI Version");
             const t = e.type.toLowerCase(),
                 r = e[t];
             return r ? r.hdmiVersion : void 0
         },
-        getCommandSetInfos: function(e) {AllFunctions(0)("Function 132").debug("getCommnandSetInfo");
+        getCommandSetInfos: function(e) {AllFunctions(0)("Function 132").verbose("getCommnandSetInfo");
             return (e.commandSets || []).map(e => {
                 return {
                     name: e.name,
@@ -5594,7 +5598,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 133 ComponentFactory: parser for various component-types
     "use strict";
-    //AllFunctions(0)("Function 133").debug("");
+    //AllFunctions(0)("Function 133").verbose("");
 
     function n(e) {
         return {
@@ -5897,7 +5901,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
         s = o.hostname(),
         a = o.firmwareVersion();
     e.exports = function(e) {
-        AllFunctions(0)("Function 136").debug("Send email from recipe")
+        AllFunctions(0)("Function 136").verbose("Send email from recipe")
         const t = e.getAction(),
             r = t.message.replace("%NEEO_HOSTNAME%", s).replace("%NEEO_FIRMWARE%", a),
             o = e.getName();
@@ -5919,13 +5923,13 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = require("semver")
 }, function(e) {// Function 140 fill some TOUCHBUTTON fields
     "use strict";
-    AllFunctions(0)("Function 140").debug("");
+    AllFunctions(0)("Function 140").verbose("");
     e.exports.NOTIFICATION_TOUCHBUTTONPRESSED = "touchbuttonpressed", e.exports.NOTIFICATION_LONG_TOUCHBUTTONPRESSED = "longtouchbuttonpressed"
 }, function(e) {// Function 141 exports = require("ip-address")
     e.exports = require("ip-address")
 }, function(e, t, r) {// Function 142 getI18nDirectory and r(308)
     "use strict";
-    AllFunctions(0)("Function 142").debug("");
+    AllFunctions(0)("Function 142").verbose("");
     const n = r(37).getI18nDirectory(),
         o = r(308);
     o.configure({
@@ -5935,7 +5939,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }), e.exports = o
 }, function(e, t, r) {// Function 143 create structure for using irblaster
     "use strict";
-    AllFunctions(0)("Function 143").debug("");
+    AllFunctions(0)("Function 143").verbose("");
     const n = r(144),
         o = r(20).deviceAdapter,
         i = new(r(312))({
@@ -5945,7 +5949,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = i
 }, function(e, t, r) {// Function 144 functions for communicating irblaster
     "use strict";
-    AllFunctions(0)("Function 144").debug("");
+    AllFunctions(0)("Function 144").verbose("");
     const n = r(2).irblaster,
         o = r(309),
         i = r(310),
@@ -5974,7 +5978,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 145 Global Cache getter/putter variables 
     "use strict";
-    AllFunctions(0)("Function 145").debug("global cache");
+    AllFunctions(0)("Function 145").verbose("global cache");
 
     function n(e) {
         return e > i.MAX_IRREPEAT ? i.MAX_IRREPEAT : e
@@ -6029,7 +6033,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }, e.exports = s
 }, function(e, t, r) {// Function 146 recipe trigger
     "use strict";
-    AllFunctions(0)("Function 146").debug("")
+    AllFunctions(0)("Function 146").verbose("")
     const n = r(318),
         o = r(319),
         i = r(320),
@@ -6046,7 +6050,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }, e.exports.TYPE_ICON = n.TYPE, e.exports.TYPE_SENSOR = o.TYPE, e.exports.TYPE_TIME = i.TYPE, e.exports.TYPE_INTERVAL = s.TYPE
 }, function(e, t, r) {// Function 147 recipeconditionvalidator
     "use strict";
-    AllFunctions(0)("Function 147").debug("");
+    AllFunctions(0)("Function 147").verbose("");
     const n = r(16),
         o = r(0)("recipeconditionvalidator"),
         i = r(14),
@@ -6054,7 +6058,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
         a = r(8),
         c = {};
     c.validateCondition = function(e) {
-        AllFunctions(0)("Function 147").debug("validateCondition");
+        AllFunctions(0)("Function 147").verbose("validateCondition");
         if (!n.isObject(e) || !n.isString(e.type)) return !1;
         switch (e.type) {
             case "interval":
@@ -6094,7 +6098,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
                 return !1
         }
         return !0
-    }, c.validateAction = function(e) { AllFunctions(0)("Function 147").debug("validateAction:")
+    }, c.validateAction = function(e) { AllFunctions(0)("Function 147").verbose("validateAction:")
         if (!n.isObject(e) || !n.isString(e.type)) return !1;
         const t = e.type;
         switch (t) {
@@ -6122,7 +6126,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }, e.exports = c
 }, function(e) {// Function 148 class BaseCondition
     "use strict";
-    AllFunctions(0)("Function 148").debug("")
+    AllFunctions(0)("Function 148").verbose("")
     class t {
         constructor(e) {
             if (this.constructor === t) throw new Error("Cannot instantiate abstract class BaseCondition");
@@ -6147,7 +6151,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = t
 }, function(e, t, r) {// Function 149 various functions for scenario and recipe
     "use strict";
-    AllFunctions(0)("Function 149").debug("")
+    AllFunctions(0)("Function 149").verbose("")
     const n = r(29),
         o = r(77),
         i = r(150),
@@ -6372,7 +6376,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = require("lodash/isFunction")
 }, function(e, t, r) {// Function 151 various functions for room
     "use strict";
-    AllFunctions(0)("Function 151").debug("")
+    AllFunctions(0)("Function 151").verbose("")
 
     function n(e, t, r, n) {
         s(n[t]).forEach(n => {
@@ -6774,7 +6778,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 152 getters for Channel-data
     "use strict";
-    AllFunctions(0)("Function 152").debug("")
+    AllFunctions(0)("Function 152").verbose("")
     const n = r(16),
         o = /\d+(\D\d+)?/,
         i = function(e) {
@@ -6791,15 +6795,15 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }, i.prototype.getChannelNr = function() {
         return this.channelNr
     }, i.prototype.getLogoURL = function() {
-        AllFunctions(0)("Function 151").debug("getLogoURL:",this.channel)
+        AllFunctions(0)("Function 151").verbose("getLogoURL:",this.channel)
         //"logoURL":"https://neeo-channel-icons.s3.amazonaws.com/e9364489-00e7-4a28-a127-f010df459eca.png"}
         
         var normalizedChannel = this.channel.name.split(' ')
-        AllFunctions(0)("Function 151").debug("getLogoURL:",normalizedChannel)
+        AllFunctions(0)("Function 151").verbose("getLogoURL:",normalizedChannel)
         normalizedChannel = normalizedChannel.join('_')
         var logoType = this.channel.logoUrl.split("/")
         var myname = logoType[3]
-//        AllFunctions(0)("Function 152").debug("Logotype:",myname)
+//        AllFunctions(0)("Function 152").verbose("Logotype:",myname)
         var extensionPos = myname.indexOf(".") 
         var theReturn = CloudReplacementUrl  +"?type=images&name="+normalizedChannel+myname.substring(extensionPos,99)
         return theReturn 
@@ -6807,7 +6811,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 153 scenario-build
     "use strict";
-    AllFunctions(0)("Function 153").debug("")
+    AllFunctions(0)("Function 153").verbose("")
 
     function n(e) {
         const t = e.details.type;
@@ -7047,7 +7051,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 154 fields for shortcut.dvd"
     "use strict";
-    AllFunctions(0)("Function 154").debug("")
+    AllFunctions(0)("Function 154").verbose("")
     const n = r(11),
         o = r(22),
         i = r(8),
@@ -7192,7 +7196,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }, e.exports = a
 }, function(e, t, r) {// Function 155 loadLatestProject, restoreProject, restoreCloudBackup, saveProject, getProjectVersions
     "use strict";
-    AllFunctions(0)("Function 155").debug("")
+    AllFunctions(0)("Function 155").verbose("")
 
     function n(e) {
         return i(e).then(e => {
@@ -7238,8 +7242,8 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             })
         },
         saveProject: function(e) {
-            AllFunctions(0)("Function 155").debug("saveProject")
-            const t = [e.getConfig(), p.getConfig(), h.getConfig(), AllFunctions(0)("Function 155").debug("saveProject, g:",g),
+            AllFunctions(0)("Function 155").verbose("saveProject")
+            const t = [e.getConfig(), p.getConfig(), h.getConfig(), AllFunctions(0)("Function 155").verbose("saveProject, g:",g),
                 g ? (u.debug("SAVED_HASH_USING_CACHE", g), g) : (u.debug("SAVED_HASH_NOT_YET_LOADED"), g = d.loadLatest().catch(() => ({})).then(e => {
                 const t = o(JSON.stringify(e));
                 return u.debug("SAVED_HASH_LOADED_FROM_REPO", {
@@ -7272,15 +7276,15 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
         },
         checkAirkey: function(e, t) {
             const r = e.airkey;
-            console.log(e)
-            AllFunctions(0)("Function 155").debug("checkAirKey",c.h64(r, 42).toString(16));
-            AllFunctions(0)("Function 155").debug("Result",{"TR2 uses brain airkey":t,"Brain uses airkey":c.h64(r, 42).toString(16),baseId:r})           
+//            console.log(e)
+            AllFunctions(0)("Function 155").verbose("checkAirKey",c.h64(r, 42).toString(16));
+            AllFunctions(0)("Function 155").verbose("Result",{"TR2 uses brain airkey":t,"Brain uses airkey":c.h64(r, 42).toString(16),baseId:r})           
             return t === c.h64(r, 42).toString(16) ? a.resolve() : a.reject(new Error("AIRKEY_NOT_MATCH"))
         }
     }
 }, function(e, t, r) {// Function 156 deviceAddToRoomBySpec
     "use strict";
-    AllFunctions(0)("Function 156").debug("")
+    AllFunctions(0)("Function 156").verbose("")
     const n = r(0)("deviceAddToRoomBySpec"),
         o = r(45),
         i = r(89),
@@ -7319,7 +7323,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
         }
 }, function(e, t, r) {// Function 157 schedule periodical backup.synchronizeLocalAndRemoteBackup
     "use strict";
-    AllFunctions(0)("Function 157").debug("backup/synchronizelocalandremotebackup")
+    AllFunctions(0)("Function 157").verbose("backup/synchronizelocalandremotebackup")
     const n = r(2).backup,
         o = r(342),
         i = r(6)("cp6:lib:backup:index"),
@@ -7331,7 +7335,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 158 startNotificationListener channel notification 
     "use strict";
-    AllFunctions(0)("Function 158").debug("startNotificationListener")
+    AllFunctions(0)("Function 158").verbose("startNotificationListener")
     const n = r(343),
         o = r(10),
         i = r(56),
@@ -7344,7 +7348,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 159 homekit resetPairingData and startNotificationListener update project data
     "use strict";
-    AllFunctions(0)("Function 159").debug("homekit resetPairingData")
+    AllFunctions(0)("Function 159").verbose("homekit resetPairingData")
 
     function n() {
         o("refresh data for homekit"), u.getAllRecipes().then(e => {
@@ -7380,7 +7384,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 160 getUrlPath getLazyUrlPath
     "use strict";
-    AllFunctions(0)("Function 160").debug("getURLPath, getLazyURLPath")
+    AllFunctions(0)("Function 160").verbose("getURLPath, getLazyURLPath")
 
     function n(e) {
 
@@ -7394,7 +7398,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
         SysInfo = r(12),
         i = ["jpg", "lz4", "lz4-black", "png"];
     t.getUrlPath = function(e, t) { 
-        AllFunctions(0)("Function 160").debug("getURLPath",e)
+        AllFunctions(0)("Function 160").verbose("getURLPath",e)
         if (!e) return "";
         const r = n(t),
             o = r.imageFormat ? "format/" + r.imageFormat + "/" : "";
@@ -7406,7 +7410,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
 
         return "v1/imagecache/get/" + o + encodeURIComponent(e)
     }, t.getLazyUrlPath = function(e, t) { 
-        AllFunctions(0)("Function 160").debug("getLazyURLPath")
+        AllFunctions(0)("Function 160").verbose("getLazyURLPath")
 
         if (!e) return "";
         const r = n(t),
@@ -7420,7 +7424,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 161 devicesmartener deviceAdapter
     "use strict";
-    AllFunctions(0)("Function 161").debug("deviceSmartener")
+    AllFunctions(0)("Function 161").verbose("deviceSmartener")
 
     function n(e) {
         return a("SMARTENER_DETECTED_SMTHING %o", e), e.state === d.STATE_FIRST_TOGGLE_DETECTED ? (a("DEVICE_TOGGLE_DETECTED"), void s(f)) : e.state === d.STATE_DEVICE_SMARTENED ? (a("DEVICE_SMARTENED"), i(), void l.smartifyStupidDevice({
@@ -7530,7 +7534,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     e.exports = i
 }, function(e, t, r) {// Function 166 getContentLayout
     "use strict";
-    AllFunctions(0)("Function 166").debug("")
+    AllFunctions(0)("Function 166").verbose("")
     const n = r(16),
         o = r(53),
         i = r(28),
@@ -7547,7 +7551,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 167 functions addScreen, addScreens, build, getStack, setKeyboardMapping, overridePowerKeyboardMapping, buildNewNavigationStack
     "use strict";
-    AllFunctions(0)("Function 167").debug("addScreen, build, getStack,setKeyboardMapping,overridePowerkeyboardMapping, buildNavigationStack")
+    AllFunctions(0)("Function 167").verbose("addScreen, build, getStack,setKeyboardMapping,overridePowerkeyboardMapping, buildNavigationStack")
     const n = r(411),
         o = r(106),
         i = function(e) {
@@ -7587,7 +7591,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 168 buildNewWidgetStack
     "use strict";
-    AllFunctions(0)("Function 168").debug("")
+    AllFunctions(0)("Function 168").verbose("")
 
     function n(e, t) {
         try {
@@ -7615,7 +7619,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 169 isWidgetSupportedAndNotKeymapped
     "use strict";
-    AllFunctions(0)("Function 169").debug("")
+    AllFunctions(0)("Function 169").verbose("")
 
     function n(e, t) {
         const r = function(e) {
@@ -7826,7 +7830,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     })
 }, function(e, t, r) {// Function 170 gui/scenario/widgets/default/light.xml
     "use strict";
-    AllFunctions(0)("Function 170").debug("gui/scenario/widgets_default/light.xml")
+    AllFunctions(0)("Function 170").verbose("gui/scenario/widgets_default/light.xml")
 
     function n(e) {
         const t = e && e.name && e.name.toLowerCase();
@@ -7921,7 +7925,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 171 a lot of get-functions, pulling the data from subordinate fiunctions
     "use strict";
-    AllFunctions(0)("Function 171").debug("")
+    AllFunctions(0)("Function 171").verbose("")
 
     function n(e) {
         const t = {};
@@ -7945,7 +7949,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     let E = !1,
         y = !1;
     e.exports.convert = function(e) {
-        AllFunctions(0)("Function 171").debug("Convert")
+        AllFunctions(0)("Function 171").verbose("Convert")
         return {
             getImageUrlPath: function(e, t) {
                 if (!t || !t.width || !t.height) throw Error("getImageUrlPath: options invalid");
@@ -8049,7 +8053,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
                 return e.getScenarios().find(e => e.getMainDevice().getDirectoryByKey(t))
             },
             getDeviceByKey: function(t) {
-                //AllFunctions(0)("Function 171").debug("getDeviceByKey",t)
+                //AllFunctions(0)("Function 171").verbose("getDeviceByKey",t)
                 return e.getDeviceByKey(t)
             },
             getDevicesByAdapterDeviceIds: function(t) {
@@ -8070,7 +8074,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
                 return n(e.getDeviceByKey(t))
             },
             getInputViewData: function(e) {
-                AllFunctions(0)("Function 171").debug("getInputViewData")
+                AllFunctions(0)("Function 171").verbose("getInputViewData")
                 if (!e) throw Error("getInputViewData: scenario undefined");
                 return e.getMainDevice().getMacros().map(e => ({
                     name: e.name,
@@ -8130,7 +8134,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 172 some get-functions, pulling the data from subordinate functions
     "use strict";
-    AllFunctions(0)("Function 172").debug("getDeviceByKey,getScenarioByDeviceKey,getPowerInfoDevices")
+    AllFunctions(0)("Function 172").verbose("getDeviceByKey,getScenarioByDeviceKey,getPowerInfoDevices")
     const n = r(6)("cp6:lib:project:repo"),
         o = r(36);
     e.exports.convert = (e => {
@@ -8152,7 +8156,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     })
 }, function(e, t, r) {// Function 173 tr2:xmlgenerate
     "use strict";
-    AllFunctions(0)("Function 173").debug("tr2:xmlgenerate")
+    AllFunctions(0)("Function 173").verbose("tr2:xmlgenerate")
 
     function n(e, t) {
 
@@ -8199,10 +8203,10 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
     }
 }, function(e, t, r) {// Function 174 TR2 directory-related functions
     "use strict";
-    AllFunctions(0)("Function 174").debug("TR2 directory-relted functiuons")
+    AllFunctions(0)("Function 174").verbose("TR2 directory-relted functiuons")
 
     function n(e, t) {
-AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
+AllFunctions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
         switch (e.uiAction) {
             case l:
                 return ";ReloadList(0)";
@@ -8237,16 +8241,16 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     e.exports = {
         jsonToBase64: i,
         getTriggerAction: function(e, t = {}, r = "actionIdentifier") {
-            AllFunctions(0)("Function 174").debug("getTriggerAction e=",e);
+            AllFunctions(0)("Function 174").verbose("getTriggerAction e=",e);
             let o = "";
-            AllFunctions(0)("Function 174").debug("getTriggerAction test I = if (e && e[r])",(e && e[r]));
+            AllFunctions(0)("Function 174").verbose("getTriggerAction test I = if (e && e[r])",(e && e[r]));
             if (e && e[r] ? o = e[r] : Array.isArray(e) && 0 < e.length && e[0] && e[0][r] && (o = e[0][r]), !o) return "";
-            AllFunctions(0)("Function 174").debug("getTriggerAction exec I n(e,t.directoryKey)",n(e,t.directoryKey)) 
+            AllFunctions(0)("Function 174").verbose("getTriggerAction exec I n(e,t.directoryKey)",n(e,t.directoryKey)) 
             const i = encodeURIComponent(o);
             return `TriggerAction('${`${a.getDirectoryActionUrl(t.directoryKey)}/?actionIdentifier=${i}`}')${n(e,t.directoryKey)}`
         },
         getImage: function(e, t = 80) {
-            AllFunctions(0)("Function 174").debug("getImage");
+            AllFunctions(0)("Function 174").verbose("getImage");
             const r = s.isWebUri(e.thumbnailUri) || u.test(e.thumbnailUri);
             if (!e.thumbnailUri || !r) return "";
             const n = c.getLazyUrlPath(e.thumbnailUri, {
@@ -8258,7 +8262,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             return c.hasImageContent(n) ? n : ""
         },
         getBrowseAction: function(e, t = {}) {
-            AllFunctions(0)("Function 174").debug("getBrowseAction: function(e, t = {}");
+            AllFunctions(0)("Function 174").verbose("getBrowseAction: function(e, t = {}");
             if (!e) return "";
             const r = a.getDirectoryBrowseUrl(t.directoryKey);
             return o({
@@ -8273,7 +8277,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             })
         },
         getParentBrowseAction: function(e = {}) {
-            AllFunctions(0)("Function 174").debug("getParentBrowseAction: function(e, {}");
+            AllFunctions(0)("Function 174").verbose("getParentBrowseAction: function(e, {}");
             const t = e.history || [];
             if (!t.length) return "";
             const r = t[t.length - 1],
@@ -8286,7 +8290,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             })
         },
         getPaginationAction: function(e, t = {}) {
-            AllFunctions(0)("Function 174").debug("getPaginationAction:")
+            AllFunctions(0)("Function 174").verbose("getPaginationAction:")
             const r = t.history || [];
             return o({
                 directoryUrl: a.getDirectoryBrowseUrl(t.directoryKey),
@@ -8302,7 +8306,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     e.exports = require("valid-url")
 }, function(e, t, r) {// Function 176 directory-related functions
     "use strict";
-    AllFunctions(0)("CPCC Function 176").debug("")
+    AllFunctions(0)("CPCC Function 176").verbose("")
     function n(e) {
         const t = o(e);
         return `BrowseDirectory('${e.directoryUrl}', '${t}')`
@@ -8323,7 +8327,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             return e.data && e.data[t] ? r = e.data[t] : Array.isArray(e) && 0 < e.length && e[0].data && e[0].data[t] && (r = e[0].data[t]), `TriggerAction('${r}')`
         },
         getImage: function(e, t = 80) {
-            AllFunctions(0)("Function 176").debug("Getimage for directory",e.thumbnailUri)
+            AllFunctions(0)("Function 176").verbose("Getimage for directory",e.thumbnailUri)
             const r = i.isWebUri(e.thumbnailUri) || u.test(e.thumbnailUri);
             if (!e.thumbnailUri || !r) return "";
             const n = c.getLazyUrlPath(e.thumbnailUri, {
@@ -8336,7 +8340,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
         },
         getInfoAction: function(e) {
             const t = e.itemInfo || "";
-            AllFunctions(0)("Function 176").debug("Popup info item",t)
+            AllFunctions(0)("Function 176").verbose("Popup info item",t)
             return `ShowPopup('message','${a.getTr2FunctionText(t)}')`
         },
         getBrowseAction: function(e, t) {
@@ -8366,7 +8370,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             })
         },
         getPaginationAction: function(e, t) {
-            AllFunctions(0)("Function 176").debug("getPaginationAction")
+            AllFunctions(0)("Function 176").verbose("getPaginationAction")
 
             const r = t.history || [];
             return n({
@@ -8383,7 +8387,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     e.exports = require("body-parser")
 }, function(e, t, r) {// Function 178 accountMiddleware
     "use strict";
-    AllFunctions(0)("Function 174").debug("getPaginationAction")
+    AllFunctions(0)("Function 174").verbose("getPaginationAction")
     const n = r(24),
         o = r(0)("accountMiddleware");
     e.exports.requireLoggedInAccountMiddleWare = ((e, t, r) => {
@@ -8546,7 +8550,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 181 Server (express route); exceptionhandler
     "use strict";
-    AllFunctions(0)("Function 181").debug("")
+    AllFunctions(0)("Function 181").verbose("")
     const n = process.uptime(),
         o = r(0)("server"),
         i = r(40),
@@ -8561,7 +8565,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
         g = r(104);
     let m;
     c.initializeServices().then(function() {
-        AllFunctions(0)("Function 181").debug("initializeServices")
+        AllFunctions(0)("Function 181").verbose("initializeServices")
         return new Promise(e => {
             o.debug("INITIALIZING SERVER"), m = i.createServer(u);
             const t = a(m, s.socket);
@@ -8615,16 +8619,16 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
         constructor(e) {
             this.entriesToStore = e, this.elements = [], this.position = 0
         }
-        addEntry(e) {AllFunctions(0)("Function 183").debug("addentry",e)
+        addEntry(e) {AllFunctions(0)("Function 183").verbose("addentry",e)
             this.elements[this.position++] = {
                 timestamp: Date.now(),
                 value: e
             }, this.position %= this.entriesToStore
         }
-        clear() {AllFunctions(0)("Function 183").debug("clear")
+        clear() {AllFunctions(0)("Function 183").verbose("clear")
             this.elements = [], this.position = 0
         }
-        getAll() {AllFunctions(0)("Function 183").debug("getall")
+        getAll() {AllFunctions(0)("Function 183").verbose("getall")
             return this.elements.sort(function(e, t) {
                 return e.timestamp > t.timestamp ? -1 : e.timestamp < t.timestamp ? 1 : 0
             })
@@ -8649,12 +8653,12 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 
     function o() {
-        AllFunctions(0)("Function 185").debug("Init functions (Setfirmwareversion)")
+        AllFunctions(0)("Function 185").verbose("Init functions (Setfirmwareversion)")
         
         return u.setFirmwareVersion(_.version), I.debug("INIT_ACCOUNT"), u.selectNeeoCloudReplacementUrl  ().then(({
             discoverUrl: e,
             isPro: t
-        }) => (AllFunctions(0)("Function 185").debug("Init functions "),P.setCloudStatusUrl(e), P.updateLicense(t), u.autologin().catch(() => {}).finally(() => {
+        }) => (AllFunctions(0)("Function 185").verbose("Init functions "),P.setCloudStatusUrl(e), P.updateLicense(t), u.autologin().catch(() => {}).finally(() => {
             k = setTimeout(() => (function(e) {
                 I.debug("START_ACCOUNT_RELATED_SERVICES"), _.startChecker().catch(e => I.debug("ERROR_FIRMWARE_CHECK:", e.message)), y.startRegistration(e), p.startTask(), N.startTasks(), R.get().then(e => m.startTask(e)).catch(e => {
                     I.warn("AUTOUPDATE_INIT_FAILED", e.message)
@@ -8664,7 +8668,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 
     function i() {
-        AllFunctions(0)("Function 185").debug("bootstrap successful, now start notificatiopnlistener (f,h,S,w,E,v,L and D)")
+        AllFunctions(0)("Function 185").verbose("bootstrap successful, now start notificatiopnlistener (f,h,S,w,E,v,L and D)")
         return I.debug("INIT_LISTENERS"), c.all([f.startNotificationListener(), h.startNotificationListener(), R.get().then(e => S.startNotificationListener(e)), w.startNotificationListener(), E.startNotificationListener(), v.startNotificationListener(), L.startNotificationListener(), D.startNotificationListener()]).catch(e => {
             I.warn("ERROR_INIT_LISTENERS", e.message)
         })
@@ -8709,7 +8713,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     let k;
     e.exports = {
         initializeServices: function() {
-            AllFunctions(0)("Function 185").debug("initializeServices")            
+            AllFunctions(0)("Function 185").verbose("initializeServices")            
             return I.debug("BOOTSTRAP_START"), T.bootstrapJn5168().catch(e => {
                 I.debug("JN_BOOTSTRAP_ERROR", e.message)
             }).then(i).then(n).then(s).then(o).then(a)
@@ -8720,7 +8724,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 186 Higher level functions for account and brain itself 
     "use strict";
-    AllFunctions(0)("Function 186").debug("")
+    AllFunctions(0)("Function 186").verbose("")
 
     function n() {
         return i.cloud.consumer
@@ -8765,8 +8769,8 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             }), c.debug("init", e), this.parseUser = null, this.duiroFormatVersion = e.duiroFormatVersion, this.firmwareVersion = "unknown", m.readAsync().then(e => this.macAddress = e)
         };
     I.prototype.isLoggedIn = function() {
-        AllFunctions(0)("Function 186").debug("isLoggedIn")
-        return this.autologin().then(() => {AllFunctions(0)("Function 186").debug("returning isLoggedIn"), !0}).catch(() => {AllFunctions(0)("Function 186").debug("not isLoggedIn");!!g.get("account", "userEmail")})
+        AllFunctions(0)("Function 186").verbose("isLoggedIn")
+        return this.autologin().then(() => {AllFunctions(0)("Function 186").verbose("returning isLoggedIn"), !0}).catch(() => {AllFunctions(0)("Function 186").verbose("not isLoggedIn");!!g.get("account", "userEmail")})
     }, I.prototype.getAccountname = function() {
         const e = _.getSessionObject();
         return !e && g.get("account", "userEmail") ? {
@@ -8834,11 +8838,11 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }, I.prototype.getBackupById = function(e) {
         return l.increaseCounter("parse-get-backup-started"), this.autologin().then(t => f.getBackupById(t, e))
     }, I.prototype.getDeviceFileList = function() {
-        AllFunctions(0)("186").debug("getDeviceFilelist");
+        AllFunctions(0)("186").verbose("getDeviceFilelist");
         const e = "getDeviceFileList" + this.duiroFormatVersion;
         return this._runCloudFunction(e).timeout(12e5)
     }, I.prototype.initializeParse = function(e) {
-        AllFunctions(0)("Function 186").debug("initializeParse")
+        AllFunctions(0)("Function 186").verbose("initializeParse")
         return new a(t => {
             u(e, {
                 appId: {
@@ -8850,14 +8854,14 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             }), s.initialize(e.appId), s.serverURL = e.parseUrl, t(e)
         })
     }, I.prototype.getPersistedCloudInstanceConfig = function() {
-        AllFunctions(0)("Function 186").debug("getPersistedCloudInstanceConfig")
+        AllFunctions(0)("Function 186").verbose("getPersistedCloudInstanceConfig")
         return h.load().then(e => e.cloudInstanceConfig)
     }, I.prototype.getFullDeviceSpec = function(e) {
-        AllFunctions(0)("Function 186").debug("getFullDeviceSpec",e)
+        AllFunctions(0)("Function 186").verbose("getFullDeviceSpec",e)
         l.increaseCounter("parse-run-cloudfunction");
         const t = "getFullDeviceSpec" + i.account.duiroFormatVersion;
         const MyDevice = e.type+"_"+e.manufacturer+"_"+e.name+".json"
-        AllFunctions(0)("Function 186").debug("getFullDeviceSpec, looking for",MyDevice)
+        AllFunctions(0)("Function 186").verbose("getFullDeviceSpec, looking for",MyDevice)
         
         //return this._download({name:MyDevice,url:"http://192.168.73.110:8000/Cloud/IRDrivers/"+MyDevice,_downloadDir : "/tmp"})
         return this._download({name:MyDevice,targetDir:"/tmp",type:"irdevices",url:CloudReplacementUrl  +"?type=irdevices&name="+MyDevice,_downloadDir : "/tmp"})
@@ -8867,7 +8871,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }, I.prototype.setFirmwareVersion = function(e) {
         this.firmwareVersion = e
     }, I.prototype._copy = function(e, t) {
-        AllFunctions(0)("Function 186").debug("_copy",e,"to",t)
+        AllFunctions(0)("Function 186").verbose("_copy",e,"to",t)
           if (/*l.debug("Copying", {
                 fromFilePath: e,
                 toFilePath: t
@@ -8879,7 +8883,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
         return   "/tmp/" + e
     },
     I.prototype._checkSum = function(e) {
-    AllFunctions(0)("Function 186").debug("_checkSum e",e)
+    AllFunctions(0)("Function 186").verbose("_checkSum e",e)
     return new u(t => {
         const r = a.createHash("sha1"),
             n = o.createReadStream(e);
@@ -8897,38 +8901,38 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     })
     },
     I.prototype._xcheckSum = function(e) {
-        AllFunctions(0)("Function 186").debug("Checksum e",e)
+        AllFunctions(0)("Function 186").verbose("Checksum e",e)
         return new u(t => {                         // r(14)
             const r = NoClouda.createHash("sha1"),  // r(41)
                 n = NoCloudo.createReadStream(e);   // r(26)
-                AllFunctions(0)("Function 186").debug("e",e)
-                AllFunctions(0)("Function 186").debug("n",n)
+                AllFunctions(0)("Function 186").verbose("e",e)
+                AllFunctions(0)("Function 186").verbose("n",n)
             n.on("data", e => {
-                AllFunctions(0)("Function 186").debug("checksum data e:", e)
+                AllFunctions(0)("Function 186").verbose("checksum data e:", e)
                 r.update(e)
             }), n.on("end", () => {
                 const n = r.digest("hex");
-                AllFunctions(0)("Function 186").debug("checksum end")
+                AllFunctions(0)("Function 186").verbose("checksum end")
                 t(n)
             }), n.on("error", e => {
-                AllFunctions(0)("Function 186").debug("checksum error t:", t), t()
+                AllFunctions(0)("Function 186").verbose("checksum error t:", t), t()
             })
         })
     }, I.prototype._download = function(e) {
-        AllFunctions(0)("Function 186").debug("_download",e)
+        AllFunctions(0)("Function 186").verbose("_download",e)
         var fullFileName = e.targetDir+"/"+e.name;
         var myContent;
         return  noCloud.downloadContent(e).then(content => 
             (myContent = content,
             this._checkSum(fullFileName))).then(r => 
-                {AllFunctions(0)("Function 186").debug("We have this checksum",r,"for",fullFileName);
+                {AllFunctions(0)("Function 186").verbose("We have this checksum",r,"for",fullFileName);
                 n(fullFileName, r.shaSum);
                 if (typeof myContent == "string")
                     return myContent = JSON.parse(myContent)
                 else 
                     return myContent})
 }, I.prototype.selectNeeoCloudReplacementUrl   = function() {
-    AllFunctions(0)("Function 186").debug("selectNeeoCloudReplacementUrl  ")
+    AllFunctions(0)("Function 186").verbose("selectNeeoCloudReplacementUrl  ")
         return this.getCloudConfigFor().then(e => this.initializeParse(e)).then(e => o({
             cloudInstanceConfig: e
         }).then(() => e)).catch(e => {
@@ -8938,7 +8942,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
         })
     }, I.prototype.getCloudConfigFor = function() {
         const e = n();
-        AllFunctions(0)("Function 186").debug("selectNeeoCloudReplacementUrl   getCloudConfigFor")
+        AllFunctions(0)("Function 186").verbose("selectNeeoCloudReplacementUrl   getCloudConfigFor")
         return this.initializeParse(e).then(() => e)
     }, I.prototype.checkDevicesForUpdates = function(e) {
         return this._runCloudFunction("getDevicesWithUpdates", {
@@ -8955,7 +8959,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             backupId: e
         })
     }, I.prototype._runCloudFunction = function(e, t = {}) {
-       AllFunctions(0)("Function 186").debug("runcloudfunction e",e);AllFunctions(0)("Function 186").debug("runcloudfunction t",t)
+       AllFunctions(0)("Function 186").verbose("runcloudfunction e",e);AllFunctions(0)("Function 186").verbose("runcloudfunction t",t)
         return this.autologin().then(r => E.runCloudFunction(r, e, t))
     }, I.prototype.pairToBrain = function(e, t) {
         return a.resolve(this.login(e.email, e.password)).then(e => E.runCloudFunction(e, "pairIntegratorToBrain", {
@@ -8968,7 +8972,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 187 Looks like zwave alarm handler
     "use strict";
-    AllFunctions(0)("Function 187").debug("zwave alarm handler")
+    AllFunctions(0)("Function 187").verbose("zwave alarm handler")
     const n = r(0)("EventLog"),
         o = [{
             name: "SENSOR_ALARM+Alarm",
@@ -9013,7 +9017,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 188 notification:powersensorlistener
     "use strict";
-    AllFunctions(0)("Function 188").debug("powersensorlistener")
+    AllFunctions(0)("Function 188").verbose("powersensorlistener")
     const n = r(6)("cp6:app:lib:notification:powersensorlistener"),
         o = r(55);
     e.exports = class {
@@ -9046,7 +9050,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 189 notificationSensorlistener
     "use strict";
-    AllFunctions(0)("Function 189").debug("sensorlistener:")
+    AllFunctions(0)("Function 189").verbose("sensorlistener:")
     const n = r(0)("notificationSensorlistener"),
         o = r(3),
         i = r(25);
@@ -9063,7 +9067,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
                 sensorValue: t,
                 sensorEventKey: r
             } = e, i = this.project.getSensorByEventKey(r);
-//            AllFunctions(0)("Function 189").debug("_handleSensorUpdate:",r,"becomes",t)
+//            AllFunctions(0)("Function 189").verbose("_handleSensorUpdate:",r,"becomes",t)
             return i ? void i.setCachedValue(t) : (n.debug("UNDEFINED_SENSOR_EVENTKEY", {
                 sensorEventKey: r,
                 sensorValue: t
@@ -9104,7 +9108,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     e.exports = require("blocked")
 }, function(e, t, r) {// Function 193 notificationsender; contains socketio-functions
     "use strict";
-    AllFunctions(0)("Function 193").debug("notificationsender (socketio)")
+    AllFunctions(0)("Function 193").verbose("notificationsender (socketio)")
     const n = r(6)("cp6:lib:notificationsender"),
         o = r(3),
         i = r(194),
@@ -9115,22 +9119,22 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     a.prototype.socketioinit = function(e) {
         this.io = e
     }, a.prototype._socketio = function(e) {
-        AllFunctions(0)("Function 193").debug("update all but TR2 - _sockeio",e.type,"(e.data)",e.data,e)
+        AllFunctions(0)("Function 193").verbose("update all but TR2 - _sockeio",e.type,"(e.data)",e.data,e)
 
         return this.io ? (this.io.sockets.emit(e.type, e.data), !0) : (n("cannot send notification via socket.io"), !1)
     }, a.prototype._cacheNotification = function(e) {
-        AllFunctions(0)("Function 193").debug("cache notification (e.type)",e.type,"(e.data)",e.data)
+        AllFunctions(0)("Function 193").verbose("cache notification (e.type)",e.type,"(e.data)",e.data)
         s.includes(e.type) || this.cache.put(e.type, e.data)
     }, a.prototype.send = function(e) {
-        AllFunctions(0)("Function 193").debug("sending notification (socketio:e)",e)
+        AllFunctions(0)("Function 193").verbose("sending notification (socketio:e)",e)
         //if (e.data != "" && e.data.substring(0,4) == "Play") {
             //e.data = "Playing \n\r this medium"
         //}
         return !(!e || !e.type) && (n("sending notification:", e.type), this._cacheNotification(e), o.increaseCounter("notification-sent"), this._socketio(e))
     }, a.prototype.resendAll = function() {
-        AllFunctions(0)("Function 193").debug("resending all cached notifications")
+        AllFunctions(0)("Function 193").verbose("resending all cached notifications")
         n("sending re-sending all cached notifications."), this.cache.forEach((e, t) => {
-            AllFunctions(0)("Function 193").debug("resending this cached notification",t,e)
+            AllFunctions(0)("Function 193").verbose("resending this cached notification",t,e)
             this._socketio({
                 type: t,
                 data: e
@@ -9174,7 +9178,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 195 load/save/delete account file
     "use strict";
-    AllFunctions(0)("Function 195").debug("oad/save/delete account file")
+    AllFunctions(0)("Function 195").verbose("oad/save/delete account file")
 
     function n() {
         return o.load(i)
@@ -9192,7 +9196,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 196 store functions
     "use strict";
-    AllFunctions(0)("Function 196").debug("store functions")
+    AllFunctions(0)("Function 196").verbose("store functions")
     const n = r(26),
         o = r(112),
         i = r(1),
@@ -9246,8 +9250,8 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             encoding: this.options.encoding
         })
     }, g.prototype.load = function(e, t, r) {
-        AllFunctions(0)("Function 196").debug("store functions - load e",e)
-        AllFunctions(0)("Function 196").debug("store functions - load t",t)
+        AllFunctions(0)("Function 196").verbose("store functions - load e",e)
+        AllFunctions(0)("Function 196").verbose("store functions - load t",t)
         return s(r) || !this.cache[e] || t ? (d.debug("loading", {
             key: e,
             timeStamp: r
@@ -9257,10 +9261,10 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             return this._cache(e, r), r
         })) : (d.debug("loading from cache", e), i.resolve(this.cache[e]))
     }, g.prototype.loadLatest = function(e) {
-        AllFunctions(0)("Function 196").debug("store functions - loadLatest e",e)
+        AllFunctions(0)("Function 196").verbose("store functions - loadLatest e",e)
         return this.listVersions(e).then(t => t.length ? this.loadLatestVersion(e, t, 0) : this.load(e, !0))
     }, g.prototype.loadLatestVersion = function(e, t, r) {
-        AllFunctions(0)("Function 196").debug("store functions - loadLatestVersion e",e)
+        AllFunctions(0)("Function 196").verbose("store functions - loadLatestVersion e",e)
         return this.load(e, !0, t[r]).catch(n => {
             if (d.warn("INVALID_STOREFILE_DETECTED", {
                     file: t[r],
@@ -9291,7 +9295,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     e.exports = require("write-file-atomic")
 }, function(e, t, r) {// Function 199 Storechecker
     "use strict";
-    AllFunctions(0)("Function 199").debug("Storechecker")
+    AllFunctions(0)("Function 199").verbose("Storechecker")
     const n = r(0)("Storechecker");
     e.exports.parseFile = function(e) {
         try {
@@ -9304,7 +9308,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 200 getObsoleteVersions
     "use strict";
-    AllFunctions(0)("Function 200").debug("getObsoleteVersions:")
+    AllFunctions(0)("Function 200").verbose("getObsoleteVersions:")
 
     function n({
         versions: e,
@@ -9403,7 +9407,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     e.exports = require("getmac")
 }, function(e, t, r) {// Function 209 functiopns for savebackup
     "use strict";
-    AllFunctions(0)("Function 209").debug("Functions for save backup:")
+    AllFunctions(0)("Function 209").verbose("Functions for save backup:")
 
     function n(e) {
         return l.encrypt(p.getSecret(), e)
@@ -9476,7 +9480,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 210 encrypt/decrypt
     "use strict";
-    AllFunctions(0)("Function 210").debug("encrypt/decrypt")
+    AllFunctions(0)("Function 210").verbose("encrypt/decrypt")
     const n = r(41),
         o = "aes-256-ctr",
         i = t.encrypt = function(e, t) {
@@ -9498,7 +9502,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 211 PromiseCache
     "use strict";
-    AllFunctions(0)("Function 211").debug("PromiseCache")
+    AllFunctions(0)("Function 211").verbose("PromiseCache")
     const n = r(0)("PromiseCache");
     (e.exports = function(e) {
         this.fetchPromise = void 0, this.cacheDurationMs = e || 1e4, this.cacheExpire = Date.now(), this.id = this.cacheExpire
@@ -9508,7 +9512,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 212 ParseCloudfunction
     "use strict";
-    AllFunctions(0)("Function 212").debug("ParseCloudFunction")
+    AllFunctions(0)("Function 212").verbose("ParseCloudFunction")
 
     function n(e) {
         const t = e.message && e.message.message ? e.message : e,
@@ -9524,9 +9528,9 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
         c = ["lookupHostnameSwitch", "updateBrainInformation", "pairIntegratorToBrain"];
     e.exports = {
         runCloudFunction: function(e, t, r) {
-            AllFunctions(0)("Function 212").debug("runCloudFunction: e",e)
-            AllFunctions(0)("Function 212").debug("runCloudFunction: t",t)
-            AllFunctions(0)("Function 212").debug("runCloudFunction: r",r)
+            AllFunctions(0)("Function 212").verbose("runCloudFunction: e",e)
+            AllFunctions(0)("Function 212").verbose("runCloudFunction: t",t)
+            AllFunctions(0)("Function 212").verbose("runCloudFunction: r",r)
 
             return s.increaseCounter("parse-run-cloudfunction"), a.debug("Calling function:", t, r), i.Cloud.run(t, r, {
                 sessionToken: e.token
@@ -9540,7 +9544,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 213 ParseAccount
     "use strict";
-    AllFunctions(0)("Function 213").debug("ParseAccount:")
+    AllFunctions(0)("Function 213").verbose("ParseAccount:")
     const n = r(54),
         o = r(1),
         i = r(0)("ParseAccount");
@@ -9564,7 +9568,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 214 DirectoryAdapter
     "use strict";
-    AllFunctions(0)("Function 214").debug("DirectoryAdapter:")
+    AllFunctions(0)("Function 214").verbose("DirectoryAdapter:")
     const n = r(0)("DirectoryAdapter"),
         o = r(17),
         i = new(r(40).Agent)({
@@ -9658,13 +9662,14 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 215 DeviceAdapter //##
     "use strict";
-    AllFunctions(0)("Function 215").debug("DeviceAdapter")
+    AllFunctions(0)("Function 215").verbose("DeviceAdapter")
 
     function n(e) {
         return l.parseJSONError(e, v)
     }
 
     function o(e, t, r = "") {
+        AllFunctions(0)("Function 215").verbose("function o")
         return e + t.getPath() + "/" + encodeURIComponent(t.getAdapterDeviceId()) + r
     }
     const i = r(1),
@@ -9901,7 +9906,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             deviceKey: t,
             adapterDeviceId: r
         }), this.urlfactory.buildDeviceUrlByDevice(e, o, i).then(e => this._get({
-            uri: e,
+            uri: e,         // uri = http://127.0.0.1:3002/sonos/subscribe/Hobbyruimte/7284515998093279232
             timeout: y
         })).then(() => e).catch(n)
     }, T.prototype.unsubscribe = function(e) {
@@ -9914,7 +9919,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             deviceKey: t,
             adapterDeviceId: r
         }), this.urlfactory.buildDeviceUrlByDevice(e, o, i).then(e => this._get({
-            uri: e,
+            uri: e, 
             timeout: y
         })).then(() => e).catch(n)
     }, T.prototype.findAdapterWithCapability = function(e) {
@@ -9965,7 +9970,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             spotifyUsername: r
         }), this._getBaseUrlFromDevice(e.getDevice()))).then(r => this._getTriggerOptions(e, t, r)).then(e => (e.agent = c, s(e).catch(n)))
     }, T.prototype.getValue = function(e) {
-        AllFunctions(0)("Function 215").debug("getValue (from deviceadapter)" );
+        AllFunctions(0)("Function 215").verbose("getValue (from deviceadapter)" );
         h.increaseCounter("deviceadapter-send-getvalue");
         const t = e.getDevice();
         return u.debug("get value of sensor", {
@@ -9976,7 +9981,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             return this._get({
                 uri: r + o.path + "/" + encodeURIComponent(t.getAdapterDeviceId()),
                 agent: c
-            }).then(Sensor => {AllFunctions(0)("Function 215").debug("deviceadapter returned",Sensor,"for",e.name ); return Sensor.value})
+            }).then(Sensor => {AllFunctions(0)("Function 215").verbose("deviceadapter returned",Sensor,"for",e.name ); return Sensor.value})
             .catch(n => AllFunctions(0)("Function 215").error("getValue ERROR (from deviceadapter)",e.name) );
         }).catch(err => AllFunctions(0)("Function 215").error(" ERROR getValue getDevice:",err ))
     }, T.prototype.browse = function(e, t, r) {
@@ -9993,7 +9998,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             throw u.debug("INVALID_BROWSE_RESULT", t), e.alreadyLogged = !0, e
         })
     }, T.prototype.callDirectoryAction = function(e, t, r) {
-        AllFunctions(0)("Function 215").debug("/:directory_key/action : translates directorykeypress into action")
+        AllFunctions(0)("Function 215").verbose("/:directory_key/action : translates directorykeypress into action")
         return h.increaseCounter("deviceadapter-send-action"), this._getBaseUrl(t).then(t => o(t, e, "/action")).then(t => (u.debug("call action on directory", {
             uri: t,
             params: r,
@@ -10015,7 +10020,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     e.exports = require("openpgp")
 }, function(e, t, r) {// Function 217 "neeo-deviceadapter", "cec", "sonos", "zwave", "hue"
     "use strict";
-    AllFunctions(0)("Function 217").debug("neeo-deviceadapter cec sonos zwave hue")
+    AllFunctions(0)("Function 217").verbose("Determine baseurl for internal and SDK-adapters (getBaseUrl), builddevices")
     const n = r(1),
         o = r(18),
         i = r(119),
@@ -10037,6 +10042,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             return new n((r, n) => {
                 if (this.isDeviceAdapterInternal(e, t)) return r(this.baseUrlDeviceadapter);
                 const o = i.getBaseUrl(t || e);
+                AllFunctions(0)("Function 217").verbose("_getBaseUrl",o)
                 o ? r(o) : n(new Error("Could not find SDK instance " + e))
             })
         }
@@ -10054,7 +10060,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 218 adapterparser
     "use strict";
-    AllFunctions(0)("Function 218").debug("adapterparser")
+    AllFunctions(0)("Function 218").verbose("adapterparser")
 
     function n(e) {
         return function(e) {
@@ -10110,14 +10116,14 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 219 iconify
     "use strict";
-    AllFunctions(0)("Function 219").debug("iconify:")
+    AllFunctions(0)("Function 219").verbose("iconify:")
     const n = r(58).iconify;
     e.exports = function(e) {
         return e.adapterName = e.type.toLowerCase(), e.icon = n(e.type), e
     }
 }, function(e, t, r) {// Function 220 zwavedevicesync
     "use strict";
-    AllFunctions(0)("Function 220").debug("zwavedevcesync:")
+    AllFunctions(0)("Function 220").verbose("zwavedevcesync:")
     const n = r(0)("zwavedevicesync"),
         o = "zwave",
         i = "controllerlearn",
@@ -10207,7 +10213,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     e.exports = a
 }, function(e, t, r) {// Function 221 devicespecs
     "use strict";
-    AllFunctions(0)("Function 221").debug("devicespecs")
+    AllFunctions(0)("Function 221").verbose("devicespecs")
 
     function n(e, t) {
         if (e.data.generic !== t.data.generic) {
@@ -10243,10 +10249,10 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             })
         };
     p.prototype.reloadDuiroData = function() {
-        AllFunctions(0)("Function 221").debug("devicespecs reloadDuiroData")
+        AllFunctions(0)("Function 221").verbose("devicespecs reloadDuiroData")
         return this.sources[c.SOURCE_DUIRO].reloadIndexFile()
     }, p.prototype.search = function(e) {
-        AllFunctions(0)("Function 221").debug("devicespecs reloadDuiroData")
+        AllFunctions(0)("Function 221").verbose("devicespecs reloadDuiroData")
         const t = s(this.sources);
         return a.all(t.map(t => t.search(e).catch(e => (l.debug("DEVICESPEC_IGNORED_SOURCE", {
             source: t.name,
@@ -10257,7 +10263,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             return e.reduce((e, t) => t ? e.concat(t) : e, []).filter(o).sort(n).slice(0, this.maxSearchResults).map(e => (e.data.manufacturer = e.data.manufacturer, e.data.name = e.data.name, e.data.type = e.data.type, e.data.adapterName = e.data.adapterName, e.data.id = e.data.id, e.data.isTested = e.data.isTested, e)) || []
         })
     }, p.prototype.splitId = function(e) {
-        AllFunctions(0)("Function 221").debug("devicespecs splitId")
+        AllFunctions(0)("Function 221").verbose("devicespecs splitId")
         const t = i(this.sources, e => ({
             type: e.type,
             name: e.name
@@ -10274,25 +10280,25 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
         }
         throw new Error("DeviceSpec: Failed to parse ID " + e)
     }, p.prototype.getFullSpec = function(e, t) {
-        AllFunctions(0)("Function 221 ").debug("devicespecs getFullSpec e:",e)
+        AllFunctions(0)("Function 221 ").verbose("devicespecs getFullSpec e:",e)
         l.debug("getFullSpec", e);
         const r = this.splitId(e);
-        AllFunctions(0)("Function 221").debug("devicespecs after splitId e:",r,t)
+        AllFunctions(0)("Function 221").verbose("devicespecs after splitId e:",r,t)
         return this.sources[r.sourceName].getFullSpec(r.id, t)
     }, p.prototype.getSpec = function(e) {
-        AllFunctions(0)("Function 221").debug(" devicespecs getSpec")
+        AllFunctions(0)("Function 221").verbose(" devicespecs getSpec")
         l.debug("getSpec", e);
         const t = this.splitId(e);
         return this.sources[t.sourceName].getSpec(t.id)
     }, p.prototype.getCapabilities = function(e, t, r) {
-        AllFunctions(0)("Function 221").debug("devicespecs getCapabilities")
+        AllFunctions(0)("Function 221").verbose("devicespecs getCapabilities")
         const n = this.splitId(e);
         return this.sources[n.sourceName].getCapabilities(t, r)
     }, p.prototype.getSourceByName = function(e) {
-        AllFunctions(0)("Function 221").debug("devicespecs getSourceByName")
+        AllFunctions(0)("Function 221").verbose("devicespecs getSourceByName")
         return this.sources[e]
     }, p.prototype.updateSearchSources = function(e) {
-        AllFunctions(0)("Function 221").debug("devicespecs updateSearchSources")
+        AllFunctions(0)("Function 221").verbose("devicespecs updateSearchSources")
         if (!Array.isArray(e)) return void l.debug("INVALID_SEARCH_SOURCE_DATA");
         l.debug("UPDATE SEARCH SOURCES");
         const t = {};
@@ -10308,7 +10314,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     e.exports = require("lodash/map")
 }, function(e, t, r) {// Function 223 DuiroSpecsSource
     "use strict";
-    AllFunctions(0)("Function 223").debug("DuiroSpecsSource:")
+    AllFunctions(0)("Function 223").verbose("DuiroSpecsSource:")
 
     function n(e) {
         return 500 * Math.ceil(e / 500)
@@ -10334,7 +10340,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             threshold: .5
         }), a.debug("device search initialized. device count", e.length)
     }, p.prototype.reloadIndexFile = function() {
-        AllFunctions(0)("Function 223").debug("DuiroSpecsSource: reloadIndexFile")
+        AllFunctions(0)("Function 223").verbose("DuiroSpecsSource: reloadIndexFile")
 
         return a.debug("RELOAD_INDEX_FILE"), this.deviceFileManager.getDeviceFileContent().then(e => {
             this._init(JSON.parse(e))
@@ -10342,7 +10348,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             a.error("DUIROSPEC_LOAD_INDEX", e.message)
         })
     }, p.prototype.getFullSpecById = function(e) {
-        AllFunctions(0)("Function 223").debug("DuiroSpecsSource: getFullSpecById",e)
+        AllFunctions(0)("Function 223").verbose("DuiroSpecsSource: getFullSpecById",e)
         return o.resolve(d.getFullDeviceSpec(e)).timeout(32e3).then(e => this._stripGenericCommandsets(e)).then(e => this._roundTimingValueBy500Ms(e))
     }, p.prototype.getDevicesWithUpdates = function(e) {
         return 0 === e.length ? o.resolve([]) : d.checkDevicesForUpdates(e)
@@ -10373,9 +10379,9 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             d = s.concat(c);
         return a.debug("search result:", d.length), o.resolve(d)
     }, p.prototype._getSpec = function(e) {
-        AllFunctions(0)("Function 223").debug("DuiroSpecsSource: _getSpec",e)
+        AllFunctions(0)("Function 223").verbose("DuiroSpecsSource: _getSpec",e)
         const t = this.devices[e];
-        AllFunctions(0)("Function 223").debug("DuiroSpecsSource: _getSpec done t",t)
+        AllFunctions(0)("Function 223").verbose("DuiroSpecsSource: _getSpec done t",t)
 
         return t || o.reject(new Error("no such devicespec: " + e)), o.resolve(t)
     }, p.prototype._stripGenericCommandsets = function(e) {
@@ -10399,7 +10405,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }, p.prototype._roundTimingValueBy500Ms = function(e) {
         return e.timing ? (e.timing.standbySourceCommandDelay && (e.timing.standbySourceCommandDelay = n(e.timing.standbySourceCommandDelay)), e.timing.standbyCommandDelay && (e.timing.standbyCommandDelay = n(e.timing.standbyCommandDelay)), e.timing.sourceSwitchDelay && (e.timing.sourceSwitchDelay = n(e.timing.sourceSwitchDelay)), e.timing.shutdownDelay && (e.timing.shutdownDelay = n(e.timing.shutdownDelay)), e) : e
     }, p.prototype._getFullSpec = function(e) {
-        AllFunctions(0)("Function 223").debug("DuiroSpecsSource: _getFullSpec")
+        AllFunctions(0)("Function 223").verbose("DuiroSpecsSource: _getFullSpec")
         return this._getSpec(e).then(e => this.getFullSpecById({
             type: e.type,
             manufacturer: e.manufacturer,
@@ -10410,7 +10416,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 224 GenericDeviceSearch
     "use strict";
-    AllFunctions(0)("Function 224").debug("GenericdeviceSearch:")
+    AllFunctions(0)("Function 224").verbose("GenericdeviceSearch:")
     const n = r(0)("GenericDeviceSearch"),
         o = [{
             addTextIfFound: "sony tv",
@@ -10471,7 +10477,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 225 DeviceFileManager
     "use strict";
-    AllFunctions(0)("Function 225").debug("DeviceFileManager:")
+    AllFunctions(0)("Function 225").verbose("DeviceFileManager:")
 
     function n(e, t) {
         h.put("devicefilemanager", e, t.substr(0, 7))
@@ -10493,7 +10499,7 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             l.debug("init", e), this.account = r(24), this._downloadDir = e.downloadDir, this._fileDir = e.fileDirectory, this._syncExpiresInMs = e.syncExpiresInMs, this._busy = !1, this._notification = t
         };
     m.prototype._checkSum = function(e) {
-        AllFunctions(0)("Function 225").debug("_checkSum e",e)
+        AllFunctions(0)("Function 225").verbose("_checkSum e",e)
         return new u(t => {
             const r = a.createHash("sha1"),
                 n = o.createReadStream(e);
@@ -10520,9 +10526,9 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             n = o.createWriteStream(t);
         return s(r, n)
     }, m.prototype._download = function(e,t,r) {
-        AllFunctions(0)("Function 225").debug(" _download e",e)
-        AllFunctions(0)("Function 225").debug(" _download t",t)
-        AllFunctions(0)("Function 225").debug(" _download r",r)
+        AllFunctions(0)("Function 225").verbose(" _download e",e)
+        AllFunctions(0)("Function 225").verbose(" _download t",t)
+        AllFunctions(0)("Function 225").verbose(" _download r",r)
         return n(e, r), this._copy(e, t)
     }, m.prototype._tmpdownload = function(e) {
         try {
@@ -10530,34 +10536,34 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
             {e.targetDir=this._downloadDir;
             e.type="devices";
             }
-            AllFunctions(0)("Function 225").debug(" new download",e)
+            AllFunctions(0)("Function 225").verbose(" new download",e)
         return  r(505).tmpdownload(e).then(tmp  => 
-            (AllFunctions(0)("Function 225").debug("returned tmpdownload in 225 with file",tmp),
+            (AllFunctions(0)("Function 225").verbose("returned tmpdownload in 225 with file",tmp),
             this._checkSum(tmp.name)).then(r => 
-                {AllFunctions(0)("Function 225").debug("We have this checksum",r,"for",tmp.name);
+                {AllFunctions(0)("Function 225").verbose("We have this checksum",r,"for",tmp.name);
                 return tmp.name;
                 }))
             }
         catch (err) {AllFunctions(0)(err)}
 
     },  m.prototype._syncPromise = function(e) {
-        AllFunctions(0)("Function 225 ").debug("_syncPromise, item: ",e)        
+        AllFunctions(0)("Function 225 ").verbose("_syncPromise, item: ",e)        
         const t = this._getLocalFilePath(e.name);
-        return this._tmpdownload(e).then(newf =>  this._checkSum(newf).then(r => (AllFunctions(0)("Function 225").debug("sha compare",r,e.shaSum),r && r === e.shaSum ? (l.debug("Local file matches shaSum. No need to update", e.name), e.filePath = t, n(e.name, e.shaSum), u.resolve(e)) : (l.debug("Local file does not match shaSum! Downloading", e.name), this._download(newf,t,r)))))
+        return this._tmpdownload(e).then(newf =>  this._checkSum(newf).then(r => (AllFunctions(0)("Function 225").verbose("sha compare",r,e.shaSum),r && r === e.shaSum ? (l.debug("Local file matches shaSum. No need to update", e.name), e.filePath = t, n(e.name, e.shaSum), u.resolve(e)) : (l.debug("Local file does not match shaSum! Downloading", e.name), this._download(newf,t,r)))))
     }, m.prototype._syncFileList = function() {
-        AllFunctions(0)("Function 225").debug("_syncFileList",e)
+        AllFunctions(0)("Function 225").verbose("_syncFileList",e)
     const n = r(24);
 
     return (n.isLoggedIn().then( () => {
        const e = ['devices.json','channels.json']
-       AllFunctions(0)("Function 225").debug("_syncFileList; we are loggedIn; devices:",e)
+       AllFunctions(0)("Function 225").verbose("_syncFileList; we are loggedIn; devices:",e)
        //            if (!e) return u.reject(Error("empty reply from server"));
 
        const t = [];
        d(e, (e,r) => {
           var devicefilename = p.FILE_LIST[r];
           var filepath = this._getLocalFilePath(devicefilename);
-          AllFunctions(0)("Function 225").debug("_syncFileList III, item: ",filepath);
+          AllFunctions(0)("Function 225").verbose("_syncFileList III, item: ",filepath);
           //var sha  = r;
           this._checkSum(filepath).then(sha =>
               t.push(this._syncPromise({
@@ -10570,28 +10576,28 @@ AllFunctions(0)("Function 174").debug("checking uiAction e.uiAction",e);
           });
 
             return u.all(t);
-        }).then(() => (AllFunctions(0)("Function 225").debug("Updated list of compatible devices; send 'NOTIFICATION_SYNCED'"),l.event("Updated list of compatible devices"), this._busy = !1, this._lastSync = Date.now(), this._notification.send({
+        }).then(() => (AllFunctions(0)("Function 225").verbose("Updated list of compatible devices; send 'NOTIFICATION_SYNCED'"),l.event("Updated list of compatible devices"), this._busy = !1, this._lastSync = Date.now(), this._notification.send({
             type: p.NOTIFICATION_SYNCED,
             data: this._lastSync
         }))).catch(e => (l.error("SYNC_FAILED", {
             error: e.message
         }), g.increaseCounter("devicefilelist-synchronize-failed"), this._busy = !1, this._lastSync = !1, u.reject(e)))).catch( err  => {AllFunctions(0)("Function 225").error("Error in getdevicefilelist",err)})
     }, m.prototype.refreshFileList = function() {
-        AllFunctions(0)("Function 225").debug("devicefilemanager: e")
+        AllFunctions(0)("Function 225").verbose("devicefilemanager: e")
 return this._syncFileList();
 
         const e = Date.now() - this._lastSync;
         return !this._lastSync || e > this._syncExpiresInMs ? (l.debug("refresh file list"), this._syncFileList()) : (l.debug("use cached file list, sync expires:", this._syncExpiresInMs - e), u.resolve())
     }, m.prototype.getFileContent = function(e) {
-        AllFunctions(0)("Function 225").debug("getFileContent: e",e)
+        AllFunctions(0)("Function 225").verbose("getFileContent: e",e)
         if (0 > p.FILE_LIST.indexOf(e)) return u.reject(new Error("unknown file name " + e));
         if (this._busy) return u.reject(new Error("device file manager is syncing"));
         return u.promisify(o.readFile)(this._getLocalFilePath(e)).catch(t => "ENOENT" === t.code ? u.reject(new Error("no such file " + e)) : u.reject(new Error("unexpected error trying to get file content of " + e)))
     }, m.prototype.getChannelFileContent = function() {
-        AllFunctions(0)("Function 225").debug("getChannelFileContent")
+        AllFunctions(0)("Function 225").verbose("getChannelFileContent")
         return this.getFileContent(p.FILE_CHANNELS)
     }, m.prototype.getDeviceFileContent = function() {
-        AllFunctions(0)("Function 225").debug("getDeviceFileContent")
+        AllFunctions(0)("Function 225").verbose("getDeviceFileContent")
         return this.getFileContent(p.FILE_DEVICES)
     }
 }, function(e) {// Function 226 contains only exports = require("promisepipe")
@@ -10618,7 +10624,7 @@ return this._syncFileList();
         const t = this.baseUrl + "/db/search?q=" + e;
         return s.debug("search adapter:", t), n(t)
     }, u.prototype._getFullSpec = function(e) {
-        AllFunctions(0)("CP6 228").debug("AdapterSpecsSource: getfullspec . E:",e)
+        AllFunctions(0)("CP6 228").verbose("AdapterSpecsSource: getfullspec . E:",e)
         
         return n(this.baseUrl + "/db/" + e)
     }, u.prototype._getAdapterSpec = function(e, t) {
@@ -10882,9 +10888,9 @@ return this._syncFileList();
     let E = {};
     e.exports = {
         getSlides: function(e, t, r) {
-            AllFunctions(0)("Function 234").debug("getSlides");
+            AllFunctions(0)("Function 234").verbose("getSlides");
             return c(a(function(e, t) {
-                AllFunctions(0)("Function 234").debug("getSlides after c:",e.slides);
+                AllFunctions(0)("Function 234").verbose("getSlides after c:",e.slides);
                 return e.slides && 0 < Object.keys(e.slides).length ? t.reduce((t, r) => {
                     const n = Object.assign({}, r),
                         o = e.slides[r.name];
@@ -11520,7 +11526,7 @@ return this._syncFileList();
     "use strict";
 
     function n(e) {
-        AllFunctions(0)("Function 256").debug("DuiroDeviceUpdater");
+        AllFunctions(0)("Function 256").verbose("DuiroDeviceUpdater");
         return e.hasCapability(g.SOURCE_DUIRO) ? function(e) {
             const t = a(e.details);
             return f.getFullSpecById(t)
@@ -11610,7 +11616,7 @@ return this._syncFileList();
             })(e, t))
         },
         bulkUpdateDevices: function(e) {
-            AllFunctions(0)("Function 256").debug("bulkUpdateDevices");
+            AllFunctions(0)("Function 256").verbose("bulkUpdateDevices");
             return l.resolve(e).mapSeries(e => n(e).then(e => (h.increaseCounter("duiro-device-auto-update-count"), e)).catch(t => {
                 h.increaseCounter("duiro-device-auto-update-failed-count");
                 const r = a(e.details);
@@ -11807,7 +11813,7 @@ return this._syncFileList();
         l = s.adapterUpdaterTimeoutMs;
     e.exports = {
         checkForAndUpdateDevice: function(e) {
-            AllFunctions(0)("Function 264").debug("checkForAndUpdateDevice");
+            AllFunctions(0)("Function 264").verbose("checkForAndUpdateDevice");
             return e.hasCapability(a.SOURCE_SDK_ADAPTER) ? n(e).then(t => (function(e, t) {
                 return !! function(e, t) {
                     const r = e.details;
@@ -12404,7 +12410,7 @@ return this._syncFileList();
     }, v.prototype.summary = function() {
         const e = l.get("account", "userEmail") || "",
             t = o.loadavg();
-        AllFunctions(0)("Function 286").debug("summary");
+        AllFunctions(0)("Function 286").verbose("summary");
         return {
             hardwareRegion: this.getRegionCode(),
             touchButtonPressed: this.isTouchbuttonPressed(),
@@ -12507,7 +12513,7 @@ return this._syncFileList();
     }, v.prototype.logAndFlushStatistics = function() {
         a.info("STATISTICS_KPI_CP6_SYSTEM", this.summary())
     }, v.prototype.cloudInfo = function() {
-        AllFunctions(0)("Function 286").debug("getting cloudinfo:",CloudReplacementUrl  +"?type=firmware&name=index.html")
+        AllFunctions(0)("Function 286").verbose("getting cloudinfo:",CloudReplacementUrl  +"?type=firmware&name=index.html")
         return i.get({
             //uri: this._cloudStatusUrl,
             uri: CloudReplacementUrl  +"?type=firmware&name=index.html", // "http://192.168.73.110:3200/iui/index.html",
@@ -12537,7 +12543,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 287 Firmware
     "use strict";
-    AllFunctions(0)("Function 287").debug("Firmware init",e)
+    AllFunctions(0)("Function 287").verbose("Firmware init",e)
     const n = r(26),
         o = r(1),
         i = r(137),
@@ -12560,18 +12566,18 @@ return this._syncFileList();
             s.debug("init", e), this._updateScriptPath = e.updateScriptPath, this._resetScriptPath = e.resetScriptPath, this._versionFile = e.versionFile, this._newVersionFile = e.newVersionFile, this._downloadDir = e.downloadDir, this._checkInterval = e.checkIntervalMs, this._downloadTimeoutMs = e.downloadTimeoutMs, this._checkIntervalId = null, this._updateInProgress = !1, this._firmwareCheckInProgress = !1, this.version = m.readFromWithFallback(this._versionFile), this.newVersion = m.readFrom(this._newVersionFile), this.updateFailed = !1
         };
     v.prototype._getFirmwarePathByVersion = function(e) {
-        AllFunctions(0)("Function 287").debug("_getFirmwarePathByVersion")
+        AllFunctions(0)("Function 287").verbose("_getFirmwarePathByVersion")
         return this._downloadDir + "/cp6-fw-" + e + ".tgz"
     }, v.prototype._getAvailableFirmware = function() {
-        AllFunctions(0)("Function 287").debug("_getNoCloudAvailableFirmware CloudReplacementUrl  :",CloudReplacementUrl  )
+        AllFunctions(0)("Function 287").verbose("_getNoCloudAvailableFirmware CloudReplacementUrl  :",CloudReplacementUrl  )
         return r(505).downloadJSONContent({name: "latest_firmware_info_NoCloud.txt", type:"firmware", targetDir : "/steady/neeo/update"}).then(x =>  x)
 
 
     }, v.prototype._downloadRequired = function(e) {
-        AllFunctions(0)("Function 287").debug("_downloadRequired e",e)
-        AllFunctions(0)("Function 287").debug("_downloadRequired ev",e.version)
-        AllFunctions(0)("Function 287").debug("_downloadRequired tv",this.version)
-        AllFunctions(0)("Function 287").debug("_downloadRequired tnv",this.newVersion)
+        AllFunctions(0)("Function 287").verbose("_downloadRequired e",e)
+        AllFunctions(0)("Function 287").verbose("_downloadRequired ev",e.version)
+        AllFunctions(0)("Function 287").verbose("_downloadRequired tv",this.version)
+        AllFunctions(0)("Function 287").verbose("_downloadRequired tnv",this.newVersion)
         this.newVersion = e.version
 
         return e && e.version ? (s.debug("FIRMWARE_VERSION_COMPARE", {
@@ -12587,21 +12593,21 @@ return this._syncFileList();
             data: Date.now()
         })
     }, v.prototype._updateNewVersionFile = function(e) {
-        AllFunctions(0)("Function 287").debug("_updateNewVersionFile e:",this._newVersionFile,e)
+        AllFunctions(0)("Function 287").verbose("_updateNewVersionFile e:",this._newVersionFile,e)
         return 99
     }, v.prototype._cleanup = function() {
         s.debug("FIRMWARE_CLEANUP_START"), this.newVersion = m.UNKNOWN;
         const e = this._getFirmwarePathByVersion("*");
-        AllFunctions(0)("Function 287").debug("We could set this._newVersionFile here to our version-file....")
+        AllFunctions(0)("Function 287").verbose("We could set this._newVersionFile here to our version-file....")
         return g.deleteDownloadedFiles(e, this._newVersionFile).then(() => {
             this._sendNotification(y), s.debug("FIRMWARE_CLEANUP_DONE")
         })
     }, v.prototype.acceptNewFirmware = function(e) {
-        AllFunctions(0)("Function 287").debug("acceptNewFirmware e:",e,t);
+        AllFunctions(0)("Function 287").verbose("acceptNewFirmware e:",e,t);
         return e
         //noCloud.moveTempFileToDest(e,t);
     }, v.prototype._downloadFirmwareIfNeeded = function(e) {
-        AllFunctions(0)("Function 287").debug("_downloadNoCloudFirmwareIfNeeded e:",e)
+        AllFunctions(0)("Function 287").verbose("_downloadNoCloudFirmwareIfNeeded e:",e)
         return this._downloadRequired(e) ? 
         (s.debug("DOWNLOAD_REQUIRED", e.version), o.resolve())
         (s.event("Start download new Firmware"), this._cleanup().then(() => this.acceptNewFirmware(e)).then(e => h.validateChecksum(e)).then(e => this._updateNewVersionFile(e)).then(() => {
@@ -12620,11 +12626,11 @@ return this._syncFileList();
             i(e.getActiveScenarios()) && this.update()
         }), this.firmwareUpdateListenersRegistered = !0)
     }, v.prototype.checkIfNewFirmwareIsAvailable = function() {
-        AllFunctions(0)("Function 287").debug("checkNoCloudIfNewFirmwareIsAvailable CloudReplacementUrl  :",CloudReplacementUrl  )
+        AllFunctions(0)("Function 287").verbose("checkNoCloudIfNewFirmwareIsAvailable CloudReplacementUrl  :",CloudReplacementUrl  )
         s.debug("start check");
         const e = this.lastChecked ? Date.now() - this.lastChecked : -1;
         return d.setValue("firmware-time-since-last-check", e), this._firmwareCheckInProgress ? (s.debug("check aborted, busy"), o.reject(new Error("FW_CHECK_BUSY"))) : (this._firmwareCheckInProgress = !0, this.lastChecked = Date.now(), this._getAvailableFirmware()
-                        .then(e => (AllFunctions(0)("Function 287").debug("firmware e=",e),this._downloadFirmwareIfNeeded(e))).then(content  => content)
+                        .then(e => (AllFunctions(0)("Function 287").verbose("firmware e=",e),this._downloadFirmwareIfNeeded(e))).then(content  => content)
                            .then(() => f.loadFirmwareSettings())
                             .then(e => (e.automaticUpdate && this._sendNotification(_), null)).timeout(36e5, "New firmware check timeout")
                             .catch(e => {"ENOENT" !== e.code && s.error("GET_FIRMWARE", {
@@ -12700,25 +12706,25 @@ return this._syncFileList();
         // that means we do not have a JN5168-chip. This chip is used by mens of it;s GPIO for IR, blink and for 6LowPan (wit remote).
         // For now, we're just signaling what needs to happen here, then return.
         // First / next step will be to send IR over a broadlink device.   
-        console.log("in _postrequest")
+        AllFunctions(0)("Function 288").verbose("_postrequest");
         if (BrainBroadLink.broadlinkIp == undefined) 
-            {AllFunctions(0)("Function 288").debug("We need to post a request to Brain's Broadlink, but no BrainBroadLink.js found");
+            {AllFunctions(0)("Function 288").verbose("We need to post a request to Brain's Broadlink, but no BrainBroadLink.js found");
             return  i.reject();
             }
         if (e == "/sendir")
             {} // we'll handle IR-send lateer in this function
         else
         if (e == "/blink")
-            {AllFunctions(0)("Function 288").debug("Request to blink... if it was an IR-request, Broadlink will blink, otherwise: no blinky-blink for now")
+            {AllFunctions(0)("Function 288").verbose("Request to blink... if it was an IR-request, Broadlink will blink, otherwise: no blinky-blink for now")
             return  i.resolve();
             }
         else            
         if (e == "/discovery")
-            {AllFunctions(0)("Function 288").debug("Short touchbutton press detected, discovery started via JN5168")
+            {AllFunctions(0)("Function 288").verbose("Short touchbutton press detected, discovery started via JN5168")
             return  i.resolve();
             }
         else
-            AllFunctions(0)("Function 288").debug("Unknown request")
+            AllFunctions(0)("Function 288").verbose("Unknown request")
             //}
         //if (!this.baseUrl) return d.increaseCounter("jn5168-missing-baseurl"), i.reject(new Error("JN5168 baseUrl not set yet"));
         r = function(e, t) {
@@ -12736,7 +12742,7 @@ return this._syncFileList();
         a.debug("send Payload to NBR (Now broadlink)", {
             path: e
         });
-        {AllFunctions(0)("Function 288").debug("Need to send IR-data via Brain; kicking of a broadlink device in-stead")
+        {AllFunctions(0)("Function 288").verbose("Need to send IR-data via Brain; kicking of a broadlink device in-stead")
         // For example NEEO-IR (power on in driver): "sendir,1:1,1,38000,4,1,343,172,21,21,21,21,21,64,21,21,21,21,21,21,21,21,21,21,21,64,21,64,21,21,21,64,21,64,21,64,21,64,21,64,21,21,21,21,
         // var t contains: i=0&f=38000&c=4&o=1&s=343.172.21.21.21.21.21.64.21.21.21.21.21.21.21.21.21.21.21.64.21.64.21.21.2
         // Broadlink payload (gc): "sendir,1:1,1,38000,4,1,343,172,21,21,21,21,21,64,21,21,21,21,21,21,21,21,21,21,21,64,21,64,21,21,21,64,21,64,21,64,21,64,21,64,21,21,21,21,>
@@ -12744,7 +12750,7 @@ return this._syncFileList();
         let IRf,IRc,IRo,IRs;
         let params=t.split("&")
         if (params.length!=5)
-            {AllFunctions(0)("Function 288").debug("Incorrect number of IR-arguments",params)
+            {AllFunctions(0)("Function 288").verbose("Incorrect number of IR-arguments",params)
             return i.reject(new Error("BrainBroadLink incorrect number of IR-arguments"))
             }
 
@@ -12763,7 +12769,7 @@ return this._syncFileList();
             }
             })
         BrainBroadLinkUri=BrainBroadLinkUri+IRf+","+IRc+","+IRo+","+IRs.replace(/["."]/g, ",") //         (".",",")
-        AllFunctions(0)("Function 288").debug("http-call to broadlink:",BrainBroadLinkUri)
+        AllFunctions(0)("Function 288").verbose("http-call to broadlink:",BrainBroadLinkUri)
         //return i.resolve();
         }
         const o = n({
@@ -12800,7 +12806,7 @@ return this._syncFileList();
             }), i.reject(n))
         })
     }, p.prototype._failsafePostRequest = function(e, t) {
-        AllFunctions(0)("Function 288").debug("_failsafePostRequest",e,t)
+        AllFunctions(0)("Function 288").verbose("_failsafePostRequest",e,t)
         return this._postRequest(e, t).catch(t => {
             const r = c.extractInfo(t);
             a.error("JN5168_FAILSAFE_CALL_FAILED", {
@@ -12809,7 +12815,7 @@ return this._syncFileList();
             })
         })
     }, p.prototype._nbrGetRequest = function(e) {
-        AllFunctions(0)("Function 288").debug("_nbrGetRequest",e)
+        AllFunctions(0)("Function 288").verbose("_nbrGetRequest",e)
         return this.baseUrl ? (this.queuePromise = this.queuePromise.then(() => n({
             method: "GET",
             pool: this._httpAgent,
@@ -12844,7 +12850,7 @@ return this._syncFileList();
             })
         })
     }, p.prototype.enableDiscoveryMode = function() { //$$$
-        AllFunctions(0)("Function 288").debug("JN5168 enableDiscoveryMode")
+        AllFunctions(0)("Function 288").verbose("JN5168 enableDiscoveryMode")
         return u.getAirKey().then(e => this._postRequest("/discovery", "enabled=true&airkey=" + e, l)).then(() => {
             a.info("JN5168_DISCOVERY_ENABLED")
         }).catch(() => {
@@ -12895,7 +12901,7 @@ return this._syncFileList();
             this.store = e
         }
         loadLatest() {
-            AllFunctions(0)("Function 289").debug("loadlatest store",t,e)
+            AllFunctions(0)("Function 289").verbose("loadlatest store",t,e)
             return this.store.loadLatest(t())
         }
         load(e, r) {
@@ -13003,7 +13009,7 @@ return this._syncFileList();
             })
         },
         validateChecksum: function(e) {
-            AllFunctions(0)("Function 291").debug("validateChecksum e:",e); 
+            AllFunctions(0)("Function 291").verbose("validateChecksum e:",e); 
             try {
             return new n((t, r) => {
                 const n = Date.now(),
@@ -13024,7 +13030,7 @@ return this._syncFileList();
                 })
             })
             }
-            catch (err) {AllFunctions(0)("Function 92").debug("valchecks error:",err)}
+            catch (err) {AllFunctions(0)("Function 92").verbose("valchecks error:",err)}
         }
     }
 }, function(e, t, r) {// Function 292 FirmwareCleanup
@@ -13049,7 +13055,7 @@ return this._syncFileList();
         d = a.promisify(i);
     e.exports = {
         deleteDownloadedFiles: function(e, t) {
-            AllFunctions(0)("Function 292").debug("deleteDownloadedFiles e:",e,t);            
+            AllFunctions(0)("Function 292").verbose("deleteDownloadedFiles e:",e,t);            
             return a.all([n(e), o(t, "VERSIONFILE")])
         }
     }
@@ -13359,7 +13365,7 @@ return this._syncFileList();
     e.exports = require("mailgun-es6")
 }, function(e, t, r) {// Function 304 exec recipe step 
     "use strict";
-    AllFunctions(0)("Function 304").debug("exec recipe step e:",e,t); 
+    AllFunctions(0)("Function 304").verbose("exec recipe step e:",e,t); 
     const n = r(0)("Schedulerstep: command"),
         o = r(43);
     e.exports = function(e) {
@@ -13378,7 +13384,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 305 action executer
     "use strict";
-    AllFunctions(0)("Function 305").debug("action executer e:",e,t); 
+    AllFunctions(0)("Function 305").verbose("action executer e:",e,t); 
 
     function n(e) {
         const t = e.action.component.getDevice();
@@ -13473,15 +13479,15 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 306 job  execute action defined; either from a set of commands (f.e. favorites) or single command
     "use strict";
-    AllFunctions(0)("Function 306").debug("job"); // note e changes format depending on type of originator for action
+    AllFunctions(0)("Function 306").verbose("job"); // note e changes format depending on type of originator for action
 
     function n(e) {
         if (!e) return [];
         const t = [],
             j = r,
             x = r(506);
-        //AllFunctions(0)("Function 306").debug("e:",e )
-        //AllFunctions(0)("Function 306").debug("t:",t )
+        //AllFunctions(0)("Function 306").verbose("e:",e )
+        //AllFunctions(0)("Function 306").verbose("t:",t )
         return e.eachLeafAction(r => {
             const n = r.getComponent(),
                 o = r.getName();
@@ -13505,9 +13511,9 @@ return this._syncFileList();
                 name: o,
                 delay: i
             }), 
-            (r.name.substring(0,7) == "CHANNEL")  ? AllFunctions(0)("Function 306").debug("channelsave start;capabilities:",e.component.device.capabilities) : {},
-            (e.component != undefined && e.component.key != undefined && e.component.device.capabilities.findIndex((theCapab) => {return theCapab == "neeo.custom.channelsave"}) >0) && ( r.name.substring(0,5) == "DIGIT")   ? x.putCurrDigit(e.name,e.component.device.key) : {},
-            (e.component != undefined && e.component.key != undefined && e.component.device.capabilities.findIndex((theCapab) => {return theCapab == "neeo.custom.channelsave"}) >0) && ( r.name.substring(0,7) == "CHANNEL") ? x.putChannelUpDown(e.name,e.component.device.key,e,j) : {},
+            (r.name.substring(0,7) == "CHANNEL")  ? AllFunctions(0)("Function 306").verbose("channelsave start;capabilities:",e.component.device.capabilities) : {},
+            (e.component != undefined && e.component.key != undefined && e.component.device.capabilities.findIndex((theCapab) => {return theCapab == "neeo.custom.channelsave"}) >0) && ( r.name.substring(0,5) == "DIGIT")   ? (d.debug("Sending DIGIT", e.getName),x.putCurrDigit(e.name,e.component.device.key)) : {},
+            (e.component != undefined && e.component.key != undefined && e.component.device.capabilities.findIndex((theCapab) => {return theCapab == "neeo.custom.channelsave"}) >0) && ( r.name.substring(0,7) == "CHANNEL") ? (d.debug("Sending CHANNEL", e.getName),x.putChannelUpDown(e.name,e.component.device.key,e,j))  : {},
             (void t.push({
                 action: r,
                 delay: i
@@ -13554,9 +13560,9 @@ return this._syncFileList();
     };
     f.build = function(e, t) {
         try {
-            AllFunctions(0)("Function 306").debug("build");
+            AllFunctions(0)("Function 306").verbose("build");
             return new f(e, t)
-        } catch (r) {AllFunctions(0)("Function 306").debug("build FAILED",r);
+        } catch (r) {AllFunctions(0)("Function 306").verbose("build FAILED",r);
             return d.error("JOB_BUILD_FAILED", {
                 msg: r.message,
                 action: e,
@@ -14536,7 +14542,7 @@ return this._syncFileList();
         t.buildFromDevices(), t.configureScenarios()
     }
 }, function(e, t, r) {// Function 333 projectValidator
-    //AllFunctions(0)("Function 333").debug("projectValidator e:",e )
+    //AllFunctions(0)("Function 333").verbose("projectValidator e:",e )
     "use strict";
     const n = r(0)("projectValidator"),
         o = r(3),
@@ -14798,17 +14804,17 @@ return this._syncFileList();
             threshold: .7
         }), n.debug("channel search initialized. channel count:", e.length)
     }, a.prototype.reloadChannelFile = function() {
-        AllFunctions(0)("Function 343").debug("ChannelService reloadChannelFile")
+        AllFunctions(0)("Function 343").verbose("ChannelService reloadChannelFile")
         return s.getChannelFileContent().then(e => {
             const t = JSON.parse(e);
             this._init(t)
-        }).catch(e => {AllFunctions(0)("Function 343").debug("Catch reloadchannelfile:",e);
+        }).catch(e => {AllFunctions(0)("Function 343").verbose("Catch reloadchannelfile:",e);
             n.error("CHANNELS_LOAD_INDEX_FAILED", e.message)
         })
     }, a.prototype.search = function(e) {
-        AllFunctions(0)("Function 343").debug("ChannelService search ")
+        AllFunctions(0)("Function 343").verbose("ChannelService search ")
         if (this.channelIndex == undefined)
-            {AllFunctions(0)("Function 343").debug("Loading channels as this is not done yet")
+            {AllFunctions(0)("Function 343").verbose("Loading channels as this is not done yet")
             return this.reloadChannelFile().then( () => {return this.channelIndex.search(e).map(e => e.item)})
         }   
         else 
@@ -14831,7 +14837,7 @@ return this._syncFileList();
 
     function n(e) {
         s.debug("registering Brain for discovery", e), d.increaseCounter("lookup-register-brain");
-        r(0)("Function 344 Obsolete").debug("Make Brain discoverable via cloud (start and stop)");
+        r(0)("Function 344 Obsolete").verbose("Make Brain discoverable via cloud (start and stop)");
  /*
         return i.resolve(); 
         const t = {
@@ -14962,7 +14968,7 @@ return this._syncFileList();
         };
     d.prototype.notificationProjectReload = function(e) {
         let t = c;
-        AllFunctions(0)("Function 347").debug("Project (re)load");
+        AllFunctions(0)("Function 347").verbose("Project (re)load");
         e.projectLabel && e.projectLabel !== c ? t = e.projectLabel : e.controllerRoom && (t = `NEEO ${e.controllerRoom.name}`), this.writeConfig(t).catch(e => {
             i.error("WRITE_AVAHI_CFG", e.message)
         })
@@ -14970,14 +14976,14 @@ return this._syncFileList();
         const o = (new Date).toLocaleDateString();
         return '<?xml version="1.0" standalone="no"?><!DOCTYPE service-group SYSTEM "avahi-service.dtd"><service-group><name>' + e + "</name><service><type>_neeo._tcp</type><port>" + this.cp6Port + "</port><txt-record>upd=" + o + "</txt-record><txt-record>rel=" + t + "</txt-record><txt-record>reg=" + r + "</txt-record><txt-record>hon=" + n + "</txt-record></service></service-group>"
     }, d.prototype.writeConfig = function(e) {
-        AllFunctions(0)("Function 347").debug("check need for writeConfig")
+        AllFunctions(0)("Function 347").verbose("check need for writeConfig")
         const t = s.firmwareVersion(),
             r = s.getRegionCode();
         if (this._region === r && this._firmwareVersion === t && this._projectLabel === e) return i.debug("omit avahi update, nothing changed"), o.resolve();
         this._region = r, this._firmwareVersion = t, this._projectLabel = e, i.debug("update avahi file, project label", e);
         const n = this.__generateXmlSettings(e, t, r, s.hostname());
-        AllFunctions(0)("Function 347").debug("writeConfig",n)
-        AllFunctions(0)("Function 347").debug("writeConfig",{cmd:this.restartcmd,param:this.restartparam})
+        AllFunctions(0)("Function 347").verbose("writeConfig",n)
+        AllFunctions(0)("Function 347").verbose("writeConfig",{cmd:this.restartcmd,param:this.restartparam})
         return u(this.configPath, n).then(() =>  (i.debug("restart avahi daemon now"), a(this.restartcmd, this.restartparam)))
     }, d.prototype.reloadAvahi = function() {
         return i.debug("restart avahi daemon now"), a(this.restartcmd, this.restartparam)
@@ -15206,17 +15212,17 @@ return this._syncFileList();
             o.debug("init", e), this.timerId = void 0, this.wifiAPModeActive = !1, this.systemctl = e.systemctl, this.parameterStart = e.parameterStart, this.parameterStop = e.parameterStop, this.disableAccessPointModeAfterMs = e.disableAccessPointModeAfterMs
         };
     c.prototype.shortpressHandler = function() {
-        AllFunctions(0)("Function 354").debug("shortpressHandler") // $$$
+        AllFunctions(0)("Function 354").verbose("shortpressHandler") // $$$
         return o.debug("touchbutton pressed, enable jn discovery mode"), i.increaseCounter("touchbutton-pressed"), o.event("NEEO Pairing mode enabled"), s.enableDiscoveryMode()
     }, c.prototype.disableAccesspointMode = function() {
-        AllFunctions(0)("Function 354").debug("disableAccesspointMode") // $$$
+        AllFunctions(0)("Function 354").verbose("disableAccesspointMode") // $$$
         return a(this.systemctl, this.parameterStop).then(() => (this.wifiAPModeActive = !1, o.event("NEEO Access Point disabled"), s._ledOn())).catch(e => {
             o.error("AP_MODE_DISABLE", {
                 msg: e.message
             })
         })
     }, c.prototype._enableAccesspointMode = function() {
-        AllFunctions(0)("Function 355").debug("_enableAccesspointMode",this.parameterStart) // $$$
+        AllFunctions(0)("Function 355").verbose("_enableAccesspointMode",this.parameterStart) // $$$
         return a(this.systemctl, this.parameterStart).then(() => (this.wifiAPModeActive = !0, this.timerId = setTimeout(() => {
             o.debug("disable AP mode timer activated"), this.disableAccesspointMode()
         }, this.disableAccessPointModeAfterMs), o.event("NEEO Access Point enabled"), s.ledWifiAPMode())).catch(e => {
@@ -15225,7 +15231,7 @@ return this._syncFileList();
             })
         })
     }, c.prototype.longpressHandler = function() { // This functionality is not necessary anymore
-        AllFunctions(0)("Function 354").debug("longpressHandler") // $$$
+        AllFunctions(0)("Function 354").verbose("longpressHandler") // $$$
         return o.debug("long touchbutton pressed, toggle wifi ap mode"), i.increaseCounter("long-touchbutton-pressed"), clearTimeout(this.timerId), this.wifiAPModeActive ? this.disableAccesspointMode() : this._enableAccesspointMode()
     }, c.prototype.userBlink = function() {
         return this.wifiAPModeActive ? n.resolve() : s.ledIdentBrain()
@@ -15833,7 +15839,7 @@ return this._syncFileList();
             }
         };
     h.prototype._downloadImages = function(url, width, height, compressiontype) {
-        //AllFunctions(0)("Function 371").debug("Downloading image,url,width,height,compressiontype",url,width,height,compressiontype)
+        //AllFunctions(0)("Function 371").verbose("Downloading image,url,width,height,compressiontype",url,width,height,compressiontype)
         if (!url) return void s.debug("invalid url, ignored");
         const i = l.getBaseUrl(); 
         d.increaseCounter("image-prefetch-started"), this.promiseQueue = this.promiseQueue.then(() => {
@@ -15864,7 +15870,7 @@ return this._syncFileList();
             s.debug("failed to prefetch image", width.message), d.increaseCounter("image-prefetch-error")
         })
     }, h.prototype._fetchFavoritesImages = function(e) {
-        AllFunctions(0)("Function 371").debug("getchfavoritesimages")
+        AllFunctions(0)("Function 371").verbose("getchfavoritesimages")
         e.getAllFavorites().forEach(e => {
             const t = e.getLogoURL(); /// 
             return u.isUrlCached(t, this.FAVORITE_IMAGE_OPTIONS) ? void s.debug("_fetchFavoritesImages: already cached url", t) : (u.addUrlToCache(t, this.FAVORITE_IMAGE_OPTIONS), void this._downloadImages(t, this.favoriteImage.width, this.favoriteImage.height))
@@ -15880,7 +15886,7 @@ return this._syncFileList();
             url: e
         })
     }, h.prototype.flushImageCache = function() {
-        AllFunctions(0)("Function 371").debug("flushImagecash... only calling clear")
+        AllFunctions(0)("Function 371").verbose("flushImagecash... only calling clear")
         return u.clear()
     }
 }, function(url, t, r) { // Function 372 Main imagecache (lookup) handler
@@ -15902,7 +15908,7 @@ return this._syncFileList();
             const cacheName = createCacheName(url, imageOptions);
             return imageCache.includes(cacheName)
         },
-        clear: function() {AllFunctions(0)("Function 372").debug("Clearing image cache");
+        clear: function() {AllFunctions(0)("Function 372").verbose("Clearing image cache");
             imageCache.length = 0, CachePtr = 0
         }
     }
@@ -16052,7 +16058,7 @@ return this._syncFileList();
         getDeviceByadapterDeviceId: function(e) {
             return n("FIND_DEVICE_BY_NAME", e), o.activeProject()
                                                     .then(t => t.getDeviceByadapterDeviceId(e))
-//                                                    .then(xx => {AllFunctions(0)("Function 376").debug("getdevicebyadapterdeviceid:",xx);return xx})
+//                                                    .then(xx => {AllFunctions(0)("Function 376").verbose("getdevicebyadapterdeviceid:",xx);return xx})
         },
         getDevices: function(e) {
             return n("GET_DEVICES", e), o.activeProject().then(t => t.getDevices())
@@ -16082,7 +16088,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 377 TR2 Service, Startsysnc function
     "use strict";
-    AllFunctions(0)("Function 377").debug("")
+    AllFunctions(0)("Function 377").verbose("")
 
     function n(e) {
         o.debug("init", e), this.routingTableRefreshTimeMs = e.routingTableRefreshTimeMs, this.buildZeroConf = r(387), this.buildGui = r(389), this.buildGuiData = r(430), this.watchGuiData = this.buildGuiData.watch, this.listeners = [], this.pushActions = u.build(d), this.tempBrainHostOverride = void 0
@@ -16144,7 +16150,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 378 TR2_PUSHUPDATE, main handler for sync/pushing an update to TR2
     "use strict";
-    AllFunctions(0)("Function 378").debug("")
+    AllFunctions(0)("Function 378").verbose("")
 
     function n(e) {
         u.updateTr2Addresses(e)
@@ -16181,14 +16187,14 @@ return this._syncFileList();
         },
         sendPushMessage: function(e) {
             if (!u.isTr2Registered())
-                 AllFunctions(0)("Function 378").debug("Push update to TR2, but no TR2 connected");
+                 AllFunctions(0)("Function 378").verbose("Push update to TR2, but no TR2 connected");
 
             if (!u.isTr2Registered()) return 60 > parseInt(process.uptime()) && o(), i.debug("TR2_NO_REGISTERED_DEVICES_FOUND"), !1;
             if (!e) return i.warn("TR2_NO_PAYLOAD_DEFINED"), !1;
             if (l === e) return i.debug("DUPLICATE_PUSHMSG_DETECTED"), !1;
             l = e, i.debug("send pushmsg", e.length);
             const t = u.getAllActiveIPV6AdressesAsArray();
-            AllFunctions(0)("Function 378").debug("Push update to these IPV6-addresses:",t)
+            AllFunctions(0)("Function 378").verbose("Push update to these IPV6-addresses:",t)
             a.pushUpdateToTr2(e, t, s.coapPort, s.maxPayloadSize).catch(e => {
                 i.warn("FAILED_DELIVER_ALL_TR2_PUSH_MESSAGES", e.message || "")
             })
@@ -16196,7 +16202,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 379 TR2_COAP_PUSHUPDATE PUSH to tr2 a POST /update 
     "use strict";
-    AllFunctions(0)("Function 379").debug("")
+    AllFunctions(0)("Function 379").verbose("")
     const n = r(0)("TR2_COAP_PUSHUPDATE"),
         o = r(162),
         i = r(1),
@@ -16232,7 +16238,7 @@ return this._syncFileList();
     e.exports = require("unidecode")
 }, function(e, t, r) {// Function 381 TR2 Tracker; manage (plus register) TR2-addresses
     "use strict";
-    AllFunctions(0)("Function 381").debug("")
+    AllFunctions(0)("Function 381").verbose("")
     const n = r(382),
         o = r(0)("TR2 Tracker"),
         i = r(141).Address6;
@@ -16267,7 +16273,7 @@ return this._syncFileList();
     e.exports = require("net")
 }, function(e, t, r) {// Function 383 TR2:pushactionhandler /ChangeScreen; handleActivescenario, addPushaction, changescreen
     "use strict";
-    AllFunctions(0)("Function 383").debug("")
+    AllFunctions(0)("Function 383").verbose("")
     const n = r(0)("TR2:pushactionhandler"),
         o = [/ChangeScreen\('\d+-?\d*',-?1\)/];
     e.exports = class e {
@@ -16704,7 +16710,7 @@ return this._syncFileList();
             visibleRootScreenId: g.visibleRootScreenId
         };
     e.exports = function(e) {
-        AllFunctions(0)("Function 402").debug("Screenbuilder TR2, checking isFirmwareUpdateAvailable")
+        AllFunctions(0)("Function 402").verbose("Screenbuilder TR2, checking isFirmwareUpdateAvailable")
         const t = e.isFirmwareUpdateAvailable() ? `badgeColor="${g.badgeColorImportant}" badgeRadius="14"` : "",
         // optional flash exclamation: const t  = `badgeColor="${g.badgeColorImportant}" badgeRadius="14"`,
             r = e.getVisibleRooms(),
@@ -16749,7 +16755,7 @@ return this._syncFileList();
     e.exports.getRecipeModel = function(e, t) {
         const r = e.getName(),
             s = function(e, t) {
-                //AllFunctions(0)("Function 405").debug("isvisibleinguiasunconfigured",e.isVisibleInGuiAsUnconfigured())
+                //AllFunctions(0)("Function 405").verbose("isvisibleinguiasunconfigured",e.isVisibleInGuiAsUnconfigured())
                 if (e.isVisibleInGuiAsUnconfigured()) return `ShowPopup('message','${c}')`;
                 if (o(e)) return "PlaySnake()";
                 const r = a.getRecipeExecuteUrl(e),
@@ -17673,7 +17679,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 428 get and render Directories (getAllDirectories)
     "use strict";
-    AllFunctions(0)("Function 428").debug(" get and render Directories")
+    AllFunctions(0)("Function 428").verbose(" get and render Directories")
 
     const n = r(429);
     e.exports = function(e) {
@@ -17683,7 +17689,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 429 Render directoryscreen
     "use strict";
-    AllFunctions(0)("Function 429").debug("Render directoryscreen")
+    AllFunctions(0)("Function 429").verbose("Render directoryscreen")
 
     function n(e) {
         return new Buffer(JSON.stringify(e)).toString("base64")
@@ -17708,7 +17714,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 430 TR2-GUIDATA; 
     "use strict";
-    AllFunctions(0)("Function 430").debug("TR2-GUIDATA")
+    AllFunctions(0)("Function 430").verbose("TR2-GUIDATA")
     const n = r(1),
         o = r(0)("TR2-GUIDATA"),
         i = r(4)("gui.tpl.data.xml"),
@@ -17732,7 +17738,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 431 TR2-GUIDATA; getRenderedData and watch
     "use strict";
-    AllFunctions(0)("Function 431").debug("TR2-GUIDATA; getRenderedData and watch")
+    AllFunctions(0)("Function 431").verbose("TR2-GUIDATA; getRenderedData and watch")
 
     function n(e, t, r) {
         const n = f[e.getType()];
@@ -18159,7 +18165,7 @@ return this._syncFileList();
     }, i.prototype.hasImageContent = function(e) {
         return !(!e || !e.length || /%2F$/.test(e))
     }, i.prototype.flushImageCache = function(e) {
-        AllFunctions(0)("Function 437").debug("flushImageCache, calling r(372).clear") 
+        AllFunctions(0)("Function 437").verbose("flushImageCache, calling r(372).clear") 
             r(372).clear();
     }    
 }, function(e, t, r) {// Function 438 Route: gui_data/sonos.tpl.data.xml
@@ -18342,7 +18348,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 441 TR2-GUIDATA-PUSHACTION
     "use strict";
-    AllFunctions(0)("Function 441").debug("TR2-GUIDATA-PUSHACTION")
+    AllFunctions(0)("Function 441").verbose("TR2-GUIDATA-PUSHACTION")
 
     function n(e) {
         return i({
@@ -18378,13 +18384,13 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 443 TR2_REQUESTHANDLER; setForwardingHosts, handleCoAPRequest, handleWifiRequest
     "use strict";
-    AllFunctions(0)("Function 443").debug("TR2_REQUESTHANDLER; setForwardingHosts, handleCoAPRequest, handleWifiRequest")
+    AllFunctions(0)("Function 443").verbose("TR2_REQUESTHANDLER; setForwardingHosts, handleCoAPRequest, handleWifiRequest")
 
     function n(e, t, r, n) {
         const o = d.resolve(e, t),
             i = m.urlMatchInfraredTrigger(o, r);
         return i ? function(e, t, r) {
-            AllFunctions(0)("Function 443").debug("TR2_REQUESTHANDLER; simple infraredgtrigger deteced");
+            AllFunctions(0)("Function 443").verbose("TR2_REQUESTHANDLER; simple infraredgtrigger deteced");
             s.debug("simple trigger detected", {
                 query: r
             });
@@ -18393,12 +18399,12 @@ return this._syncFileList();
                 generic: /true/.test(r.generic)
             };
             return f.getRepository().then(e => {
-                AllFunctions(0)("Function 443").debug("TR2_REQUESTHANDLER; triggerAction");
+                AllFunctions(0)("Function 443").verbose("TR2_REQUESTHANDLER; triggerAction");
 //                AllFunctions(0)("Function 443 TR2_REQUESTHANDLER; e",e);
-                AllFunctions(0)("Function 443").debug(" TR2_REQUESTHANDLER; n",n);
-                AllFunctions(0)("Function 443").debug(" TR2_REQUESTHANDLER; o",o);
-                AllFunctions(0)("Function 443").debug(" TR2_REQUESTHANDLER; i",i);
-                AllFunctions(0)("Function 443").debug(" TR2_REQUESTHANDLER; a",a);
+                AllFunctions(0)("Function 443").verbose(" TR2_REQUESTHANDLER; n",n);
+                AllFunctions(0)("Function 443").verbose(" TR2_REQUESTHANDLER; o",o);
+                AllFunctions(0)("Function 443").verbose(" TR2_REQUESTHANDLER; i",i);
+                AllFunctions(0)("Function 443").verbose(" TR2_REQUESTHANDLER; a",a);
 
                 e.triggerAction(n, o, i, a)
             })
@@ -18416,7 +18422,7 @@ return this._syncFileList();
             if (!e || n) return;
             let t = p.answerForTr2(o, e);
             return t = p.transliterationToAscii(t), s.debug("payload response:", t), t
-        }));AllFunctions(0)("Function 443").debug("TR2_REQUESTHANDLER; request ");
+        }));AllFunctions(0)("Function 443").verbose("TR2_REQUESTHANDLER; request ");
     }
 
     function o(e) {
@@ -18455,11 +18461,11 @@ return this._syncFileList();
             _ = e
         },
         handleCoAPRequest: function(e, t) {
-            AllFunctions(0)("Function 443").debug("handleCoAPRequest")
+            AllFunctions(0)("Function 443").verbose("handleCoAPRequest")
             return function(e) {
                 return e._packet && e._packet.messageId ? v !== e._packet.messageId && (v = e._packet.messageId, !0) : (s.debug("COAP_NO_MESSAGEID_IN_PACKET"), !1)
             }(e) ? new c((r, a) => {
-                try {AllFunctions(0)("Function 443").debug(" handleCoAPRequest goOn")
+                try {AllFunctions(0)("Function 443").verbose(" handleCoAPRequest goOn")
                     s.debug("handle coap request:", {
                         shortUrl: t
                     }), e.on("timeout", e => {
@@ -18467,7 +18473,7 @@ return this._syncFileList();
                     }).on("error", e => {
                         i("COAP_SERVER_ERROR", e.message, a)
                     });
-                    AllFunctions(0)("Function 443").debug(" expandRequestUrl t",t)
+                    AllFunctions(0)("Function 443").verbose(" expandRequestUrl t",t)
                     const c = g.expandRequestUrl(t);
                     n(o(c.longUrl), c.longUrl, c.query, c.sendNoResponse).then(t => {
                         const n = t ? t.length : 0;
@@ -18488,7 +18494,7 @@ return this._syncFileList();
             }) : (s.debug("COAP_DUPLICATE_MESSAGE"), h.updateDuplicateCoapMessages(), e.end(), c.reject(new Error("COAP_DUPLICATE_MESSAGE")))
         },
         handleWifiRequest: function(e) {
-            AllFunctions(0)("Function 443").debug(" handleWifiRequest")
+            AllFunctions(0)("Function 443").verbose(" handleWifiRequest")
             return new c((t, r) => {
                 s.debug("handle wifi request:", {
                     url: e
@@ -18562,7 +18568,7 @@ return this._syncFileList();
     const n = r(27),
         o = r(171);
     e.exports.getRepository = function() {
-        AllFunctions(0)("Function 448").debug("Loading projectfile")
+        AllFunctions(0)("Function 448").verbose("Loading projectfile")
         return n.get().then(e => {
             const t = o.convert(e);
             if (!t || 0 === Object.keys(t).length) throw new Error("CONVERTED_REPO_INVALID");
@@ -18571,7 +18577,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 449 cp6:lib:tr2:coap:server
     "use strict";
-    AllFunctions(0)("Function 449").debug("")
+    AllFunctions(0)("Function 449").verbose("")
 
     const n = r(162),
         o = r(69),
@@ -18594,13 +18600,13 @@ return this._syncFileList();
         };
     i.inherits(a, o.EventEmitter), a.prototype.bind = function() {AllFunctions(0)("Function 449 i.inherits 1"),
         s("start coap server %o", this.coapOptions), this.coapServer = n.createServer(this.coapOptions), this.coapServer.on("request", (e, t) => {
-            AllFunctions(0)("Function 449").debug("i.request")
+            AllFunctions(0)("Function 449").verbose("i.request")
             this._handleCoAPMessage(e, t)
         }), this.coapServer.on("error", e => {
-            AllFunctions(0)("Function 449").debug(" i.error")
+            AllFunctions(0)("Function 449").verbose(" i.error")
             this.emit("error", e)
         }), this.coapServer.listen(this.listeningPort, this.listeningHost, () => {
-            AllFunctions(0)("Function 449").debug(" listen")
+            AllFunctions(0)("Function 449").verbose(" listen")
             s("TR2_COAPSERVER_STARTED %o", {
                 host: this.listeningHost,
                 port: this.listeningPort
@@ -18611,26 +18617,26 @@ return this._syncFileList();
             this.coapServer.close()
         } catch (e) {}
     }, a.prototype._handleCoAPMessage = function(e, t) {
-        AllFunctions(0)("Function 449").debug(" Got message e",e.body,e.url)
-        //AllFunctions(0)("Function 449").debug("Got message t",t)
+        AllFunctions(0)("Function 449").verbose(" Got message e",e.body,e.url)
+        //AllFunctions(0)("Function 449").verbose("Got message t",t)
         if (!e || !t) return void this.emit("invalidrequest", e);
         if (!e.rsinfo || !e.rsinfo.address || "IPv6" !== e.rsinfo.family) return s("request from a non IPv6 Address, ignored"), void this.emit("invalidsender", e);
         this.ipv6AddrOfLastMessage !== e.rsinfo.address && (s("new IPv6 Address:", e.rsinfo.address), this.emit("ipv6coapaddress", e.rsinfo.address), this.ipv6AddrOfLastMessage = e.rsinfo.address);
         const r = e.url;
-        AllFunctions(0)("Function 449").debug("Passing message to requesthandler.handleCoAPRequest ")
-        //AllFunctions(0)("Function 449").debug("Got message t",t)
+        AllFunctions(0)("Function 449").verbose("Passing message to requesthandler.handleCoAPRequest ")
+        //AllFunctions(0)("Function 449").verbose("Got message t",t)
 
         this.requesthandler.handleCoAPRequest(t, r).catch(() => {})
     }
 }, function(e, t, r) {// Function 450 r(451))(r(2).tr2udpserver)
     "use strict";
-    AllFunctions(0)("Function 450").debug("")
+    AllFunctions(0)("Function 450").verbose("")
     const n = r(2),
         o = new(r(451))(n.tr2udpserver);
     e.exports = o
 }, function(e, t, r) {// Function 451 tr2udpserver
     "use strict";
-    AllFunctions(0)("Function 451").debug("create udp4-socketserver (for tr2)")
+    AllFunctions(0)("Function 451").verbose("create udp4-socketserver (for tr2)")
 
     const n = r(452).createSocket("udp4"),
         o = r(69),
@@ -18644,12 +18650,12 @@ return this._syncFileList();
             this.emit("serverstarted", n.address())
         }), 
         n.on("message", (e, t) => {
-            AllFunctions(0)("Function 451").debug("receive udp-message (e,t)",e,t)
+            AllFunctions(0)("Function 451").verbose("receive udp-message (e,t)",e,t)
  // Function 451 udp-message (e,t) <Buffer 31 30> { address: '192.168.0.52', family: 'IPv4', port: 64269, size: 2 }
             this.emit("udprequest", e, t)
         }),
 //        n.on("emit", () => {
-//            AllFunctions(0)("Function 451").debug("emitting message")
+//            AllFunctions(0)("Function 451").verbose("emitting message")
 //        }), 
         n.on("error", e => {
             this.emit("error", e)
@@ -18747,10 +18753,10 @@ return this._syncFileList();
         g = r(0)("TR2:DirectoryHandler");
     e.exports = {
         browseDirectory: function(e, t, r) {
-            AllFunctions(0)("Function 453").debug("browseDirectory")
-    AllFunctions(0)("Function 453").debug(" e",e)
-    AllFunctions(0)("Function 453").debug(" t",t)
-    AllFunctions(0)("Function 453").debug(" r",r)
+            AllFunctions(0)("Function 453").verbose("browseDirectory")
+    AllFunctions(0)("Function 453").verbose(" e",e)
+    AllFunctions(0)("Function 453").verbose(" t",t)
+    AllFunctions(0)("Function 453").verbose(" r",r)
 
             if (!r) return a.resolve(p.error("Sorry, this list cannot be loaded."));
             const o = e.getScenarioByDirectoryKey(t),
@@ -18790,7 +18796,7 @@ return this._syncFileList();
             })
         },
         callAction: function(e, t, r = {}) {
-            AllFunctions(0)("Function 453").debug("callAction")
+            AllFunctions(0)("Function 453").verbose("callAction")
             const n = e.getDirectoryByKey(t);
             if (!n) return g.warn("TR2_LIST_INVALID_DIRECTORY", {
                 directoryKey: t
@@ -18807,7 +18813,7 @@ return this._syncFileList();
             })
         },
         getDeviceRootItems: function(e, t = {}) {
-            AllFunctions(0)("Function 453").debug("getDeviceRootItems")
+            AllFunctions(0)("Function 453").verbose("getDeviceRootItems")
 
 
             const r = t.deviceKey,
@@ -18837,7 +18843,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 454 cp6:lib:tr2:xmlgenerate:listFactory
     "use strict";
-    AllFunctions(0)("Function 454").debug("")
+    AllFunctions(0)("Function 454").verbose("")
 
     function n(e) {
         return e && e.items && e.items.length ? e.items.reduce((t, r) => {
@@ -18872,8 +18878,8 @@ return this._syncFileList();
         p = 7;
     e.exports = {
         prepareViewData: function(e, t) {
-//AllFunctions(0)("Function 454").debug("prepareViewData: function(e, t) {");
-//AllFunctions(0)("Function 454").debug("e:",e);
+//AllFunctions(0)("Function 454").verbose("prepareViewData: function(e, t) {");
+//AllFunctions(0)("Function 454").verbose("e:",e);
             if (!e || !Array.isArray(e.items)) return a("invalid browsedata", e),
                 function(e) {
                     return {
@@ -18929,7 +18935,7 @@ return this._syncFileList();
         };
     e.exports = {
         getViewData: function(e, t) {
-            AllFunctions(0)("Function 455").debug("getViewData: e",e)
+            AllFunctions(0)("Function 455").verbose("getViewData: e",e)
             return e ? e.isHeader ? function(e) {
                 return {
                     isHeader: !0,
@@ -18953,7 +18959,7 @@ return this._syncFileList();
                     return e.title && (n.title = a.getTr2VisibleText(e.title)), e.iconName && (n.iconName = o(e.iconName)), e.inverse ? (n.textColor = i.fastListScreen.textColor, n.activeTextColor = i.fastListScreen.buttonActiveBackgroundColor, n.backgroundColor = i.fastListScreen.backgroundColor, n.activeBackgroundColor = i.fastListScreen.buttonActiveBackgroundColor) : (n.textColor = i.fullScreenDarkPopup.textColor, n.activeTextColor = i.fullScreenDarkPopup.backgroundColor, n.backgroundColor = i.fullScreenDarkPopup.buttonColor, n.activeBackgroundColor = i.fullScreenDarkPopup.activeBackgroundColor), n
                 })
             }(e, t) : e.isInfoItem ? function(e, t) {
-                AllFunctions(0)("Function 455").debug("We have an infoitem:, this is title,text,triggeraction",e.title,e.text,s.getTriggerAction(e, t))
+                AllFunctions(0)("Function 455").verbose("We have an infoitem:, this is title,text,triggeraction",e.title,e.text,s.getTriggerAction(e, t))
                 return {
                     isInfoItem: !0,
                     title: a.getTr2VisibleText(e.title),
@@ -18971,7 +18977,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 456 prepareviewdata cp6:lib:tr2:xmlgenerate:listcontent
     "use strict";
-    AllFunctions(0)("Function 456").debug("")
+    AllFunctions(0)("Function 456").verbose("")
 
     function n(e) {
         const t = Object.assign(s, e),
@@ -19017,7 +19023,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 457 getviewdata cp6:lib:tr2:xmlgenerate:listFactory browse
     "use strict";
-    AllFunctions(0)("Function 457").debug("")
+    AllFunctions(0)("Function 457").verbose("")
     function n(e, t) {
         return e.length ? e.map(e => l.getViewData(e, t)) : [{
             isEmpty: !0,
@@ -19051,7 +19057,7 @@ return this._syncFileList();
         m = 7;
     e.exports = {
         prepareViewData: function(e) {
-            AllFunctions(0)("In function 457").debug("")
+            AllFunctions(0)("In function 457").verbose("")
 
             if (!e || !Array.isArray(e.items)) return u("invalid browsedata", e),
                 function(e) {
@@ -19087,7 +19093,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 458 getviewdata
     "use strict";
-    AllFunctions(0)("Function 458").debug("")
+    AllFunctions(0)("Function 458").verbose("")
     function n(e, t, r = "") {
         return {
             isElement: !0,
@@ -19106,7 +19112,7 @@ return this._syncFileList();
         c = 215;
     e.exports = {
         getViewData: function(e, t) {
-            AllFunctions(0)("Function 458").debug("")
+            AllFunctions(0)("Function 458").verbose("")
             return e ? e.isHeader ? function(e) {
                 return {
                     isHeader: !0,
@@ -19119,7 +19125,7 @@ return this._syncFileList();
                     onClick: i.getTriggerAction(e),
                     defaultImage: a
                 }
-            }(e) : e.isInfoItem ? function(e) {AllFunctions(0)("Function 458").debug("isInfoitem ",e)
+            }(e) : e.isInfoItem ? function(e) {AllFunctions(0)("Function 458").verbose("isInfoitem ",e)
                 return n(e, i.getInfoAction(e), o.getWithoutActiveTouchColor("Information"))
             }(e) : e.isActionNode ? function(e) {
                 const t = e.icon ? o.getWithoutActiveTouchColor(e.icon) : "";
@@ -19131,7 +19137,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 459 TR2_LIST_PARAMETER
     "use strict";
-    AllFunctions(0)("Function 459").debug("")
+    AllFunctions(0)("Function 459").verbose("")
     var n = Number.isInteger;
     const o = r(0)("TR2_LIST_PARAMETER"),
         i = r(2).tr2.listPageSize;
@@ -19160,7 +19166,7 @@ return this._syncFileList();
         }
     }
 }, function(e, t, r) {// Function 460 Looks like main route
-    AllFunctions(0)("Function 460").debug("")
+    AllFunctions(0)("Function 460").verbose("")
     "use strict";
     const n = r(5), // exports = require("express")
         o = r(177),
@@ -19174,7 +19180,7 @@ return this._syncFileList();
     const l = r(142);                                           // Locale-definitions
     u.use(l.init), u.use(function(e, t, r) {
 
-        AllFunctions(0)("Function 460").debug("express.use init",e.method,e.url)
+        AllFunctions(0)("Function 460").verbose("express.use init",e.method,e.url)
 
         "OPTIONS" === e.method ? t.send() : r()
     }), u.use(o.json({
@@ -19221,12 +19227,14 @@ return this._syncFileList();
         homekit: r(503),
         fst: r(504)
     };
-    p.use("/api", h.api), p.use("/systeminfo", h.systeminfo), p.use("/firmware", h.firmware), p.use("/notifications",  h.notification), p.use("/account", h.account), p.use("/wifi", h.wifi), p.use("/projects", h.project), p.use("/devicespecs", h.devicespec), p.use("/deviceadapter", h.deviceadapter), p.use("/devicetest", h.devicetest), p.use("/directoryadapter", h.directoryadapter), p.use("/channels", h.channel), p.use("/irblaster", h.irblaster), p.use("/statistics", h.statistics), p.use("/shorturl", h.shorturl), p.use("/curl", h.curl), p.use("/forwardactions", h.forwardactions), p.use("/guilogger", h.guilogger), p.use("/secure", h.crypto), p.use("/neeoremote", h.neeoremote), p.use("/events", h.events), p.use("/homekit", h.homekit), p.use("/fst", h.fst), d && p.use("/dui", h.dui), u.use(function(e, t, r) 
-        {AllFunctions(0)("Function 460").debug("last resort u.use, d:",d )
+    p.use("/api", h.api), p.use("/systeminfo", h.systeminfo), p.use("/firmware", h.firmware), p.use("/notifications",  h.notification), p.use("/account", h.account), p.use("/wifi", h.wifi), p.use("/projects", h.project), p.use("/devicespecs", h.devicespec), p.use("/deviceadapter", h.deviceadapter), p.use("/devicetest", h.devicetest), p.use("/directoryadapter", h.directoryadapter), p.use("/channels", h.channel), p.use("/irblaster", h.irblaster), p.use("/statistics", h.statistics), p.use("/shorturl", h.shorturl), p.use("/curl", h.curl), p.use("/forwardactions", h.forwardactions), p.use("/guilogger", h.guilogger), p.use("/secure", h.crypto), p.use("/neeoremote", h.neeoremote), p.use("/events", h.events), p.use("/homekit", h.homekit), p.use("/fst", h.fst), d && 
+        p.use("/dui", h.dui), p.post("/cp6/metaMessageHandler", (req,res) => {res.json(metaMessageHandler(req,res,a))}),
+        u.use(function(e, t, r) 
+        {AllFunctions(0)("Function 460").verbose("last resort u.use, d:",d )
         const n = new Error("Not Found");
         n.status = 404, r(n)
     }), d  ? (u.use(function(e, t, r, n) { // changed this to test debug fucntionality
-        AllFunctions(0)("Function 460").debug("u,.use EXPREESS NEEDS NEXT PARAMETER",n)
+        AllFunctions(0)("Function 460").verbose("u,.use EXPREESS NEEDS NEXT PARAMETER",n)
         n || a.debug("EXPRESS_NEEDS_NEXT_PARAMETER_WEBPACK_TOO"), a.error("SERVER_ERROR", {
             url: t.url,
             method: t.method,
@@ -19238,7 +19246,7 @@ return this._syncFileList();
             stack: e.stack
         })
     }), a.debug("mount TOUCHBUTTON DEVELOPMENT route"), p.get("/touchbutton", function(e, t) {
-        AllFunctions(0)("Function 460").debug("mount TOUCHBUTTON DEVELOPMENT route")
+        AllFunctions(0)("Function 460").verbose("mount TOUCHBUTTON DEVELOPMENT route")
         r(10).send({
             type: "touchbuttonpressed",
             date: new Date
@@ -19247,14 +19255,14 @@ return this._syncFileList();
         })
     }),      
     a.debug("mount LED IDENT route"), p.get("/ledupdatefw", function(e, t) {
-        AllFunctions(0)("Function 460").debug("mount LED IDENT route")
+        AllFunctions(0)("Function 460").verbose("mount LED IDENT route")
         r(31).ledFirmwareUpdate(), t.json({
             msg: "firmware update led..."
         })
     })) : u.use(function(e, t, r, n) {
-        AllFunctions(0)("Function 460").debug("generic u.use t.url",t.url )
-        //AllFunctions(0)("Function 460").debug(" generic u.use n",n)
-        AllFunctions(0)("Function 460").debug(" generic u.use e",e)
+        AllFunctions(0)("Function 460").verbose("generic u.use t.url",t.url )
+        //AllFunctions(0)("Function 460").verbose(" generic u.use n",n)
+        AllFunctions(0)("Function 460").verbose(" generic u.use e",e)
         const o = !e.alreadyLogged && e.message && -1 === e.message.indexOf("Internal Server Error");
         n || a.debug("EXPRESS_NEEDS_NEXT_PARAMETER_WEBPACK_TOO"), o && a.error("INVALID_ROUTE", {
             url: t.url,
@@ -19277,6 +19285,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 463 Router: API 
     "use strict";
+    AllFunctions(0)("Express router for API calls").verbose("");    
     const n = r(1),
         o = r(5).Router(),
         i = r(90),
@@ -19292,7 +19301,7 @@ return this._syncFileList();
         r376 = r(376),
         q = r(27);
     o.get("/recipes", (e, t) => {
-        AllFunctions(0)("API-recipes").debug("");
+        AllFunctions(0)("API-recipes").verbose("");
         const r = s.getBaseUrl();
         i.getAllRecipes(r).then(e => {
             t.json(e)
@@ -19365,61 +19374,98 @@ return this._syncFileList();
                                                     channelInfo.channel == thisFavo.channelNr ? 
                                                     (myName = thisFavo.channel.name,myResult = true):{}
                                                 }),
-                                                AllFunctions(0)("Function 463").debug("Is this favorite result:",{Result:myResult,name:myName}),
+                                                AllFunctions(0)("Function 463").verbose("Is this favorite result:",{Result:myResult,name:myName}),
                                                 t.json({Result:myResult,name:myName})}
                                 )
-                            ).catch(err => {AllFunctions(0)("Function 463").debug("Failed isthisfavorite:",{Result:myResult,name:myName},err),
+                            ).catch(err => {AllFunctions(0)("Function 463").verbose("Failed isthisfavorite:",{Result:myResult,name:myName},err),
                             t.json({Result:myResult,name:myName})})
                         
                     
     }), o.get("/flushImageCache", (e, t) => {
-        AllFunctions(0)("Function 463").debug("request to flush imagecache");
+        AllFunctions(0)("Function 463").verbose("request to flush imagecache");
         p.flushImageCache(); // ### clear local array first (Function 372) ; seems to be an extra "cache" only storing the keys of cache content.
         const agnt = new h.Agent({
               keepAlive: !0,
               keepAliveMsecs: 8e3
         });
-        AllFunctions(0)("Function 463").debug("invoking express router (17)for flushimage")
+        AllFunctions(0)("Function 463").verbose("invoking express router (17) for flushimage")
          g({             // send http://brainurl:3004/v1/imagecache/flushImagecache/; this will be routed to imageservice.js
             url: s.getBaseUrl()+"v1/imagecache/flushImagecache/",
             agent: agnt,
             encoding: null,
             timeout: 4e3
-        }).then(() => AllFunctions(0)("Function 463").debug("Returned from request 463"),t.json({"Result":"Cache cleared!!"}))
+        }).then(() => AllFunctions(0)("Function 463").verbose("Returned from request 463"),t.json({"Result":"Cache cleared!!"}))
+
+
 
     }), o.get("/GetLogLevels", (e, t) => {
         AllFunctions(0)("Function 463").verbose("GetLogLevels received");
-        try {
-            const n = e.query.Module;
-            const o = e.query.logLevel;
-            var MyLogLevels = getLoglevels() 
-            MyLogLevels = {"result":MyLogLevels }
-            AllFunctions(0)("Function 463").debug("GetLogLevels obtained:",MyLogLevels);
-            t.send(MyLogLevels)
-            }
-        catch (err) {
-            t.json({
-                msg: "Loglevel NOT adjusted "+err
-                })
+        let promiseT = []; let theResult = []; let theUrl = ''; let i;
+        for (i = 0;i < logmodules.MetaComponents.length ; i++) {
+            theUrl="http://127.0.0.1:300"+(i+1)+"/"+logmodules.MetaComponents[i]+"/metaMessageHandler/?doFunc=GetLogLevel";
+            AllFunctions(0)("Function 463").verbose("Getting loglevel by",theUrl)
+            let tBody= ''  // post message to the relevant port for this module; uri is all we need, no body required.
+            promiseT.push (r(17)({
+                uri: theUrl,
+                method: "POST",
+                pool: this._httpAgent,
+                timeout: 4e3,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Content-Length": tBody.length
+                },
+                body: tBody
+            }).then( (thisResult) => {(AllFunctions(0)("Function 463").debug("Returned from single post request",thisResult),theResult.push(JSON.parse(thisResult)[0]))})
+            .catch ( (err) => {(AllFunctions(0)("Function 463").error("Error calling getloglevel",theUrl))})            
+            )
         }
+        Promise.all(promiseT).then((values) => {
+            return (AllFunctions(0)("Function 463").verbose("Returned from all post requests"),
+                    AllFunctions(0)("Function 463").debug("returned:",theResult),
+                    t.json({"result":theResult}))
+        })
+
     }), o.get("/OverrideLogLevel", (e, t) => {
-        AllFunctions(0)("Function 463").debug("OverrideLogLevel received");
-        try {
-            const n = e.query.Module;
-            const o = e.query.logLevel;
-            OverrideLoglevel(o,n) 
-            t.json({
-                msg: "Loglevel was adjusted"
-            })
+        AllFunctions(0)("Function 463").verbose("OverrideLogLevel received");
+        var theModule = e.query.Module;
+        if (theModule == undefined)
+            return t.json({msg: "Missing modulename"})
+        else
+            theModule = theModule.toLowerCase()
+        
+        let thelogLevel = e.query.logLevel;
+        let doFunc="?doFunc=OverrideLogLevel&logLevel="+thelogLevel
+        let theUrl = ''
+        let i;
+        for (i = 0;i < logmodules.MetaComponents.length ; i++) {
+            if (logmodules.MetaComponents[i] === theModule) 
+            {   theUrl="http://127.0.0.1:300"+(i+1)+"/"+theModule+"/metaMessageHandler/"+doFunc;
+                break;
             }
-        catch (err) {
-            t.json({
-                msg: "Loglevel NOT adjusted "+err
-                })
         }
+            
+        if (theUrl == '')
+        {   AllFunctions(0)("Function 463").error("Unrecognised module for loglevel override "+theModule)
+            return t.json({"error":"Unrecognised module for loglevel override "+theModule})
+        }
+        AllFunctions(0)("Function 463").verbose("Loglevel change; invoking",theUrl)
+
+        let tBody= ''  // post message to the relevant port for this module; uri is all we need, no body required.
+        return r(17)({
+            //uri: this.baseUrl + e,
+            uri: theUrl,
+            method: "POST",
+            pool: this._httpAgent,
+            timeout: 4e3,
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Content-Length": tBody.length
+            },
+            body: tBody
+        }).then((theResult) => (AllFunctions(0)("Function 463").verbose("Returned from post request"),t.json(theResult)))
 
     }), o.get("/TouchButton", (e, t) => {
-        AllFunctions(0)("Function 463").debug("TOUCHBUTTON simulated"),
+        AllFunctions(0)("Function 463").verbose("TOUCHBUTTON simulated"),
         r(10).send({
             type: "touchbuttonpressed",
             date: new Date
@@ -19429,7 +19475,7 @@ return this._syncFileList();
         })
 
     }), o.get("/longTouchButton", function(e, t) {
-        AllFunctions(0)("Function 463").debug("longtouchbutton"),
+        AllFunctions(0)("Function 463").verbose("longtouchbutton"),
         r(10).send({
             type: r(140).NOTIFICATION_LONG_TOUCHBUTTONPRESSED,
             date: new Date
@@ -19468,10 +19514,10 @@ return this._syncFileList();
         l = r(155),
         p = r(27);
     i.post("/login", function(e, t, r) {
-        AllFunctions(0)("Function 464").debug("login")        
-        AllFunctions(0)("Function 464").debug("login;e.body",e.body)        
+        AllFunctions(0)("Function 464").verbose("login")        
+        AllFunctions(0)("Function 464").verbose("login;e.body",e.body)        
         const i = n(e.body);
-        AllFunctions(0)("Function 464").debug("login;i",i)        
+        AllFunctions(0)("Function 464").verbose("login;i",i)        
         c.canPerform(c.ACCOUNT_LOGIN).then(() => s.login(i.email, i.password)).then(() => t.json({
             success: !0
         })).catch(e => {
@@ -19602,29 +19648,29 @@ return this._syncFileList();
         a = r(44);
     let c;
     n.get("/scan", (e, t) => {
-        AllFunctions(0)("Function 467").debug("router WIFI; get /scan")
+        AllFunctions(0)("Function 467").verbose("router WIFI; get /scan")
 
         o.scan().then(e => {
             t.json(e)
         })
     }), n.get("/debug", (e, t) => {
-        AllFunctions(0)("Function 467").debug("router WIFI; get /debug")
+        AllFunctions(0)("Function 467").verbose("router WIFI; get /debug")
         o.scanRaw().then(e => {
             t.json(e)
         })
     }), n.get("/settings", (e, t) => {
-        AllFunctions(0)("Function 467").debug("router WIFI; get /settings")
+        AllFunctions(0)("Function 467").verbose("router WIFI; get /settings")
         t.json({
             ssid: o.getSsid(),
             encryption: o.getEncryption()
         })
     }), n.get("/disableopenap", function(e, t) {
-        AllFunctions(0)("Function 467").debug("router WIFI; get /disableopenap")
+        AllFunctions(0)("Function 467").verbose("router WIFI; get /disableopenap")
         s.debug("disable open wifi ap"), t.status(200).end(), clearTimeout(c), c = setTimeout(() => {
             a.disableAccesspointMode()
         }, 5e3)
     }), n.post("/connect", (e, t, r) => {
-        AllFunctions(0)("Function 467").debug("router WIFI; post /connect")
+        AllFunctions(0)("Function 467").verbose("router WIFI; post /connect")
 
         const n = e.body;
         o.connect(n.ssid, n.password, n.encryption, n.hiddenSSID).then(() => {
@@ -19639,7 +19685,7 @@ return this._syncFileList();
     }), e.exports = n
 }, function(e, t, r) {// Function 468 Router: channel
     "use strict";
-    AllFunctions(0)("Function 468").debug("")
+    AllFunctions(0)("Function 468").verbose("")
     const n = r(5).Router(),
         o = r(158);
     n.get("/search", function(e, t, r) {
@@ -19650,15 +19696,15 @@ return this._syncFileList();
             r(e)
         } else t.json([])
     }), n.get("/:channelid", function(e, t) {
-//        AllFunctions(0)("Function 468").debug("router Channel; get channelid e",e)
-//        AllFunctions(0)("Function 468").debug("router Channel; get channelid e.params",e.params)
-//        AllFunctions(0)("Function 468").debug("router Channel; get channelid e.params.channelid",e.params.channelid)
+//        AllFunctions(0)("Function 468").verbose("router Channel; get channelid e",e)
+//        AllFunctions(0)("Function 468").verbose("router Channel; get channelid e.params",e.params)
+//        AllFunctions(0)("Function 468").verbose("router Channel; get channelid e.params.channelid",e.params.channelid)
         const r = e.params.channelid;
         t.json(o.get(r))
     }), e.exports = n
 }, function(e, t, r) {// Function 469 Router: devicespec
     "use strict";
-    AllFunctions(0)("Function 469").debug("")
+    AllFunctions(0)("Function 469").verbose("")
     const n = r(5).Router(),
         o = r(45),
         i = r(72),
@@ -19667,7 +19713,7 @@ return this._syncFileList();
         c = r(178).requireLoggedInAccountMiddleWare,
         u = r(0)("routes.devicespec");
     n.get("/search", function(e, t, r) {
-        AllFunctions(0)("Function 469").debug("search ")
+        AllFunctions(0)("Function 469").verbose("search ")
         const n = e.query.q;
         n && n.length ? o.search(n).then(e => {
             t.json(e)
@@ -19684,7 +19730,7 @@ return this._syncFileList();
             t.json({
                 success: !0
             })
-        }).catch(t => {AllFunctions(0)("Function 469").debug("Catch refreshlist ",t)
+        }).catch(t => {AllFunctions(0)("Function 469").verbose("Catch refreshlist ",t)
             u.error("ROUTE_DEVICESPEC_REFRESHFILELIST", {
                 url: e.url,
                 method: e.method,
@@ -19692,14 +19738,14 @@ return this._syncFileList();
             }), r(new Error(s(t, "devicespec_sync")))
         })
     }), n.get("/:spec_id", function(e, t, r) {
-        AllFunctions(0)("Function 469").debug("spec_id ")
+        AllFunctions(0)("Function 469").verbose("spec_id ")
         const n = a.getRequestParameter(e, "spec_id", {
             presence: !0
         });
         o.getSpec(n).then(e => {
             t.json(e)
         }).catch(t => {
-            AllFunctions(0)("Funcion 469").debug("Error in use")
+            AllFunctions(0)("Funcion 469").verbose("Error in use")
             u.error("ROUTE_DEVICESPEC_ID", {
                 url: e.url,
                 method: e.method,
@@ -19837,13 +19883,13 @@ return this._syncFileList();
         s = r(0)("routes.sensor"),
         a = r(3);
     o.use("/:device_key/sensors", n), n.param("sensor_key", function(e, t, r, n) {
-        AllFunctions(0)("Function 475").debug("/:device_key/sensors",n)
+        AllFunctions(0)("Function 475").verbose("/:device_key/sensors",n)
         e.sensor = e.device.getSensorByKey(n), e.sensor ? r() : r(new Error(i(null, "notfound", "sensor", n).message))
     }), n.get("/:sensor_key", function(e, t, r) {
             e.sensor.getValue().then(e => {
                 a.increaseCounter("sensor-read-succeeded"), t.json({
                     value: e
-            }),AllFunctions(0)("Function 475").debug("GetSensor-value",e)
+            }),AllFunctions(0)("Function 475").verbose("GetSensor-value",e)
         }).catch(e => {
             s.debug("failed to get sensor value", e.message), a.increaseCounter("sensor-read-errors"), e.alreadyLogged = !0, r(e)
         })
@@ -20095,7 +20141,7 @@ return this._syncFileList();
             r(new Error(i(e, "directoryadapter_browse").message))
         })
     }), n.post("/:directory_key/action", function(e, t, r) {
-        AllFunctions(0)("Function 481").debug("/:directory_key/action")
+        AllFunctions(0)("Function 481").verbose("/:directory_key/action")
         s.callAction(e.directory, e.body).then(e => {
             t.json(e)
         }).catch(e => {
@@ -20123,11 +20169,11 @@ return this._syncFileList();
     }), e.exports = n
 }, function(e, t, r) {// Function 483 Router: favorites
     "use strict";
-    AllFunctions(0)("Function 483").debug("favorites")
+    AllFunctions(0)("Function 483").verbose("favorites")
 
     function n(e, t) {
-        AllFunctions(0)("Function 483").debug("favorites e")
-        //AllFunctions(0)("Function 483").debug("favorites t",t)
+        AllFunctions(0)("Function 483").verbose("favorites e")
+        //AllFunctions(0)("Function 483").verbose("favorites t",t)
         return parseInt(s.getRequestParameter(e, t, {
             presence: !0,
             numericality: {
@@ -20189,7 +20235,7 @@ return this._syncFileList();
             t.json(s)
         }).catch(r)
     }), o.get("/triggerByChannel/:favChannelNr", function(e, t) {
-        AllFunctions(0)("Function 483").debug("o.get(/triggerByChannel/:favChannelNr e,t",e,t)
+        AllFunctions(0)("Function 483").verbose("o.get(/triggerByChannel/:favChannelNr e,t",e,t)
         const r = c.buildChannelSwitchAction(e.device, e.channelNr),
             n = u.trigger(r);
         h.debug("FAVORITE_TRIGGERD_BY_CHANNEL", {
@@ -20199,10 +20245,10 @@ return this._syncFileList();
         const r = e.device.getFavorites();
         r.splice(r.indexOf(e.favorite), 1), e.project.saveDebounced(), t.json(r)
     }), o.get("/:favIdx/trigger", function(e, t) {
-        AllFunctions(0)("Function 483").debug("o.get(/:favIdx/trigger e.favorite",e.favorite);
-        AllFunctions(0)("Function 483").debug("o.get(/:favIdx/trigger e.favorite.getChannelNr()",e.favorite.getChannelNr());
+        AllFunctions(0)("Function 483").verbose("o.get(/:favIdx/trigger e.favorite",e.favorite);
+        AllFunctions(0)("Function 483").verbose("o.get(/:favIdx/trigger e.favorite.getChannelNr()",e.favorite.getChannelNr());
         const r = c.buildChannelSwitchAction(e.device, e.favorite.getChannelNr());
-        AllFunctions(0)("Function 483").debug("Back, before triggering this:",r)
+        AllFunctions(0)("Function 483").verbose("Back, before triggering this:",r)
         const n = u.trigger(r);
         h.debug("USE_FAVORITE", {
             channel: e.favorite.getChannelName()
@@ -20212,7 +20258,7 @@ return this._syncFileList();
         "use strict";
         const j = r;
         function n(e, t) {
-            AllFunctions(0)("Function 484").debug("here (in N) we have all the ingredients to store currrchannel:",e.key,t)
+            AllFunctions(0)("Function 484").verbose("here (in N) we have all the ingredients to store currrchannel:",e.key,t)
             j(506).putCurrFavo(t, e.key) 
             const r = function(e) {
                     const t = e.getPresetSettings();
@@ -20258,7 +20304,7 @@ return this._syncFileList();
             };
         e.exports = {
             buildChannelSwitchAction: function(e, t) {
-                AllFunctions(0)("Function 484").debug("buildChannelSwitchAction")
+                AllFunctions(0)("Function 484").verbose("buildChannelSwitchAction")
                 return a.check(a.NEEO_FEATURE_FAVORITES_CUSTOM_HANDLER, e) ? function(e, t) {
                     const r = e.getFavoriteComponent();
                     return s.buildActionOfComponent("Favorite " + t, r, {
@@ -20269,7 +20315,7 @@ return this._syncFileList();
         }
 }, function(e, t, r) {// Function 485 Router: notification
     "use strict";
-    AllFunctions(0)("Function 485").debug("router")
+    AllFunctions(0)("Function 485").verbose("router")
 
     const n = r(5).Router(),
         o = r(0)("routes.notification"),
@@ -20278,10 +20324,10 @@ return this._syncFileList();
         a = r(9),
         c = r(14);
         n.get("/", function(e, t, r) {
-            AllFunctions(0)("Function 485").debug("router - post notifications")
+            AllFunctions(0)("Function 485").verbose("router - post notifications")
         })
         n.post("/", function(e, t, r) {
-        AllFunctions(0)("Function 485").debug("router - post notifications",e.url,"body:",e.body)
+        AllFunctions(0)("Function 485").verbose("router - post notifications",e.url,"body:",e.body)
         const n = e.body;
         c(n, {
             type: {
@@ -20293,7 +20339,7 @@ return this._syncFileList();
                 }
             }
         });
-        AllFunctions(0)("Function 485").debug("n.type",n.type)
+        AllFunctions(0)("Function 485").verbose("n.type",n.type)
 /* an attempt to add linebreaks in textlabels; injects some text and CRLF ... did not work as TR2 doesn't honor crlf 
        if (n.type == 'DEVICE_SENSOR_UPDATE') {
                 n.data.sensorValue = "====>&#x0A;&#x0D;"+n.data.sensorValue
@@ -20301,7 +20347,7 @@ return this._syncFileList();
         }
 */ 
         try {
-            AllFunctions(0)("Function 485").debug("send",n)
+            AllFunctions(0)("Function 485").verbose("send",n)
 
             s.send(n) ? t.json({
                 success: !0
@@ -20310,7 +20356,7 @@ return this._syncFileList();
             o.debug("NOTIFICATION_SEND_ERROR", e), i.increaseCounter("notification-send-error"), e.alreadyLogged = !0, r(e)
         }
     }), n.get("/push-all", function(e, t) {
-        AllFunctions(0)("Function 485").debug("push-all")
+        AllFunctions(0)("Function 485").verbose("push-all")
         s.resendAll(), t.end()
     }), e.exports = n
 }, function(e, t, r) {// Function 486 Router: irblaster
@@ -20654,17 +20700,17 @@ return this._syncFileList();
     }), e.exports = n
 }, function(e, t, r) {// Function 490-TR2 Router: tr2
     "use strict";
-    AllFunctions(0)("Function 490").debug("handle TR2 GUI")
+    AllFunctions(0)("Function 490").verbose("handle TR2 GUI")
 
-    function n(e) { AllFunctions(0)("Function 490").debug("TR2 convert")
+    function n(e) { AllFunctions(0)("Function 490").verbose("TR2 convert")
         return p.convert(e)
     }
 
-    function o(e) {AllFunctions(0)("Function 490").debug("TR2 return project",e.project)
+    function o(e) {AllFunctions(0)("Function 490").verbose("TR2 return project",e.project)
         return n(e.project)
     }
 
-    function i(e, t) {AllFunctions(0)("Function 490").debug("TR2 search for listlength")
+    function i(e, t) {AllFunctions(0)("Function 490").verbose("TR2 search for listlength")
         const r = t.match(/listLength="(\d+)"/);
         r && (e.totalLength = r[1]), y.endRequest(e)
     }
@@ -20683,13 +20729,13 @@ return this._syncFileList();
             success: !0
         },
         y = m.buildRequestTracker();
-        AllFunctions(0)("Function 490").debug("TR2 use: e")
+        AllFunctions(0)("Function 490").verbose("TR2 use: e")
 
     h.use("/:project_key/tr2", s), s.get("/gui_xml", function(e, t) {
-        AllFunctions(0)("Function 490").debug("TR2 use /:project_key/tr2/s.get(/gui_xml ")
+        AllFunctions(0)("Function 490").verbose("TR2 use /:project_key/tr2/s.get(/gui_xml ")
         const r = Date.now();
         d.guiXml(n(e.project)).then(n => {
-            AllFunctions(0)("Function 490").debug("TR2 d.guiXml(");
+            AllFunctions(0)("Function 490").verbose("TR2 d.guiXml(");
             const o = Date.now() - r;
             n && o > 2500 && g.info("TR2_GUIXML_GENERATE", {
                     durationMs: o,
@@ -20706,22 +20752,22 @@ return this._syncFileList();
                 }(e)
         })
     }), s.get("/guidata_xml", function(e, t, r) {
-        AllFunctions(0)("Function 490").debug("TR2 get guidata_xml")
-        //AllFunctions(0)("Function 490").debug("TR2 get guidata_xml  e.project:",e.project)
+        AllFunctions(0)("Function 490").verbose("TR2 get guidata_xml")
+        //AllFunctions(0)("Function 490").verbose("TR2 get guidata_xml  e.project:",e.project)
         const o = Date.now();
         d.guiDataXml(n(e.project)).then(e => {
-            AllFunctions(0)("Function 490").debug("TR2 e passed:")
+            AllFunctions(0)("Function 490").verbose("TR2 e passed:")
             const r = Date.now() - o;
             e && r > 2500 && m.increaseCounter("tr2-guidataxml-long-generate"), t.set("Content-Type", f), t.send(l.transliterationToAscii(e))
         }).catch(r)
-        AllFunctions(0)("Function 490").debug("TR2 get guidata_xml done")
+        AllFunctions(0)("Function 490").verbose("TR2 get guidata_xml done")
 
     }), s.get("/overrideBrainHost/:host", function(e, t) {
-        AllFunctions(0)("Function 490").debug("TR2 get /overrideBrainHost/:host")
+        AllFunctions(0)("Function 490").verbose("TR2 get /overrideBrainHost/:host")
         const r = e.params.host;
         g.debug("overrideBrainHost", r), d.overrideBrainHost(r), t.send("WITH_GREAT_POWER_COMES_GREAT_RESPONSIBILITY")
     }), s.get("/zero_conf_xml", function(e, t, r) {
-        AllFunctions(0)("Function 490").debug("TR2 get /zero_conf_xml (connection request by TR2)")
+        AllFunctions(0)("Function 490").verbose("TR2 get /zero_conf_xml (connection request by TR2)")
         g.debug("server zeroconf.xml");
         try {
             const n = d.zeroConfXml();
@@ -20732,10 +20778,10 @@ return this._syncFileList();
             }), r(e)
         }
     }), s.get("/directory/stats", function(e, t) {
-        AllFunctions(0)("Function 490").debug("TR2 get /directory/stats")
+        AllFunctions(0)("Function 490").verbose("TR2 get /directory/stats")
         t.json(y.getStats())
     }), s.get("/directory/:directory_key/action", function(e, t, r) {
-        AllFunctions(0)("Function 490").debug("TR2 get directory/:directory_key/action")
+        AllFunctions(0)("Function 490").verbose("TR2 get directory/:directory_key/action")
 
         const o = a.getRequestParameter(e, "directory_key", {
                 presence: !0
@@ -20744,17 +20790,17 @@ return this._syncFileList();
                 actionIdentifier: e.query.actionIdentifier || ""
             },
             s = n(e.project);
-            AllFunctions(0)("Function 490").debug("TR2 get /directory/:directory_key/action actiopnIdentifier:",i,"getRequestParameter",o)
+            AllFunctions(0)("Function 490").verbose("TR2 get /directory/:directory_key/action actiopnIdentifier:",i,"getRequestParameter",o)
         c.directoryAction(s, o, i).then(() => t.send()).catch(r)
     }), s.post("/directory/:directory_key/browse", function(e, t, r) {
-        AllFunctions(0)("Function 490").debug("TR2 post /directory/:directory_key/browse")
+        AllFunctions(0)("Function 490").verbose("TR2 post /directory/:directory_key/browse")
 
         let n = "";
         e.on("data", e => {
             n += e
         }), e.on("end", () => {
             e.browseParams = c.parseEncodedListParameter(n), r()
-            AllFunctions(0)("Function 490").debug("TR2 post - browseParams: ",e.browseParams)
+            AllFunctions(0)("Function 490").verbose("TR2 post - browseParams: ",e.browseParams)
         })
     }, function(e, t, r) {
         const o = a.getRequestParameter(e, "directory_key", {
@@ -20771,7 +20817,7 @@ return this._syncFileList();
             y.failRequest(u), r(e)
         })
     }), s.post("/device/:device_key/rootitems", function(e, t, r) {
-        AllFunctions(0)("Function 490").debug("TR2 post /device/:device_key/rootitems")
+        AllFunctions(0)("Function 490").verbose("TR2 post /device/:device_key/rootitems")
         const o = a.getRequestParameter(e, "device_key", {
                 presence: !0
             }),
@@ -20790,20 +20836,20 @@ return this._syncFileList();
 
         o(e).disableTr2Log(), t.json(E)
     }), s.get("/enableUartLog", function(e, t) {
-        AllFunctions(0)("Function 490").debug("TR2 get enableUartlog")
+        AllFunctions(0)("Function 490").verbose("TR2 get enableUartlog")
         o(e).enableTr2UartLog(), t.json(E)
     }), s.get("/enableUserActionLog", function(e, t) {
-        AllFunctions(0)("Function 490").debug("TR2 get enableUserActionLog")
+        AllFunctions(0)("Function 490").verbose("TR2 get enableUserActionLog")
         o(e).enableTr2UserActionLog(), t.json(E)
     }), s.get("/testpushaction", function(e, t) {
-        AllFunctions(0)("Function 490").debug("TR2 get testpushaction")
+        AllFunctions(0)("Function 490").verbose("TR2 get testpushaction")
 
         const r = e.query.callback;
         d.pushActions.addPushAction(r), t.json(E)
     }), e.exports = s
 }, function(e, t, r) {// Function 491 Router: TR2 guilogger tr2logparser
     "use strict";
-    AllFunctions(0)("Function 491").debug("TR2 guilogger tr2logparser")
+    AllFunctions(0)("Function 491").verbose("TR2 guilogger tr2logparser")
     function n(e) {
         return e.reduce((e, t) => (! function(e) {
             return e.message === a
@@ -20858,7 +20904,7 @@ return this._syncFileList();
         u = /\n*.+\n*$/
 }, function(e, t, r) {// Function 492 Router: TR2 guilogger 
     "use strict";
-    AllFunctions(0)("Function 491").debug("TR2 guilogger")
+    AllFunctions(0)("Function 491").verbose("TR2 guilogger")
     const n = r(6)("cp6:lib:guilogger:tr2logusage"),
         o = r(3);
     e.exports = {
@@ -20870,7 +20916,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 493 Router: 
     "use strict";
-    AllFunctions(0)("Function 493").debug("router")
+    AllFunctions(0)("Function 493").verbose("router")
     function n() {
         c.refreshClients()
     }
@@ -20880,54 +20926,54 @@ return this._syncFileList();
         a = r(15),
         c = r(83);
     o.get("/", function(e, t) {
-        AllFunctions(0)("Function 493").debug("router get(/")
+        AllFunctions(0)("Function 493").verbose("router get(/")
         t.json(i.summary())
     }), o.get("/useProUI", function(e, t) {
-        AllFunctions(0)("Function 493").debug("router useProUI")
+        AllFunctions(0)("Function 493").verbose("router useProUI")
         t.json(i.useProUI())
     }), o.get("/setClassicUI", function(e, t, r) {
-        AllFunctions(0)("Function 493").debug("router: get /setClassicUI")
+        AllFunctions(0)("Function 493").verbose("router: get /setClassicUI")
         const o = a.getBooleanParam(e, "useClassicUI");
         i.setClassicUI(o).then(n).then(t.json({
             success: !0
         })).catch(r)
     }), o.get("/cloudInfo", function(e, t, r) {
-        AllFunctions(0)("Function 493").debug("router: get /cloudInfo")
+        AllFunctions(0)("Function 493").verbose("router: get /cloudInfo")
         i.cloudInfo().then(e => t.json(e)).catch(r)
     }), o.get("/lan-address", function(e, t) {
-        AllFunctions(0)("Function 493").debug("router: get /setClaslan-addresssicUI")
+        AllFunctions(0)("Function 493").verbose("router: get /setClaslan-addresssicUI")
         t.json(i.getLanAddress())
     }), o.get("/identbrain", function(e, t) {
-        AllFunctions(0)("Function 493").debug("router: get /identbrain")
+        AllFunctions(0)("Function 493").verbose("router: get /identbrain")
         s.userBlink(), t.json({
             success: !0
         })
     }), e.exports = o
 }, function(e, t, r) {// Function 494 Router: 
     "use strict";
-    AllFunctions(0)("Function 494").debug("Router")
+    AllFunctions(0)("Function 494").verbose("Router")
     const n = r(5).Router(),
         o = r(3),
         i = r(31);
     n.get("/", function(e, t) {
-        AllFunctions(0)("Function 494").debug("Router - /")
+        AllFunctions(0)("Function 494").verbose("Router - /")
         t.json({
             statistics: o.getStatistic()
         })
     }), n.get("/tr2", function(e, t) {
-        AllFunctions(0)("Function 494").debug("Router - /tr2")
+        AllFunctions(0)("Function 494").verbose("Router - /tr2")
         t.json({
             statistics: o.tr2.getStatistic()
         })
     }), n.get("/errors", function(e, t) {
-        AllFunctions(0)("Function 494").debug("Router - /errors")
+        AllFunctions(0)("Function 494").verbose("Router - /errors")
         t.json({
             statistics: o.getLastErrors()
         })
     }), n.get("/nbr", function(e, t) {
-        AllFunctions(0)("Function 494").debug("Router - /nbr")
+        AllFunctions(0)("Function 494").verbose("Router - /nbr")
         i.updateStatistics().then(() => {
-            AllFunctions(0)("Function 494").debug("Router - /updateStatistics")
+            AllFunctions(0)("Function 494").verbose("Router - /updateStatistics")
             t.json({
                 statistics: o.getStatistic()
             })
@@ -20935,23 +20981,23 @@ return this._syncFileList();
     }), e.exports = n
 }, function(e, t, r) {// Function 495 Router: shorturl
     "use strict";
-    AllFunctions(0)("Function 495").debug("")
+    AllFunctions(0)("Function 495").verbose("")
     const n = r(5).Router(),
         o = r(84),
         i = /\/shorturl/;
     n.get("/:uri", function(e, t) {
-        AllFunctions(0)("Function 495").debug("Router - get /:uri")
+        AllFunctions(0)("Function 495").verbose("Router - get /:uri")
         const r = e.originalUrl.replace(i, "");
-        AllFunctions(0)("Function 495").debug("Router - get /:uri-done")
+        AllFunctions(0)("Function 495").verbose("Router - get /:uri-done")
 
         o.handleTr2WifiRequest(r).then(e => {
-            AllFunctions(0)("Function 495").debug("handleTr2WifiRequest",e)
+            AllFunctions(0)("Function 495").verbose("handleTr2WifiRequest",e)
             e ? (t.set("Content-Type", "text/xml"), t.send(e)) : t.send()
         })
     }), e.exports = n
 }, function(e, t, r) {// Function 496 Router: SYSTEMINFO, STATISTICS, "ERROR LOG"
     "use strict";
-    AllFunctions(0)("Function 496").debug("")
+    AllFunctions(0)("Function 496").verbose("")
 
     function n(e) {
         return d + e + u
@@ -20964,10 +21010,10 @@ return this._syncFileList();
         s = r(12),
         a = r(3),
         c = "\n",
-        u = "[0m",
-        d = "[35m",
-        l = "[33m",
-        p = "[34m",
+        u = "",
+        d = "m",
+        l = "m",
+        p = "m",
         h = function(e, t) {
             const r = [],
                 i = function(e, t, s) {
@@ -20979,25 +21025,25 @@ return this._syncFileList();
             }(e)), i(t, "", 0), r.join("\n")
         };
     i.get("/", function(e, t) {
-        AllFunctions(0)("Function 496").debug("Router: get /")
+        AllFunctions(0)("Function 496").verbose("Router: get /")
         const r = h("# SYSTEMINFO", s.summary()),
             n = h("# STATISTICS", a.getStatistic()),
             o = h("# ERROR LOG", a.getLastErrors());
         t.send(r + c + n + c + o + c)
     }), i.get("/raw", function(e, t) {
-        AllFunctions(0)("Function 496").debug("Router: get /raw")
+        AllFunctions(0)("Function 496").verbose("Router: get /raw")
         t.send(a.getLastErrors())
     }), e.exports = i
 }, function(e, t, r) {// Function 497 Router: forwardactions
     "use strict";
-    AllFunctions(0)("Function 497").debug("")
+    AllFunctions(0)("Function 497").verbose("")
     const n = r(5).Router(),
         o = r(59),
         i = r(21),
         s = r(14),
         a = "28071979";
     n.post("/viewbuilder", function(e, t) {
-        AllFunctions(0)("Function 497").debug("Router: post /viewbuilder")
+        AllFunctions(0)("Function 497").verbose("Router: post /viewbuilder")
         const r = function(e) {
                 s(e, {
                     macroNames: {
@@ -21025,12 +21071,12 @@ return this._syncFileList();
     }), e.exports = n
 }, function(e, t, r) {// Function 498 Router: routes.feedback
     "use strict";
-    AllFunctions(0)("Function 498").debug("")
+    AllFunctions(0)("Function 498").verbose("")
     const n = r(5).Router(),
         o = r(0)("routes.feedback"),
         i = r(101);
     n.post("/delete", function(e, t, r) {
-        AllFunctions(0)("Function 498").debug("Route post /delete")
+        AllFunctions(0)("Function 498").verbose("Route post /delete")
         i.clear().then(() => {
             t.json({
                 success: !0
@@ -21039,7 +21085,7 @@ return this._syncFileList();
             o.debug("FORWARDACTION_CLEAR", e.message), r(e)
         })
     }), n.post("/", function(e, t, r) {
-        AllFunctions(0)("Function 498").debug("Route post /")
+        AllFunctions(0)("Function 498").verbose("Route post /")
         const n = e.body;
         i.setRemotehost(n).then(() => {
             t.json({
@@ -21049,7 +21095,7 @@ return this._syncFileList();
             o.debug("FORWARDACTION_SET", e.message), r(e)
         })
     }), n.get("/", function(e, t, r) {
-        AllFunctions(0)("Function 498").debug("Route get /")
+        AllFunctions(0)("Function 498").verbose("Route get /")
         i.load().then(e => {
             e && e.forwarding ? t.json(e.forwarding) : t.json({})
         }).catch(e => {
@@ -21058,42 +21104,42 @@ return this._syncFileList();
     }), e.exports = n
 }, function(e, t, r) {// Function 499 Router: routes.tr2 eror and exception detection
     "use strict";
-    AllFunctions(0)("Function 499").debug("")
+    AllFunctions(0)("Function 499").verbose("")
     const n = r(5),
         o = r(177),
         i = n.Router(),
         s = r(180);
     i.post("/exceptions", (e, t) => {
-        AllFunctions(0)("Function 499").debug("Route post /exceptions")
+        AllFunctions(0)("Function 499").verbose("Route post /exceptions")
         s.log(e.body), t.status(200), t.end()
     });
     const a = o.text({
         type: "text/plain"
     });
     i.post("/tr2/error", a, (e, t) => {
-        AllFunctions(0)("Function 499").debug("Route post /tr2/error")
+        AllFunctions(0)("Function 499").verbose("Route post /tr2/error")
         s.tr2.error(e.body), t.status(200), t.end()
     }), i.post("/tr2/exception", a, (e, t) => {
-        AllFunctions(0)("Function 499").debug("oute post /tr2/execption")
+        AllFunctions(0)("Function 499").verbose("Route post /tr2/execption")
         s.tr2.exception(e.body), t.status(200), t.end()
     }), i.post("/tr2/info", a, (e, t) => {
-        AllFunctions(0)("Function 499").debug("Route post /tr2/info")
+        AllFunctions(0)("Function 499").verbose("Route post /tr2/info")
         s.tr2.info(e.body), t.status(200), t.end()
     }), e.exports = i
 }, function(e, t, r) {// Function 500 Router: crypto
     "use strict";
-    AllFunctions(0)("Function 500").debug("")
+    AllFunctions(0)("Function 500").verbose("")
     const n = r(5).Router(),
         o = r(71);
     n.get("/pubkey", (e, t) => {
-        AllFunctions(0)("Function 500").debug("Route get /pubkey")
+        AllFunctions(0)("Function 500").verbose("Route get /pubkey")
         t.json({
             publickey: o.getPublicKey()
         })
     }), e.exports = n
 }, function(e, t, r) {// Function 501 Router: neeolink
     "use strict";
-    AllFunctions(0)("Function 501").debug("")
+    AllFunctions(0)("Function 501").verbose("")
 
     function n(e) {
         return {
@@ -21108,12 +21154,12 @@ return this._syncFileList();
         s = r(42),
         a = r(83);
     i.get("/neeolink", function(e, t, r) {
-        AllFunctions(0)("Function 499").debug("Route get /neeolink")
+        AllFunctions(0)("Function 499").verbose("Route get /neeolink")
         s.loadTR2CommunicationVia6lowpan().then(e => {
             t.json(e)
         }).catch(r)
     }), i.post("/enableneeolink", function(e, t, r) {
-        AllFunctions(0)("Function 499").debug("Route post /enableneeolink")
+        AllFunctions(0)("Function 499").verbose("Route post /enableneeolink")
         s.saveTR2CommunicationVia6lowpan(n(!0)).then(() => {
             o(), t.json({
                 success: !0
@@ -21121,7 +21167,7 @@ return this._syncFileList();
         }).catch(r)
     }), i.post("/disableneeolink", function(e, t, r) {
         s.saveTR2CommunicationVia6lowpan(n(!1)).then(() => {
-            AllFunctions(0)("Function 499").debug("Route post /disableneeolink")
+            AllFunctions(0)("Function 499").verbose("Route post /disableneeolink")
             o(), t.json({
                 success: !0
             })
@@ -21129,15 +21175,15 @@ return this._syncFileList();
     }), e.exports = i
 }, function(e, t, r) {// Function 502 Router: homekit?
     "use strict";
-    AllFunctions(0)("Function 502").debug("Router homekit?")
+    AllFunctions(0)("Function 502").verbose("Router homekit?")
     const n = r(5).Router(),
         o = r(109);
     n.get("/", function(e, t) {
         t.json(o.getAllEvents())
     }), e.exports = n
-}, function(e, t, r) {// Function 503").debug("Router: homekit
+}, function(e, t, r) {// Function 503").verbose("Router: homekit
     "use strict";
-    AllFunctions(0)("Function 503").debug("Router homekit?")
+    AllFunctions(0)("Function 503").verbose("Router homekit?")
     const n = r(5).Router(),
         o = r(159);
     n.post("/reset", function(e, t) {
@@ -21145,7 +21191,7 @@ return this._syncFileList();
     }), e.exports = n
 }, function(e, t, r) {// Function 504 Router: fst
     "use strict";
-    AllFunctions(0)("Function 504").debug("Final systemtest (FST)")
+    AllFunctions(0)("Function 504").verbose("Final systemtest (FST)")
     const n = r(5).Router(),
         o = r(31),
         i = r(44),
@@ -21185,7 +21231,7 @@ return this._syncFileList();
 
 }, function(e, t, r) {// Function 505 added function past cloud
     "use strict";
-    AllFunctions(0)("Function 505").debug("Added function past cloud",e)
+    AllFunctions(0)("Function 505").verbose("Added function past cloud",e)
         //return xx._download({name:MyDevice,url:CloudReplacementUrl  +"?type=irdevices&name="+MyDevice,_downloadDir : "/tmp"})
 
     const c = r(227),
@@ -21201,7 +21247,7 @@ return this._syncFileList();
 
     e.exports = {    
         copy : function(e, t) {
-            AllFunctions(0)("Function 505").debug("noCloud - copy",e,t)
+            AllFunctions(0)("Function 505").verbose("noCloud - copy",e,t)
 
                 if ( e === t) return u.resolve();
                     const r = o.createReadStream(e),
@@ -21211,7 +21257,7 @@ return this._syncFileList();
                 
         checkSum : 
             function(e) {
-                AllFunctions(0)("Function 505").debug("noCloud - downcheckSumload",e)
+                AllFunctions(0)("Function 505").verbose("noCloud - downcheckSumload",e)
 
                 return new u(t => {
                     const r = a.createHash("sha1"),
@@ -21222,7 +21268,7 @@ return this._syncFileList();
                         const n = r.digest("hex");
                         t(n)
                     }), n.on("error", e => {
-                        AllFunctions(0)("Function 505").debug("checksum error", e), t()
+                        AllFunctions(0)("Function 505").verbose("checksum error", e), t()
                     })
                 })
             },
@@ -21230,49 +21276,49 @@ return this._syncFileList();
             
         downloadJSONContent : 
             function(e) {
-                AllFunctions(0)("Function 505").debug("downloadJSONContent")
-                return this.downloadContent(e).then(mycontent => (typeof mycontent == "string" ? JSON.parse(mycontent)  : (mycontent))).catch(err => (AllFunctions(0)("Function 505").debug("Error converting json",err)))
+                AllFunctions(0)("Function 505").verbose("downloadJSONContent")
+                return this.downloadContent(e).then(mycontent => (typeof mycontent == "string" ? JSON.parse(mycontent)  : (mycontent))).catch(err => (AllFunctions(0)("Function 505").verbose("Error converting json",err)))
             },    
 
         JSONContent : 
             function(e) {
-                AllFunctions(0)("Function 505").debug("noCloud - JSONContent")
-                return JSON.parse(e).catch(err => AllFunctions(0)("Function 505").debug("File e.name not found",err,e.name))
+                AllFunctions(0)("Function 505").verbose("noCloud - JSONContent")
+                return JSON.parse(e).catch(err => AllFunctions(0)("Function 505").verbose("File e.name not found",err,e.name))
             },    
             
         downloadContent : 
             function(e) {
-                AllFunctions(0)("Function 505").debug("noCloud - downloadContent")
+                AllFunctions(0)("Function 505").verbose("noCloud - downloadContent")
                 var dest = e.targetDir+"/"+e.name;
-                return this.download(e).then( () => this.loadContent(dest)).then(content => (content)).catch(err => AllFunctions(0)("Function 505").debug("File e.name not found",err,e.name))
+                return this.download(e).then( () => this.loadContent(dest)).then(content => (content)).catch(err => AllFunctions(0)("Function 505").verbose("File e.name not found",err,e.name))
             },    
     
         loadContent : 
             function(e) {
-                AllFunctions(0)("Function 505").debug("noCloud - download",e)
+                AllFunctions(0)("Function 505").verbose("noCloud - download",e)
                 try {
                     return o.readFileSync(e, {
                         encoding: "utf-8"
                     })
                 }
-                catch (err) {AllFunctions(0)("Function 505").debug("Catch",err)}
+                catch (err) {AllFunctions(0)("Function 505").verbose("Catch",err)}
             },    
 
         moveTempFileToDest:
             function(e,t) {
-                AllFunctions(0)("Function 505 noCloud").debug("moveTempFileToDest",e,t)
+                AllFunctions(0)("Function 505 noCloud").verbose("moveTempFileToDest",e,t)
                 var src = e.targetDir+"/"+e.name;
                 var dest = t.targetDir+"/"+t.name;
                 return this.copy(src,dest)
                 .catch(err => {
-                    AllFunctions(0)("Function 505").debug("Catch foutje:",err)
+                    AllFunctions(0)("Function 505").verbose("Catch foutje:",err)
                 })
 
             },
 
         tmpdownload: 
             function(e) {
-                AllFunctions(0)("Function 505").debug("noCloud - download",e)
+                AllFunctions(0)("Function 505").verbose("noCloud - download",e)
                 const t = c.fileSync({
                     dir: "/tmp"//,
                     //mode: 0o666
@@ -21284,7 +21330,7 @@ return this._syncFileList();
             }, 
         download: 
             function(e) {
-                AllFunctions(0)("Function 505").debug("noCloud - download",e)
+                AllFunctions(0)("Function 505").verbose("noCloud - download",e)
                 const t = c.fileSync({
                     dir: "/tmp"//,
                     //mode: 0o666
@@ -21292,11 +21338,11 @@ return this._syncFileList();
                 r = o.createWriteStream(t.name);
                 var url = CloudReplacementUrl  +"?type="+e.type+"&name="+e.name;
                 var dest = e.targetDir+"/"+e.name;
-                AllFunctions(0)("Function 505").debug("getting file:",e,url,dest,t.name)
+                AllFunctions(0)("Function 505").verbose("getting file:",e,url,dest,t.name)
                 return  s(i(url), r) //.then(x => this._checkSum(t.name))
                 .then(r => this.copy(t.name, dest))
                 .catch(err => {
-                    AllFunctions(0)("Function 505").debug("Catch foutje:",err)
+                    AllFunctions(0)("Function 505").verbose("Catch foutje:",err)
                 })
                 .finally(() => {
                     t.removeCallback()
@@ -21305,20 +21351,20 @@ return this._syncFileList();
         }
 },  function(e, t)  { // Function 506 Custom functionality - added without NEEO development
         "use strict";
-        AllFunctions(0)("Function 506").debug("CurrentChannel")
+        AllFunctions(0)("Function 506").verbose("CurrentChannel")
 
         const currChannelArray = [];
         e.exports = {
             storeChannelInfo: function(currChannel, deviceId,command) {
                 let thisMoment = moment()
                 currChannelArray[deviceId] = {"channel":currChannel,"command":command,"atMoment":thisMoment};
-                AllFunctions(0)("Function 506").debug("storeChannelInfo - currChannelArray:",currChannelArray)
+                AllFunctions(0)("Function 506").verbose("storeChannelInfo - currChannelArray:",currChannelArray)
                 return 1
             },   
             getCurrChannel: function(deviceId) {
-                AllFunctions(0)("Function 506").debug("getCurrChannel")
+                AllFunctions(0)("Function 506").verbose("getCurrChannel")
                 if (!deviceId) 
-                    {AllFunctions(0)("Function 506").debug("addCurrentChannel - MISSING channel or deviceId")
+                    {AllFunctions(0)("Function 506").verbose("addCurrentChannel - MISSING channel or deviceId")
                     return Promise.reject({result: false});
                     }
                 let currChannelForDevice;
@@ -21326,19 +21372,19 @@ return this._syncFileList();
                     currChannelForDevice= currChannelArray[deviceId].channel;
                     }
                 catch  (err)
-                    {AllFunctions(0)("Function 506").debug("Channel not found for",deviceId,"; channel -1 substituted")
+                    {AllFunctions(0)("Function 506").verbose("Channel not found for",deviceId,"; channel -1 substituted")
                     return Promise.reject({result: false,reason:"Channel not found","channel": "Channel not defined yet"});
                     }
-                AllFunctions(0)("Function 506").debug("getCurrChannel Channel is",currChannelForDevice)
+                AllFunctions(0)("Function 506").verbose("getCurrChannel Channel is",currChannelForDevice)
                 return Promise.resolve({result: true,channel:currChannelForDevice})
             },  
             putChannelUpDown: function(command,deviceId,e,r) {
                 const c = r(484),
                 u = r(52);
-                AllFunctions(0)("Function 506").debug("putChannelUpDown")
+                AllFunctions(0)("Function 506").verbose("putChannelUpDown")
                 let FinalChannel=0;
                 this.getCurrChannel(deviceId).then(newChannel => {
-                    AllFunctions(0)("Function 506").debug("putchannelupdown result getcurrentchannel",newChannel)
+                    AllFunctions(0)("Function 506").verbose("putchannelupdown result getcurrentchannel",newChannel)
                     if (newChannel.channel != undefined)
                         {FinalChannel=newChannel.channel;
                         let splitParts = command.split(' ');
@@ -21350,7 +21396,7 @@ return this._syncFileList();
                             FinalChannel--;
                         }
                     else {
-                        AllFunctions(0)("Function  506").debug("putchannelupdown result getcurrentchannel undefined:",newChannel)
+                        AllFunctions(0)("Function  506").verbose("putchannelupdown result getcurrentchannel undefined:",newChannel)
                         FinalChannel = 1;
                     }
                     this.storeChannelInfo(FinalChannel, deviceId,command);
@@ -21359,7 +21405,7 @@ return this._syncFileList();
                     return n;
                     }
                 )
-                .catch(err => {AllFunctions(0)("Function 506").debug("putChannelUpDown. Failed to execute promise",err);
+                .catch(err => {AllFunctions(0)("Function 506").verbose("putChannelUpDown. Failed to execute promise",err);
                                 this.storeChannelInfo(FinalChannel, deviceId,command)
                                 const x = c.buildChannelSwitchAction(e.component.device, FinalChannel)
                                 const n = u.trigger(x);
@@ -21368,9 +21414,9 @@ return this._syncFileList();
 
                             },  
             putCurrDigit: function(currChannel, deviceId) {
-                AllFunctions(0)("Function 506").debug("putCurrDigit",currChannel, deviceId)
+                AllFunctions(0)("Function 506").verbose("putCurrDigit",currChannel, deviceId)
                 if (!currChannel || !deviceId) 
-                    {AllFunctions(0)("Function 506").debug("addCurrentChannel - MISSING channel or deviceId")
+                    {AllFunctions(0)("Function 506").verbose("addCurrentChannel - MISSING channel or deviceId")
                     return -1;
                     }
                 let digitParts = currChannel.split(' ')
@@ -21384,15 +21430,36 @@ return this._syncFileList();
                 return 1
             },        
             putCurrFavo: function(fullCurrChannel, deviceId) {
-                AllFunctions(0)("Function 506").debug("fullCurrChannel",fullCurrChannel, deviceId)
+                AllFunctions(0)("Function 506").verbose("fullCurrChannel",fullCurrChannel, deviceId)
                 if (!fullCurrChannel || !deviceId) 
-                    {AllFunctions(0)("Function 506").debug("fullCurrChannel - MISSING channel or deviceId");
+                    {AllFunctions(0)("Function 506").verbose("fullCurrChannel - MISSING channel or deviceId");
                     return -1;
                     }
                 let thisMoment = moment();
-                AllFunctions(0)("Function  506").debug("Storing",fullCurrChannel);
+                AllFunctions(0)("Function  506").verbose("Storing",fullCurrChannel);
                 this.storeChannelInfo(fullCurrChannel, deviceId,"FAVO") ;
                 return 1;
             },           }
     }
 ]);
+function metaMessageHandler(req, res,f)
+{ f.debug("metaMessageHandler");
+  if (req.query.doFunc == undefined)
+  { f.debug('Missing function for messagehandler routine',req.doFunc);
+    return logModule+": Missing function for messagehandler routine"
+  };
+  var doFunc = req.query.doFunc;
+  if (doFunc.toUpperCase() == "GETLOGLEVEL")
+   {f.verbose("Getting loglevel")
+    return getLoglevels(logModule);
+   }
+
+  if (doFunc.toUpperCase() == "OVERRIDELOGLEVEL")
+    {f.verbose("Setting loglevel")
+      const o = req.query.logLevel;
+      return OverrideLoglevel(o,logModule) 
+    }
+    metaLog({type:LOG_TYPE.ERROR,content:"Unknown function requestedmetaMessageHandler "+req.query.doFunc});
+    metaLog({type:LOG_TYPE.ERROR,content:"logLevel passed "+req.query.logLevel});
+    return "Returning error"
+}

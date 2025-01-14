@@ -1,13 +1,14 @@
+const logModule = "imageservice";
+process.env.StartupPath = __dirname;
 const { metaMessage, LOG_TYPE, LOG_LEVEL,initialiseLogComponents, initialiseLogSeverity,OverrideLoglevel, getLoglevels } = require("/opt/meta/metaMessage");
-
 function metaLog(message) {
-  let initMessage = { component:'imageservice', type:LOG_TYPE.ERROR, content:'', deviceId: "" };
-  let myMessage = {...initMessage, ...message}
-  return metaMessage (myMessage);
-} 
-  
+    let initMessage = { component:logModule, type:LOG_TYPE.ERROR, content:'', deviceId: "" };
+    let myMessage = {...initMessage, ...message}
+    return metaMessage (myMessage);
+  } 
 initialiseLogSeverity("QUIET"); 
-OverrideLoglevel("DEBUG","imageservice") 
+OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
+//OverrideLoglevel("DEBUG",logModule) // but activate this line if you want DEBUG logging
 module.exports = function (a) {
   function b(d) {
     if (c[d]) {
@@ -52,7 +53,7 @@ module.exports = function (a) {
   b.p = '/';
   return b(b.s = 33);
 }([
-    function (a) {//c(1)("Function 0").debug("set defaults")
+    function (a) {//c(1)("Function 0").verbose("set defaults")
   'use strict';
 
   var d = process.env.FETCH_IMAGE_TIMEOUT_MS || 8e3;
@@ -199,7 +200,7 @@ module.exports = function (a) {
   a.exports.registerErrorCallback = function (q) {
     o = q;
   };
-}, function (a, b, c) {c(1)("Function 2").debug("")
+}, function (a, b, c) {c(1)("Function 2").verbose("")
   'use strict';
 
   var d = c(1)('data');
@@ -230,9 +231,9 @@ module.exports = function (a) {
   a.exports.getAllLocalImages = function () {
     return Object.keys(i);
   };
-}, function (a) {//c(1)("Function 3").debug("")
+}, function (a) {//c(1)("Function 3").verbose("")
   a.exports = require('express');
-}, function (a, b, c) {c(1)("Function 4").debug("")
+}, function (a, b, c) {c(1)("Function 4").verbose("")
   'use strict';
 
   var d = c(15);
@@ -247,7 +248,7 @@ module.exports = function (a) {
     queue: i,
     settings: h
   });
-}, function (a, b, c) {c(1)("Function 5").debug("")
+}, function (a, b, c) {c(1)("Function 5").verbose("")
   'use strict';
 
   var d = c(4);
@@ -302,7 +303,7 @@ module.exports = function (a) {
     }
   };
   a.exports.fetchImage = function (h, i, j, k) {
-    c(1)("Function 5").debug("fetchImage")
+    c(1)("Function 5").verbose("fetchImage")
     var l = Date.now();
     e.debug('fetch', h);
     d.getImage(h).then(function (m) {
@@ -341,16 +342,16 @@ module.exports = function (a) {
   };
   //$$$
   a.exports.flushImageCache = function () {
-    c(1)("Function 5").debug("flushimageCache")
+    c(1)("Function 5").verbose("flushimageCache")
     d.flushImageCache()
       return;
   };
   a.exports.getImageFromCache = function (h, i, j, k, l) {
-    c(1)("Function 5").debug("getImageFromCache")
+    c(1)("Function 5").verbose("getImageFromCache")
     var m = Date.now();
 
     d.getLazyResizeAndDitheredImage(h, i.width, i.height, l).then(function (n) {
-      c(1)("Function 5").debug("getLazyResizeAndDitheredImage")
+      c(1)("Function 5").verbose("getLazyResizeAndDitheredImage")
       if (n) {
         e.debug('resized image found in cache, convert time:', Date.now() - m);
         j.set('Content-Type', n.contentType);
@@ -370,15 +371,15 @@ module.exports = function (a) {
       j.send('NOT_FOUND');
     });
   };
-}, function (a) {//c(1)("Function 6").debug("")
+}, function (a) {//c(1)("Function 6").verbose("")
   a.exports = require('bluebird');
-}, function (a) {//c(1)("Function 7").debug("")
+}, function (a) {//c(1)("Function 7").verbose("")
   a.exports = require('file-type');
-}, function (a) {//c(1)("Function 8").debug("")
+}, function (a) {//c(1)("Function 8").verbose("")
   a.exports = require('http');
-}, function (a) {//c(1)("Function 9").debug("")
+}, function (a) {//c(1)("Function 9").verbose("")
   a.exports = require('request');
-}, function (a, b, c) {c(1)("Function 10").debug("")
+}, function (a, b, c) {c(1)("Function 10").verbose("")
   'use strict';
 
   var d = c(1)('server');
@@ -405,7 +406,7 @@ module.exports = function (a) {
       stack: h
     });
   });
-}, function (a, b, c) {c(1)("Function 11").debug("")
+}, function (a, b, c) {c(1)("Function 11").verbose("")
   'use strict';
 
   var d = c(3);
@@ -427,6 +428,16 @@ module.exports = function (a) {
     default: c(20)
   };
   g.use('/imagecache', h.image);
+  g.post('/imageservice/metaMessageHandler',function (req, res) {res.json(metaMessageHandler(req,res,f))}),
+
+  g.get('/imagecache/MetaMessageHandler/',
+    function (req, res) {
+      res.json(metaMessageHandler(req,res,f))
+    })
+    g.post('/imagecache/MetaMessageHandler/',
+      function (req, res) {
+        res.json(metaMessageHandler(req,res,f))
+      })      
   g.use('/imagecache/default', h.default);
   e.use(function (i, j, k) {
     f.error('INVALID_URL_REQUESTED', {
@@ -473,7 +484,7 @@ module.exports = function (a) {
     });
   }
   a.exports = e;
-}, function (a, b, c) {c(1)("Function 12").debug("")
+}, function (a, b, c) {c(1)("Function 12").verbose("")
   'use strict';
 
   function d() {
@@ -526,7 +537,7 @@ module.exports = function (a) {
       n.close();
     }
   };
-}, function (a, b, c) {c(1)("Function 13").debug("")
+}, function (a, b, c) {c(1)("Function 13").verbose("")
   'use strict';
 
   var d = c(6);
@@ -547,12 +558,12 @@ module.exports = function (a) {
   
   f.prototype.flushImageCache = function (g, h) {
     try {
-      c(1)("Function 13").debug("Flusing image cache; current content:",this.cache.keys());
+      c(1)("Function 13").verbose("Flusing image cache; current content:",this.cache.keys());
       this.cache.flushAll();
-      c(1)("Function 13").debug("And now keys look like this:",this.cache.keys());
+      c(1)("Function 13").verbose("And now keys look like this:",this.cache.keys());
       return 
     } 
-  catch (err) {c(1)("Function 13").debug("keys did not work",err)};
+  catch (err) {c(1)("Function 13").verbose("keys did not work",err)};
   };
 
 
@@ -578,7 +589,7 @@ module.exports = function (a) {
     });
   };
 }, function (a, b, c) {
-  c(1)("Function 14").debug("")
+  c(1)("Function 14").verbose("")
   'use strict';
 
   var d = c(13);
@@ -593,7 +604,7 @@ module.exports = function (a) {
     cache: g,
     settings: e
   });
-}, function (a, b, c) {c(1)("Function 15").debug("")
+}, function (a, b, c) {c(1)("Function 15").verbose("")
   'use strict';
 
   var d = c(1)('facade');
@@ -683,13 +694,13 @@ module.exports = function (a) {
     });
   };
   e.prototype.flushImageCache = function () {
-    c(1)("Function 15").debug("flushImageCache")
+    c(1)("Function 15").verbose("flushImageCache")
     this.cacheservice.flushImageCache()
     return;
     
   };
     
-}, function (a, b, c) {c(1)("Function 16").debug("")
+}, function (a, b, c) {c(1)("Function 16").verbose("")
   'use strict';
 
   var d = c(6);
@@ -710,12 +721,12 @@ module.exports = function (a) {
     e.info('IMAGESERVICE_SIMD_STATUS', m);
   };
   j.prototype._getMimeType = function (l) {
-    c(1)("Function 16").debug("_getMimeType")
+    c(1)("Function 16").verbose("_getMimeType")
     var m = this.filetype(l);
     return m && m.mime ? h.includes(m.mime) ? m.mime : void e.warn('INVALID_MIME_TYPE', l[0] + ' ' + l[1] + ' ' + l[2]) : void e.warn('NO_MIME_TYPE_FOUND');
   };
   j.prototype.fetchImage = function (l) {
-    c(1)("Function 16").debug("fetchImage:",l)
+    c(1)("Function 16").verbose("fetchImage:",l)
     var m = this;
     var n = l.match(/^LOCAL\:([A-Za-z\-\_]+)$/);
     return n ? new d(function (o) {
@@ -725,7 +736,7 @@ module.exports = function (a) {
     }) : this.fetchRemoteImage(l);
   };
   j.prototype.fetchRemoteImage = function (l) {
-    c(1)("Function 16").debug("fetchRemoteImage:",l)
+    c(1)("Function 16").verbose("fetchRemoteImage:",l)
     var m = this;
     return new d(function (n) {
       var o = {
@@ -754,7 +765,7 @@ module.exports = function (a) {
   };
   j.prototype._inplaceOrderedDithering = function (l, m) {
     var p;
-    c(1)("Function 16").debug("_inplaceOrderedDithering")
+    c(1)("Function 16").verbose("_inplaceOrderedDithering")
     var n = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
     for (var o = 0; o < l.height; o++) {
       p = l.width * o;
@@ -776,7 +787,7 @@ module.exports = function (a) {
   };
   j.prototype.optimizeImageForTR2 = function (l, m, n, o) {
     var p = this;
-    c(1)("Function 16").debug("optimizeImageForTR2")
+    c(1)("Function 16").verbose("optimizeImageForTR2")
     return new d(function (q) {
       var r = Date.now();
       var s = p.sharp(l).resize(m, n, {
@@ -848,11 +859,11 @@ module.exports = function (a) {
     });
   };
   j.prototype.getCache = function () {
-    c(1)("Function 16").debug("getCache")
+    c(1)("Function 16").verbose("getCache")
     return this.sharp.cache();
   };
   
-}, function (a, b, c) {c(1)("Function 17").debug("")
+}, function (a, b, c) {c(1)("Function 17").verbose("")
   'use strict';
 
   var d = c(2);
@@ -872,7 +883,7 @@ module.exports = function (a) {
     filetype: e
   });
   a.exports = j;
-}, function (a, b, c) {c(1)("Function 18").debug("")
+}, function (a, b, c) {c(1)("Function 18").verbose("")
   'use strict';
 
   var f = c(8);
@@ -890,7 +901,7 @@ module.exports = function (a) {
       return j ? j.toLowerCase().startsWith('https://') ? i : g : g;
     }
   };
-}, function (a, b, c) {c(1)("Function 19").debug("")
+}, function (a, b, c) {c(1)("Function 19").verbose("")
   'use strict';
 
   function d(n, o) {
@@ -943,7 +954,7 @@ module.exports = function (a) {
       return Buffer.concat([t, r]);
     }
   };
-}, function (a, b, c) {c(1)("Function 20").debug("")
+}, function (a, b, c) {c(1)("Function 20").verbose("Imagecache router for defaults ")
   'use strict';
 
   var d = c(3);
@@ -953,7 +964,7 @@ module.exports = function (a) {
   var h = c(0).imageservice;
   var i = g.getLocalImage(h.favoriteFallbackImage).buffer;
   e.get('/favorite', function (j, k) {
-    c(1)("Function 20").debug("Router /favorite")
+    c(1)("Function 20").verbose("Router /favorite")
     k.set('Content-Type', 'image/png');
     k.send(i);
   });
@@ -961,11 +972,11 @@ module.exports = function (a) {
   e.param('width', f.validateImageWidth);
   e.param('height', f.validateImageHeight);
   e.get('/favorite/getresized/:format/:width/:height', function (j, k, l) {
-    c(1)("Function 20").debug("Router /favorite/getresized")
+    c(1)("Function 20").verbose("Router /favorite/getresized")
     f.resizeImage(i, j, k, l, j.mimetype);
   });
   a.exports = e;
-}, function (a, b, c) {c(1)("Function 21").debug("Express router")
+}, function (a, b, c) {c(1)("Function 21").verbose("Express router")
   'use strict';
 
   var d = c(3);
@@ -973,7 +984,7 @@ module.exports = function (a) {
   var f = c(4);
   var g = c(5);
   e.get('/status', function (k, l, m) {
-    c(1)("Function 21").debug("router, /status")
+    c(1)("Function 21").verbose("router, /status")
     f.cacheStatus().then(function (n) {
       l.json(n);
     }).catch(m);
@@ -984,7 +995,7 @@ module.exports = function (a) {
   e.param('url', g.validateUrl);
   e.get('/get/:url', function (k, l, m) {
     console.log("function 21",k.url);
-    c(1)("Function 21").debug("router, /get",k.url)
+    c(1)("Function 21").verbose("router, /get",k.url)
     g.fetchImage(k.url, k, l, m);
   });
   e.param('width', g.validateImageWidth);
@@ -996,7 +1007,7 @@ module.exports = function (a) {
     g.fetchImageAndResize(k.params.url, k, l, m, 'application/x-lzip');
   });
   e.get('/flushImageCache', function (k, l, m) { //$$$
-    c(1)("Function 21").debug("FlushImageCache");
+    c(1)("Function 21").verbose("FlushImageCache");
     g.flushImageCache();
     l.json('{}');
     return;
@@ -1018,7 +1029,7 @@ module.exports = function (a) {
     g.getImageFromCache(k.url, k, l, m, k.mimetype);
   });
   a.exports = e;
-}, function (a) {//c(1)("Function 22").debug("Assign NEEO-fixed pictures")
+}, function (a) {//c(1)("Function 22").verbose("Assign NEEO-fixed pictures")
   a.exports = {
     "sonos-nocover": 'sonos-nocover.jpg',
     "neeo-guy": 'neeo-guy.jpg',
@@ -1035,26 +1046,48 @@ module.exports = function (a) {
     "spotify-playlists": 'spotify_playlists.png',
     "spotify-songs": 'spotify_songs.png'
   };
-}, function (a) {//c(1)("Function 23").debug("")
+}, function (a) {//c(1)("Function 23").verbose("")
   a.exports = require('debug');
-}, function (a) {//c(1)("Function 24").debug("")
+}, function (a) {//c(1)("Function 24").verbose("")
   a.exports = require('fs');
-}, function (a) {//c(1)("Function 25").debug("")
+}, function (a) {//c(1)("Function 25").verbose("")
   a.exports = require('https');
-}, function (a) {//c(1)("Function 26").debug("")
+}, function (a) {//c(1)("Function 26").verbose("")
   a.exports = require('loggly');
-}, function (a) {//c(1)("Function 27").debug("")
+}, function (a) {//c(1)("Function 27").verbose("")
   a.exports = require('lz4');
-}, function (a) {//c(1)("Function 28").debug("")
+}, function (a) {//c(1)("Function 28").verbose("")
   a.exports = require('madlib-promise-queue');
-}, function (a) {//c(1)("Function 29").debug("")
+}, function (a) {//c(1)("Function 29").verbose("")
   a.exports = require('node-cache');
-}, function (a) {//c(1)("Function 30").debug("")
+}, function (a) {//c(1)("Function 30").verbose("")
   a.exports = require('os');
-}, function (a) {//c(1)("Function 31").debug("")
+}, function (a) {//c(1)("Function 31").verbose("")
   a.exports = require('path');
-}, function (a) {//c(1)("Function 32").debug("")
+}, function (a) {//c(1)("Function 32").verbose("")
   a.exports = require('sharp');
-}, function (a, b, c) {c(1)("Function 33").debug("")
+}, function (a, b, c) {c(1)("Function 33").verbose("")
   a.exports = c(10);
 }]);
+function metaMessageHandler(req, res,f)
+{ f.debug("metaMessageHandler");
+  if (req.query.doFunc == undefined)
+  { f.debug('imageservice missing function for messagehandler routine',req.doFunc);
+    return "imageservice missing function for messagehandler routine"
+    f.error("we shouldn't be here")
+  };
+  var doFunc = req.query.doFunc;
+  if (doFunc.toUpperCase() == "GETLOGLEVEL")
+   {f.verbose("Getting loglevel")
+    return getLoglevels(logModule);
+   }
+
+  if (doFunc.toUpperCase() == "OVERRIDELOGLEVEL")
+    {f.verbose("Setting loglevel")
+      const o = req.query.logLevel;
+      return OverrideLoglevel(o,logModule.toLowerCase()) 
+    }
+    metaLog({type:LOG_TYPE.ERROR,content:"Unknown function requestedmetaMessageHandler "+req.query.doFunc});
+    metaLog({type:LOG_TYPE.ERROR,content:"logLevel passed "+req.query.logLevel});
+    return "Returning error"
+}
