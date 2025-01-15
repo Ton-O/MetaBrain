@@ -9,7 +9,7 @@ function metaLog(message) {
 initialiseLogSeverity("QUIET"); 
 OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
 //OverrideLoglevel("DEBUG",logModule) // but activate this line if you want DEBUG logging
-
+var theLog;
   module.exports = function(a) {
     function b(d) {
         if (c[d]) return c[d].exports;
@@ -38,8 +38,10 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
         return b.d(e, 'a', e), e
     }, b.o = function(d, e) {
         return Object.prototype.hasOwnProperty.call(d, e)
-    }, b.p = '/', b(b.s = 36)
-}([function(a, b, c) {//o(0)("Function init").verbose("");
+    }, b.p = '/', console.log("einde defs"), theLog = b(0),theLog("pffff").debug("en de nieuwe functie"),console.log(b(36)), b(b.s = 36)
+}([
+    function(a, b, c) {  //theLog("Function init 0");
+        console.log("Function 0")
     'use strict';
 
     function d() {
@@ -79,13 +81,13 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
         if (true) {
             var v = u ? t + ' ' + JSON.stringify(u) : t;
             metaLog({type:r, content:"["+ this.label + "] "+v,deviceId:"_"})  
-          //console.log('%s - %s: [ %s ] %s', new Date().toISOString(), r, this.label, v);
+          console.log('%s - %s: [ %s ] %s', new Date().toISOString(), r, this.label, v);
         }
         var w = {
                 host: j,
                 app: h.tag,
                 version: k,
-                level: r.toUpperCase(),
+                level: r, //  .toUpperCase(),
                 source: this.label,
                 message: t,
                 timestamp: Date.now()
@@ -94,15 +96,16 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
                 msg: u
             } : u, s && o && (q++, q < h.maximalUpstreamLogMessagePerHour ? o.log(w) : q === h.maximalUpstreamLogMessagePerHour && (w.source = 'LOG', w.message = 'LOG_COUNT_EXCEEDED', w.level = 'WARN', w.params = void 0, o.log(w))), 'error' === r && p && p(w)
         }
-    }, e.prototype.always = d._log(LOG_TYPE.ALWAYS, !1), e.prototype.debug = d._log(LOG_TYPE.DEBUG, !1), e.prototype.verbose = d._log(LOG_TYPE.VERBOSE, !1), e.prototype.info = d._log(LOG_TYPE.INFO, !0), e.prototype.warn = d._log(LOG_TYPE.WARNING, !0), e.prototype.error = d._log(LOG_TYPE.ERROR, !0) 
+    }, e.prototype.always = e._log(LOG_TYPE.ALWAYS, !1), e.prototype.debug = e._log(LOG_TYPE.DEBUG, !1), e.prototype.verbose = e._log(LOG_TYPE.VERBOSE, !1), e.prototype.info = e._log(LOG_TYPE.INFO, !0), e.prototype.warn = e._log(LOG_TYPE.WARNING, !0), e.prototype.error = e._log(LOG_TYPE.ERROR, !0) 
     //e.prototype.debug = e._log('debug', !1), e.prototype.verbose = e._log('verbose', !1), e.prototype.info = e._log('info', !0), e.prototype.warn = e._log('warn', !0), e.prototype.error = e._log('error', !0), 
         a.exports = function(r) {
         return n || (d(), n = !0), new e(r)
     }, a.exports.registerErrorCallback = function(r) {
         p = r
     }
-}, function(a) {       //c(1)("Function init").verbose("");
+}, function(a) {        console.log("Function init 1");
     'use strict';
+    console.log("Function 1")
     var d = process.env.IP || '127.0.0.1',
         e = process.env.PORT || 3005;
     a.exports = {
@@ -132,12 +135,15 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             restCallTimeoutMs: process.env.NEEO_HOMEKIT_REST_CALL_TIMEOUT_MS || '4000'
         }
     }
-}, function(a, b, c) {   c(2)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 2").verbose("");
     'use strict';
+    theLog("Function init 2").verbose("starting");
     var d = c(10),
         e = c(1).brain,
         f = c(0)('rest');
-    a.exports.failsafeGetRequest = function(g, h) {
+        theLog("Function init 2").verbose("starting 2");
+
+        a.exports.failsafeGetRequest = function(g, h) {theLog("Function init 2").verbose("failsafeGetRequest");
         return d({
             method: 'GET',
             uri: g,
@@ -147,13 +153,13 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
                 error: j.message
             })
         })
-    }, a.exports.getRequest = function(g) {
+    }, a.exports.getRequest = function(g) {theLog("Function init 2").verbose("getRequest");
         return d({
             method: 'GET',
             uri: g,
             timeout: e.restCallTimeoutMs
         })
-    }, a.exports.getRequestWithJsonAnswer = function(g) {
+    }, a.exports.getRequestWithJsonAnswer = function(g) {theLog("Function init 2").verbose("getRequestWithJsonAnswer");
         return d({
             method: 'GET',
             uri: g,
@@ -161,11 +167,11 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             timeout: e.restCallTimeoutMs
         })
     }
-}, function(a) {       //c(1)("Function init").verbose("");
+}, function(a) {       console.log("Function init 3");
     a.exports = require('bluebird')
-}, function(a) {       //c(1)("Function init").verbose("");
+}, function(a) {       console.log("Function init 4");
     a.exports = require('express')
-}, function(a, b, c) {   c(2)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 5").verbose("");
     'use strict';
     var d = c(29);
     a.exports.getUsername = function(e) {
@@ -174,7 +180,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             return g += f.slice(h, h + 2), g
         }
     }
-}, function(a, b, c) {   c(3)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 6").verbose("");
     'use strict';
     var d = c(0)('HomeKit'),
         e = c(1),
@@ -227,7 +233,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
     }, a.exports.getStatistics = function() {
         return k
     }
-}, function(a, b, c) {   c(4)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 7").verbose("");
     'use strict';
     var d = c(6),
         e = c(18),
@@ -236,13 +242,13 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
     a.exports.getFacade = function() {
         return h
     }
-}, function(a) {       //c(5)("Function init").verbose("");
+}, function(a) {       console.log("Function init 8");
     a.exports = require('hap-nodejs')
-}, function(a) {       //c(6)("Function init").verbose("");
+}, function(a) {       console.log("Function init 9");
     a.exports = require('os')
-}, function(a) {       //c(7)("Function init").verbose("");
+}, function(a) {       console.log("Function init 10");
     a.exports = require('request-promise')
-}, function(a, b, c) {   c(8)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 11").verbose("");
     'use strict';
     var d = process.uptime(),
         e = c(34),
@@ -273,7 +279,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             stack: n
         })
     })
-}, function(a, b, c) {   c(9)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 12").verbose("");
     'use strict';
     var d = c(4),
         e = c(28),
@@ -285,11 +291,15 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
         l.send()
     });
     var h = d.Router();
+
     g.use('/v1', h), g.use('/', h);
+    g.post('/homekit/metaMessageHandler',function (req, res) {res.json(metaMessageHandler(req,res,c))
+ });
     var j = {
         braininterface: c(26),
         statistics: c(27)
     };
+
     h.use('/braininterface', j.braininterface), h.use('/statistics', j.statistics), g.use(function(k, l, m) {
         f.error('INVALID_URL_REQUESTED', {
             url: k.url
@@ -316,7 +326,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             message: k.message
         })
     }), a.exports = g
-}, function(a, b, c) {   c(10)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 13").verbose("");
     'use strict';
     var f = c(30)('neeo:bootstrap'),
         g = c(7).getFacade();
@@ -328,7 +338,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             f('TERMINATE_SERVICES'), g.stopServer()
         }
     }
-}, function(a, b, c) {   c(11)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 14").verbose("");
     'use strict';
     var d = c(10),
         e = c(1).brain,
@@ -344,7 +354,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             })
         })
     }
-}, function(a, b, c) {   c(12)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 15").verbose("");
     'use strict';
     var d = c(0)('AlexaController'),
         e = c(14),
@@ -357,7 +367,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             }
         }
     }
-}, function(a, b, c) {   c(13)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 16").verbose("");
     'use strict';
     var d = c(15),
         e = c(0)('AlexaFactory');
@@ -373,7 +383,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             }
         }
     }
-}, function(a, b, c) {   c(14)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 17").verbose("");
     'use strict';
     var d = c(31),
         e = new d;
@@ -382,7 +392,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
     }, a.exports.updateData = function(f) {
         return e.updateDevices(f)
     }
-}, function(a, b, c) {   c(15)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 18").verbose("");
     'use strict';
     var d = c(0)('Alexa'),
         e = c(1).alexa,
@@ -403,7 +413,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             }
         }
     }
-}, function(a, b, c) {   c(16)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 19").verbose("");
     'use strict';
     var d = c(0)('HomeKit DataSource'),
         e = c(3),
@@ -420,15 +430,16 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             return d.error('MAC_ADDRESS_READ', l.message), '63:36:39:58:47:cf'
         })
     }
-}, function(a, b, c) {   c(17)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 20").verbose("");
     'use strict';
 
-    function d() {
+    function d() {theLog("Function init 20").verbose("removeAllBridgedAccessories");
         o.removeAllBridgedAccessories(), o.destroy()
     }
 
     function e(r) {
         var s = void 0;
+        theLog("Function init 20").verbose("e(r)",r);
         try {
             s = g.readdirSync(r)
         } catch (v) {
@@ -441,6 +452,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
     function f() {
         return o !== void 0
     }
+    theLog("Function init 20").verbose("part 2");
     var g = c(32),
         h = c(0)('Bridge'),
         j = c(2),
@@ -476,7 +488,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             category: n.Categories.BRIDGE
         })
     }
-}, function(a, b, c) {   c(18)("Function init").verbose("");
+}, function(a, b, c) {   console.log("Function 20")//theLog("Function init 21").verbose("");
     'use strict';
 
     function d(l) {
@@ -515,7 +527,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
     }, a.exports.suppportsPowerTracking = function(l) {
         return l.powerKey !== void 0
     }
-}, function(a, b, c) {   c(19)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 22").verbose("");
     'use strict';
 
     function d(n, o) {
@@ -572,7 +584,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             })
         }), q
     }
-}, function(a, b, c) {   c(20)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 23").verbose("");
     'use strict';
     var d = c(0)('switchableController'),
         e = c(2),
@@ -601,7 +613,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             }
         }
     }
-}, function(a, b, c) {   c(21)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 24").verbose("");
     'use strict';
     var d = c(3),
         e = c(0)('triggerableController'),
@@ -633,7 +645,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             }
         }
     }
-}, function(a, b, c) {   c(22)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 25").verbose("");
     'use strict';
 
     function d(k, l) {
@@ -709,7 +721,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             }]), k
         }();
     a.exports = j
-}, function(a, b, c) {   c(23)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 26").verbose("");
     'use strict';
     var d = c(4),
         e = d.Router(),
@@ -729,7 +741,7 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
     }), e.post('/resetpairing', function(g, h) {
         h.json({}), f.resetPairing()
     }), a.exports = e
-}, function(a, b, c) {   c(24)("Function init").verbose("");
+}, function(a, b, c) {   theLog("Function init 27").verbose("");
     'use strict';
     var d = c(4),
         e = d.Router(),
@@ -739,40 +751,44 @@ OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
             homekit: f.getStatistics()
         })
     }), a.exports = e
-}, function(a) {       //c(25)("Function init").verbose("");
+}, function(a) {       console.log("Function init 28");
     a.exports = require('body-parser')
-}, function(a) {       //c(26)("Function init").verbose("");
+}, function(a) {       console.log("Function init 29");
     a.exports = require('crypto')
-}, function(a) {       //c(27)("Function init").verbose("");
+}, function(a) {       console.log("Function init 30");
     a.exports = require('debug')
-}, function(a) {       //c(28)("Function init").verbose("");
+}, function(a) {       console.log("Function init 31");
     a.exports = require('fauxmojs')
-}, function(a) {       //c(29)("Function init").verbose("");
+}, function(a) {       console.log("Function init 32");
     a.exports = require('fs')
-}, function(a) {       //c(30)("Function init").verbose("");
+}, function(a) {       console.log("Function init 33");
+    console.log("require http")
+
     a.exports = require('getmac')
-}, function(a) {       //c(31)("Function init").verbose("");
+}, function(a) {       console.log("Function init 34");
+    console.log("require http")
     a.exports = require('http')
-}, function(a) {       //c(32)("Function init").verbose("");
+}, function(a) {       console.log("Function init 35");
     a.exports = require('loggly')
-}, function(a, b, c) { //c(33)("Function init").verbose("");
+}, function(a, b, c) { theLog("Function init 36").verbose("");
+    console.log("doing function 36")
     a.exports = c(11)
 }]);
 function metaMessageHandler(req, res,f)
-{ f.debug("metaMessageHandler");
+{ metaLog({type:LOG_TYPE.DEBUG,content:"metaMessageHandler"});
   if (req.query.doFunc == undefined)
-  { f.debug('imageservice missing function for messagehandler routine',req.doFunc);
+  { metaLog({type:LOG_TYPE.ERROR,content:'imageservice missing function for messagehandler routine '+req.doFunc});
     return "imageservice missing function for messagehandler routine"
-    f.error("we shouldn't be here")
+    metaLog({type:LOG_TYPE.ERROR,content:"we shouldn't be here"})
   };
   var doFunc = req.query.doFunc;
   if (doFunc.toUpperCase() == "GETLOGLEVEL")
-   {f.verbose("Getting loglevel")
+   {metaLog({type:LOG_TYPE.VERBOSE,content:"Getting loglevel"})
     return getLoglevels(logModule);
    }
 
   if (doFunc.toUpperCase() == "OVERRIDELOGLEVEL")
-    {f.verbose("Setting loglevel")
+    {metaLog({type:LOG_TYPE.VERBOSE,content:"Setting loglevel"})
       const o = req.query.logLevel;
       return OverrideLoglevel(o,logModule.toLowerCase()) 
     }
