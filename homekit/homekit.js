@@ -38,10 +38,10 @@ var theLog;
         return b.d(e, 'a', e), e
     }, b.o = function(d, e) {
         return Object.prototype.hasOwnProperty.call(d, e)
-    }, b.p = '/', console.log("einde defs"), theLog = b(0),theLog("pffff").debug("en de nieuwe functie"),console.log(b(36)), b(b.s = 36)
+    }, b.p = '/',theLog = b(0), b(b.s = 36)
 }([
     function(a, b, c) {  //theLog("Function init 0");
-        console.log("Function 0")
+        metaLog({type:LOG_TYPE.VERBOSE,content:"Function 0"})
     'use strict';
 
     function d() {
@@ -81,7 +81,7 @@ var theLog;
         if (true) {
             var v = u ? t + ' ' + JSON.stringify(u) : t;
             metaLog({type:r, content:"["+ this.label + "] "+v,deviceId:"_"})  
-          console.log('%s - %s: [ %s ] %s', new Date().toISOString(), r, this.label, v);
+            // console.log('%s - %s: [ %s ] %s', new Date().toISOString(), r, this.label, v);
         }
         var w = {
                 host: j,
@@ -103,9 +103,8 @@ var theLog;
     }, a.exports.registerErrorCallback = function(r) {
         p = r
     }
-}, function(a) {        console.log("Function init 1");
+}, function(a) {        metaLog({type:LOG_TYPE.VERBOSE,content:"Function init 1"});
     'use strict';
-    console.log("Function 1")
     var d = process.env.IP || '127.0.0.1',
         e = process.env.PORT || 3005;
     a.exports = {
@@ -167,9 +166,9 @@ var theLog;
             timeout: e.restCallTimeoutMs
         })
     }
-}, function(a) {       console.log("Function init 3");
+}, function(a) {       metaLog({type:LOG_TYPE.VERBOSE,content:"Function init 3"});
     a.exports = require('bluebird')
-}, function(a) {       console.log("Function init 4");
+}, function(a) {       metaLog({type:LOG_TYPE.VERBOSE,content:"Function init 4"});
     a.exports = require('express')
 }, function(a, b, c) {   theLog("Function init 5").verbose("");
     'use strict';
@@ -242,11 +241,11 @@ var theLog;
     a.exports.getFacade = function() {
         return h
     }
-}, function(a) {       console.log("Function init 8");
+}, function(a) {       metaLog({type:LOG_TYPE.VERBOSE,content:"Function init 8"});
     a.exports = require('hap-nodejs')
-}, function(a) {       console.log("Function init 9");
+}, function(a) {       metaLog({type:LOG_TYPE.VERBOSE,content:"Function init 9"});
     a.exports = require('os')
-}, function(a) {       console.log("Function init 10");
+}, function(a) {       metaLog({type:LOG_TYPE.VERBOSE,content:"Function init 10"});
     a.exports = require('request-promise')
 }, function(a, b, c) {   theLog("Function init 11").verbose("");
     'use strict';
@@ -488,7 +487,7 @@ var theLog;
             category: n.Categories.BRIDGE
         })
     }
-}, function(a, b, c) {   console.log("Function 20")//theLog("Function init 21").verbose("");
+}, function(a, b, c) {   metaLog({type:LOG_TYPE.VERBOSE,content:"Function 20"})//theLog("Function init 21").verbose("");
     'use strict';
 
     function d(l) {
@@ -751,27 +750,27 @@ var theLog;
             homekit: f.getStatistics()
         })
     }), a.exports = e
-}, function(a) {       console.log("Function init 28");
+}, function(a) {       metaLog({type:LOG_TYPE.VERBOSE,content:"Function init 28"});
     a.exports = require('body-parser')
-}, function(a) {       console.log("Function init 29");
+}, function(a) {       metaLog({type:LOG_TYPE.VERBOSE,content:"Function init 29"});
     a.exports = require('crypto')
-}, function(a) {       console.log("Function init 30");
+}, function(a) {       metaLog({type:LOG_TYPE.VERBOSE,content:"Function init 30"});
     a.exports = require('debug')
-}, function(a) {       console.log("Function init 31");
+}, function(a) {       metaLog({type:LOG_TYPE.VERBOSE,content:"Function init 31"});
     a.exports = require('fauxmojs')
-}, function(a) {       console.log("Function init 32");
+}, function(a) {       metaLog({type:LOG_TYPE.VERBOSE,content:"Function init 32"});
     a.exports = require('fs')
-}, function(a) {       console.log("Function init 33");
-    console.log("require http")
+}, function(a) {       metaLog({type:LOG_TYPE.VERBOSE,content:"Function init 33"});
+    metaLog({type:LOG_TYPE.VERBOSE,content:"require http"});
 
     a.exports = require('getmac')
-}, function(a) {       console.log("Function init 34");
-    console.log("require http")
+}, function(a) {       metaLog({type:LOG_TYPE.VERBOSE,content:"Function init 34"});
+    metaLog({type:LOG_TYPE.VERBOSE,content:"require http"});
     a.exports = require('http')
-}, function(a) {       console.log("Function init 35");
+}, function(a) {       metaLog({type:LOG_TYPE.VERBOSE,content:"Function init 35"});
     a.exports = require('loggly')
 }, function(a, b, c) { theLog("Function init 36").verbose("");
-    console.log("doing function 36")
+    metaLog({type:LOG_TYPE.VERBOSE,content:"doing function 36"});
     a.exports = c(11)
 }]);
 function metaMessageHandler(req, res,f)
