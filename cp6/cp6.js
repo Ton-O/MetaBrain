@@ -3215,10 +3215,10 @@ const currChannelArray = [];
             name: this.name
         }),  this.getValue())
     }, u.prototype.getValue = function() {
-        AllFunctions(0)("Function 62").verbose("getValue; now calling deviceadapter to get this value", this.name)
+        AllFunctions(0)("Function 62").debug("getValue; now calling deviceadapter to get this value", this.name)
         return this._valuePromise = c.getValue(this), i.debug("SENSOR_CACHED_VALUE_USING_NEXT_GET_VALUE", { // ###
             name: this.name
-        }), this._valuePromise.catch(() => {AllFunctions(0)("Function 62").verbose("Errcatch valuepromise");
+        }), this._valuePromise.catch(() => {AllFunctions(0)("Function 62").verbose("Err.catch valuepromise");
             this._valueExpiration = Date.now() + 6e4
         }),  this._valuePromise
     }, u.prototype.toJSON = function() {
@@ -3278,7 +3278,7 @@ const currChannelArray = [];
             n.debug("no payload / payload.body / requestUrl")
         },
         transliterationToAscii: function(e) {
-            AllFunctions(0)("Function 64").verbose("transliterationToAscii")
+            AllFunctions(0)("Function 64").debug("transliterationToAscii")
 
             return e ? function(e) {
                 return e.split("").map(e => {
@@ -5959,6 +5959,7 @@ const currChannelArray = [];
         c = new i(a, n);
     e.exports = {
         trigger: function(e, t) {
+            metaLog({type:LOG_TYPE.VERBOSE,content:"Trigger IR "+e.name});
             return c.trigger(e, t)
         },
         sendSingleCommand: function(e) {
@@ -7411,7 +7412,7 @@ const currChannelArray = [];
 
         return "v1/imagecache/get/" + o + encodeURIComponent(e)
     }, t.getLazyUrlPath = function(e, t) { 
-        AllFunctions(0)("Function 160").verbose("getLazyURLPath")
+        AllFunctions(0)("Function 160").debug("getLazyURLPath")
 
         if (!e) return "";
         const r = n(t),
@@ -9982,7 +9983,7 @@ AllFunctions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             return this._get({
                 uri: r + o.path + "/" + encodeURIComponent(t.getAdapterDeviceId()),
                 agent: c
-            }).then(Sensor => {AllFunctions(0)("Function 215").verbose("deviceadapter returned",Sensor,"for",e.name ); return Sensor.value})
+            }).then(Sensor => {AllFunctions(0)("Function 215").debug("deviceadapter returned",Sensor,"for",e.name ); return Sensor.value})
             .catch(n => AllFunctions(0)("Function 215").error("getValue ERROR (from deviceadapter)",e.name) );
         }).catch(err => AllFunctions(0)("Function 215").error(" ERROR getValue getDevice:",err ))
     }, T.prototype.browse = function(e, t, r) {
@@ -10043,7 +10044,7 @@ AllFunctions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             return new n((r, n) => {
                 if (this.isDeviceAdapterInternal(e, t)) return r(this.baseUrlDeviceadapter);
                 const o = i.getBaseUrl(t || e);
-                AllFunctions(0)("Function 217").verbose("_getBaseUrl",o)
+                AllFunctions(0)("Function 217").debug("_getBaseUrl",o)
                 o ? r(o) : n(new Error("Could not find SDK instance " + e))
             })
         }
@@ -12713,7 +12714,7 @@ return this._syncFileList();
             return  i.reject();
             }
         if (e == "/sendir")
-            {} // we'll handle IR-send lateer in this function
+            {} // we'll handle IR-send later in this function
         else
         if (e == "/blink")
             {AllFunctions(0)("Function 288").verbose("Request to blink... if it was an IR-request, Broadlink will blink, otherwise: no blinky-blink for now")
