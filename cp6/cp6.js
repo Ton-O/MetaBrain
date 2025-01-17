@@ -38,6 +38,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
                     BrainBroadLink = {}
                     }
         })
+const currChannelArray = [];        
 ! function(e) {
     function t(n) { 
         if (r[n]) return r[n].exports;
@@ -21352,95 +21353,116 @@ return this._syncFileList();
 },  function(e, t)  { // Function 506 Custom functionality - added without NEEO development
         "use strict";
         AllFunctions(0)("Function 506").verbose("CurrentChannel")
-
-        const currChannelArray = [];
+        
         e.exports = {
             storeChannelInfo: function(currChannel, deviceId,command) {
                 let thisMoment = moment()
                 currChannelArray[deviceId] = {"channel":currChannel,"command":command,"atMoment":thisMoment};
-                AllFunctions(0)("Function 506").verbose("storeChannelInfo - currChannelArray:",currChannelArray)
+
+                AllFunctions(0)("Function 506").verbose("storeChannelInfo - currChannelArray:")
                 return 1
             },   
-            getCurrChannel: function(deviceId) {
-                AllFunctions(0)("Function 506").verbose("getCurrChannel")
-                if (!deviceId) 
-                    {AllFunctions(0)("Function 506").verbose("addCurrentChannel - MISSING channel or deviceId")
-                    return Promise.reject({result: false});
+        getCurrChannel: function(deviceId) {
+            AllFunctions(0)("Function 506").verbose("getCurrChannel")
+            if (!deviceId) 
+                {AllFunctions(0)("Function 506").verbose("addCurrentChannel - MISSING channel or deviceId")
+                return Promise.reject({result: false});
+                }
+            let currChannelForDevice;
+            try {
+                currChannelForDevice= currChannelArray[deviceId].channel;
+                }
+            catch  (err)
+                {AllFunctions(0)("Function 506").verbose("Channel not found for",deviceId,"; channel -1 substituted")
+                return Promise.reject({result: false,reason:"Channel not found","channel": "Channel not defined yet"});
+                }
+            AllFunctions(0)("Function 506").verbose("getCurrChannel Channel is",currChannelForDevice)
+            let thisMoment = moment()
+            let waitTime = 0;
+            if (currChannelArray[deviceId].command != "DIGIT")
+            {  AllFunctions(0)("Function 506").verbose("Sending digit, check if we can send already")
+                console.log(thisMoment - currChannelArray[deviceId].atMoment)
+                if ((thisMoment - currChannelArray[deviceId].atMoment) <1200)
+                {   waitTime = 1200 - (thisMoment - currChannelArray[deviceId].atMoment);
+                    AllFunctions(0)("Function 506").verbose("Pausing before sending IR-digit, to prevent clogging up channelinfo",waitTime)
+                }
+            }
+            return this.delay(waitTime).then(function() {
+                return Promise.resolve({result: true,channel:currChannelForDevice}) ;
+            });
+        },
+        delay: function (t) {
+            return new Promise(function(resolve) {
+                setTimeout(function() {
+                resolve();
+                }, t);
+            });
+        },
+                
+        putChannelUpDown: function(command,deviceId,e,r) {
+            const c = r(484),
+            u = r(52);
+            AllFunctions(0)("Function 506").verbose("putChannelUpDown")
+            let FinalChannel=0;
+            this.getCurrChannel(deviceId).then(newChannel => {
+                AllFunctions(0)("Function 506").verbose("putchannelupdown result getcurrentchannel",newChannel)
+                if (newChannel.channel != undefined)
+                    {FinalChannel=newChannel.channel;
+                    let splitParts = command.split(' ');
+                    if (splitParts.length <2)
+                        splitParts = command.split('_');
+                    if (splitParts[1] == "UP") //CHANNEL_
+                        FinalChannel++;
+                    else
+                        FinalChannel--;
                     }
-                let currChannelForDevice;
-                try {
-                    currChannelForDevice= currChannelArray[deviceId].channel;
-                    }
-                catch  (err)
-                    {AllFunctions(0)("Function 506").verbose("Channel not found for",deviceId,"; channel -1 substituted")
-                    return Promise.reject({result: false,reason:"Channel not found","channel": "Channel not defined yet"});
-                    }
-                AllFunctions(0)("Function 506").verbose("getCurrChannel Channel is",currChannelForDevice)
-                return Promise.resolve({result: true,channel:currChannelForDevice})
-            },  
-            putChannelUpDown: function(command,deviceId,e,r) {
-                const c = r(484),
-                u = r(52);
-                AllFunctions(0)("Function 506").verbose("putChannelUpDown")
-                let FinalChannel=0;
-                this.getCurrChannel(deviceId).then(newChannel => {
-                    AllFunctions(0)("Function 506").verbose("putchannelupdown result getcurrentchannel",newChannel)
-                    if (newChannel.channel != undefined)
-                        {FinalChannel=newChannel.channel;
-                        let splitParts = command.split(' ');
-                        if (splitParts.length <2)
-                            splitParts = command.split('_');
-                        if (splitParts[1] == "UP") //CHANNEL_
-                            FinalChannel++;
-                        else
-                            FinalChannel--;
-                        }
-                    else {
-                        AllFunctions(0)("Function  506").verbose("putchannelupdown result getcurrentchannel undefined:",newChannel)
-                        FinalChannel = 1;
-                    }
-                    this.storeChannelInfo(FinalChannel, deviceId,command);
-                    const x = c.buildChannelSwitchAction(e.component.device, FinalChannel)
-                    const n = u.trigger(x);
-                    return n;
-                    }
-                )
-                .catch(err => {AllFunctions(0)("Function 506").verbose("putChannelUpDown. Failed to execute promise",err);
-                                this.storeChannelInfo(FinalChannel, deviceId,command)
-                                const x = c.buildChannelSwitchAction(e.component.device, FinalChannel)
-                                const n = u.trigger(x);
-                                return n;
-                            })
+                else {
+                    AllFunctions(0)("Function  506").verbose("putchannelupdown result getcurrentchannel undefined:",newChannel)
+                    FinalChannel = 1;
+                }
+                this.storeChannelInfo(FinalChannel, deviceId,command);
+                const x = c.buildChannelSwitchAction(e.component.device, FinalChannel)
+                const n = u.trigger(x);
+                return n;
+                }
+            )
+            .catch(err => {AllFunctions(0)("Function 506").verbose("putChannelUpDown. Failed to execute promise",err);
+                            this.storeChannelInfo(FinalChannel, deviceId,command)
+                            const x = c.buildChannelSwitchAction(e.component.device, FinalChannel)
+                            const n = u.trigger(x);
+                            return n;
+                        })
 
-                            },  
-            putCurrDigit: function(currChannel, deviceId) {
-                AllFunctions(0)("Function 506").verbose("putCurrDigit",currChannel, deviceId)
-                if (!currChannel || !deviceId) 
-                    {AllFunctions(0)("Function 506").verbose("addCurrentChannel - MISSING channel or deviceId")
-                    return -1;
-                    }
-                let digitParts = currChannel.split(' ')
-                let channelNumber = digitParts[1];
-                let curContent = currChannelArray[deviceId];
-                let thisMoment = moment()
-                if (curContent != undefined)
-                    if ( thisMoment.diff(curContent.atMoment,"seconds") <= 3  )
-                            channelNumber = curContent.channel + channelNumber;
-                this.storeChannelInfo(channelNumber, deviceId,"DIGIT") 
-                return 1
-            },        
-            putCurrFavo: function(fullCurrChannel, deviceId) {
-                AllFunctions(0)("Function 506").verbose("fullCurrChannel",fullCurrChannel, deviceId)
-                if (!fullCurrChannel || !deviceId) 
-                    {AllFunctions(0)("Function 506").verbose("fullCurrChannel - MISSING channel or deviceId");
-                    return -1;
-                    }
-                let thisMoment = moment();
-                AllFunctions(0)("Function  506").verbose("Storing",fullCurrChannel);
-                this.storeChannelInfo(fullCurrChannel, deviceId,"FAVO") ;
-                return 1;
-            },           }
+                        },  
+        putCurrDigit: function(currChannel, deviceId) {
+            AllFunctions(0)("Function 506").verbose("putCurrDigit",currChannel, deviceId)
+            if (!currChannel || !deviceId) 
+                {AllFunctions(0)("Function 506").verbose("addCurrentChannel - MISSING channel or deviceId")
+                return -1;
+                }
+            let digitParts = currChannel.split(' ')
+            let channelNumber = digitParts[1];
+            let curContent = currChannelArray[deviceId];
+            let thisMoment = moment()
+            if (curContent != undefined)
+                if ( thisMoment.diff(curContent.atMoment,"seconds") <= 3  )
+                        channelNumber = curContent.channel + channelNumber;
+            this.storeChannelInfo(channelNumber, deviceId,"DIGIT") 
+            return 1
+        },        
+        putCurrFavo: function(fullCurrChannel, deviceId) {
+            AllFunctions(0)("Function 506").verbose("fullCurrChannel",fullCurrChannel, deviceId)
+            if (!fullCurrChannel || !deviceId) 
+                {AllFunctions(0)("Function 506").verbose("fullCurrChannel - MISSING channel or deviceId");
+                return -1;
+                }
+            let thisMoment = moment();
+            AllFunctions(0)("Function  506").verbose("Storing",fullCurrChannel);
+            this.storeChannelInfo(fullCurrChannel, deviceId,"FAVO") ;
+            return 1;
+        },           
     }
+}
 ]);
 function metaMessageHandler(req, res,f)
 { f.debug("metaMessageHandler");
