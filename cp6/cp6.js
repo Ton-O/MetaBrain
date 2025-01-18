@@ -3210,7 +3210,7 @@ const currChannelArray = [];
             name: this.name
         }), this._valuePromise = n.resolve(e)
     }, u.prototype.getCachedValue = function() {
-        AllFunctions(0)("Function 62").verbose("GetCachedValue")
+        AllFunctions(0)("Function 62").debug("GetCachedValue")
         return (this._valueExpiration == undefined || this._valueExpiration < Date.now()) && (i.debug("SENSOR_CACHED_EXPIRED"), this._valuePromise = void 0, this._valueExpiration = void 0), this._valuePromise ? this._valuePromise : (i.debug("SENSOR_CACHED_VALUE_NOT_SET", {
             name: this.name
         }),  this.getValue())
@@ -3351,7 +3351,7 @@ const currChannelArray = [];
                 value: ""
             };
             const t = e.sensor;
-            AllFunctions(0)("Function 67").verbose("calling t.getCachedValue() ( = F 62)");
+            AllFunctions(0)("Function 67").debug("calling t.getCachedValue() ( = F 62)");
             return t.getCachedValue().then(t => ({
                 component: e,
                 value: t
@@ -9972,7 +9972,7 @@ AllFunctions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             spotifyUsername: r
         }), this._getBaseUrlFromDevice(e.getDevice()))).then(r => this._getTriggerOptions(e, t, r)).then(e => (e.agent = c, s(e).catch(n)))
     }, T.prototype.getValue = function(e) {
-        AllFunctions(0)("Function 215").verbose("getValue (from deviceadapter)" );
+        AllFunctions(0)("Function 215").debug("getValue (from deviceadapter)" );
         h.increaseCounter("deviceadapter-send-getvalue");
         const t = e.getDevice();
         return u.debug("get value of sensor", {
