@@ -2413,7 +2413,7 @@ module.exports = function(t) {
             "POWER TOGGLE": d.POWER_TOGGLE_FUNCTION
         };
     t.exports = n.buildButtonMap(c)
-}, function(t, r, o) {o(0)("Function  46").verbose(" Buold a map of buttons");
+}, function(t, r, o) {o(0)("Function  46").verbose(" Build a map of buttons");
     'use strict';
     var n = o(4),
         d = n.keyCodes,
