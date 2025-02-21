@@ -4384,7 +4384,7 @@ const currChannelArray = [];
             clearInterval(c), c = void 0
         },
         checkForAndUpdateDevice: function(e) {
-            AllFunctions(0)("Function 92").verbose("checkForAndUpdateDevice");
+            AllFunctions(0)("Function 91").verbose("checkForAndUpdateDevice");
             return e.hasCapability(n.SOURCE_DUIRO) ? o.checkForAndUpdateDevice(e) : e.hasCapability(n.SOURCE_SDK_ADAPTER) ? i.checkForAndUpdateDevice(e) : Promise.reject(new Error("DEVICE_UPDATE_FAILED"))
         }
     }
