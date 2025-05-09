@@ -1,4 +1,5 @@
 "use strict";
+process.env.StartupPath = __dirname;
 const moment = require('moment');
 const { metaMessage, LOG_TYPE, LOG_LEVEL,initialiseLogComponents, initialiseLogSeverity,OverrideLoglevel, getLoglevels } = require("/opt/meta/metaMessage");
 var CloudReplacement   = ""; // "http://192.168.73.194"
@@ -17,7 +18,6 @@ OverrideLoglevel("DEBUG","CP6")
 var BrainBroadLink;
 const fs = require("fs");
 var BrainBroadLinkFile = __dirname + '/BrainBroadLink.json'
-console.log("Checking BroadlinkFile:",BrainBroadLinkFile)
 fs.readFile(BrainBroadLinkFile, (err, data) => {
         if (err) {
           metaLog({type:LOG_TYPE.ERROR, content:'No BrainBroadLink.json file, cannot send IR-DATA'});
@@ -1445,6 +1445,10 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             }))
         }), t
     }, U.get = function(e) {
+        AllFunctions(0)("Function 27").debug("get 1 e",e );
+        if (e = D, P && P.getName() === e) 
+            AllFunctions(0)("Function 27").debug("get... already cached so returning project directly" );
+
         if (e = D, P && P.getName() === e) return p.resolve(P);
         if (L) return _.debug("Project get already in progress"), L;
         let t;
@@ -1453,6 +1457,8 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             err: r.message,
             stack: r.stack
         }), t = U.createDefault(), t)).finally(() => {
+            AllFunctions(0)("Function 27").debug("get 3",U ),
+
             t.setActive(), L = null
         })
     }, U.activeProject = function() {
@@ -4442,6 +4448,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
             return f.slides = l.process(f.slides), f
         },
         generateDeviceViewStructure: function(e) {
+            AllFunctions(0)("Function 92").debug("generateDeviceViewStructure");
             const t = i(d.getWidgetsForDevice(e)).reduce((e, t) => (e[t.name] = t, e), {}),
                 r = {
                     [e.key]: t
@@ -4469,6 +4476,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
         o = r(232);
     e.exports = {
         getKeymappingForDevice: function(e) {
+            AllFunctions(0)("Function 92").debug("getKeymappingForDevice");            
             if (!e.key) throw new Error("device is missing key attribute");
             const t = n.getKeymappingDefinitionNamesForDevice(e);
             return {
@@ -7272,7 +7280,6 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
         },
         checkAirkey: function(e, t) {
             const r = e.airkey;
-            console.log(e)
             AllFunctions(0)("Function 155").debug("checkAirKey",c.h64(r, 42).toString(16));
             AllFunctions(0)("Function 155").debug("Result",{"TR2 uses brain airkey":t,"Brain uses airkey":c.h64(r, 42).toString(16),baseId:r})           
             return t === c.h64(r, 42).toString(16) ? a.resolve() : a.reject(new Error("AIRKEY_NOT_MATCH"))
@@ -7818,12 +7825,14 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
                 isDynamic: !0
             }
         };
-    e.exports.render = o, e.exports.isWidgetSupported = i, e.exports.isWidgetSupportedAndNotKeymapped = function(e) {
+    e.exports.render = o, 
+    e.exports.isWidgetSupported = i, 
+    e.exports.isWidgetSupportedAndNotKeymapped = function(e) {
         if (!i(e)) return !1;
-        return !0 !== u(e, "data.widget.options.skipSlideIfHardwareKeypad")
-    }, m.setWidgetRender(o), m.setWidgetFilter(i), m.setWidgetGetter(function(e) {
-        return v[e]
-    })
+        return !0 !== u(e, "data.widget.options.skipSlideIfHardwareKeypad")   // skip slide if hardwarekeypad is available
+        }, m.setWidgetRender(o), m.setWidgetFilter(i), m.setWidgetGetter(function(e) {
+            return v[e]
+        })
 }, function(e, t, r) {// Function 170 gui/scenario/widgets/default/light.xml
     "use strict";
     AllFunctions(0)("Function 170").debug("gui/scenario/widgets_default/light.xml")
@@ -8070,7 +8079,7 @@ fs.readFile(BrainBroadLinkFile, (err, data) => {
                 return n(e.getDeviceByKey(t))
             },
             getInputViewData: function(e) {
-                AllFunctions(0)("Function 171").debug("getInputViewData")
+                AllFunctions(0)("Function 171").debug("getInputViewData",e.name)
                 if (!e) throw Error("getInputViewData: scenario undefined");
                 return e.getMainDevice().getMacros().map(e => ({
                     name: e.name,
@@ -10628,7 +10637,7 @@ return this._syncFileList();
     }, u.prototype._getSpec = u.prototype._getFullSpec
 }, function(e) {// Function 229 contains only exports = require("lodash/union")
     e.exports = require("lodash/union")
-}, function(e, t) {// Function 230 ALL_TR2_KEYDEFINITIONS (Names all keys)
+}, function(e, t) {// Function 230 ALL_TR2_KEYDEFINITIONS (Names all keys)   ##### TR2 hardware-key definition
     "use strict";
     t.MUTE = "MUTE", t.HOME = "HOME", t.POWER = "POWER", t.VOLUME_UP = "VOLUP", t.VOLUME_DOWN = "VOLDOWN", t.CHANNEL_UP = "CHUP", t.CHANNEL_DOWN = "CHDOWN", t.LEFT = "LEFT", t.RIGHT = "RIGHT", t.UP = "UP", t.DOWN = "DOWN", t.BACK = "BACK", t.OK = "OK", t.MENU = "MENU", t.ALL_TR2_KEYDEFINITIONS = [t.MUTE, t.HOME, t.POWER, t.VOLUME_UP, t.VOLUME_DOWN, t.CHANNEL_UP, t.CHANNEL_DOWN, t.LEFT, t.RIGHT, t.UP, t.DOWN, t.BACK, t.OK, t.MENU]
 }, function(e, t, r) {// Function 231 Create keylayout
@@ -10861,6 +10870,7 @@ return this._syncFileList();
     }
 
     function a(e) {
+
         let t = !1;
         return e.sort(i).filter(e => {
             const r = t;
@@ -10882,9 +10892,9 @@ return this._syncFileList();
     let E = {};
     e.exports = {
         getSlides: function(e, t, r) {
-            AllFunctions(0)("Function 234").debug("getSlides");
+            AllFunctions(0)("Function 234").debug("getSlides own defined slides",e.slides);
+            AllFunctions(0)("Function 234").debug("getSlides device defined slides",t);
             return c(a(function(e, t) {
-                AllFunctions(0)("Function 234").debug("getSlides after c:",e.slides);
                 return e.slides && 0 < Object.keys(e.slides).length ? t.reduce((t, r) => {
                     const n = Object.assign({}, r),
                         o = e.slides[r.name];
@@ -10983,6 +10993,8 @@ return this._syncFileList();
                 if (t.has(o.key)) throw new Error("Duplicate widget id found: " + o.key);
                 t.add(o.key)
             }
+            AllFunctions(0)("Function 238").debug("getWidgetsForDevice c",c);
+
         },
         getWidgets: function() {
             return Object.keys(c).reduce((e, t) => {
@@ -10997,10 +11009,15 @@ return this._syncFileList();
         },
         getWidgetsForDevice: function(e) {
             if (!e.key) throw s.increaseCounter("widget-invalid-devicekey"), new Error("device is missing key attribute");
-            return o(c).filter(t => t.check(e)).reduce((t, r) => {
+            AllFunctions(0)("Function 238").debug("getWidgetsForDevice e.name",e.name);
+
+            /*return*/ let bb = o(c).filter(t => t.check(e)).reduce((t, r) => {
                 const n = r.clone();
+
                 return n.deviceKey = e.key, t[r.name] = n, t
             }, {})
+            AllFunctions(0)("Function 238").debug("resulting getWidgetsForDevice ",bb);return bb
+
         }
     }
 }, function(e, t, r) {// Function 239 Routines for creating widget
@@ -16376,7 +16393,7 @@ return this._syncFileList();
         const t = Buffer.from(e, "utf8");
         return new Uint8Array(t).reduce((e, t) => 128 & t ? e + "&#" + t.toString(10) + ";" : e + n.escape(String.fromCharCode(t)), "")
     }
-}, function(e, t, r) {// Function 389 TR2-GUI; mostly validity-checking 
+}, function(e, t, r) {// Function 389 TR2-GUI; determine and fill all parts of the TR2-GUI 
     "use strict";
     const n = r(1),
         o = r(0)("TR2-GUI"),
@@ -16394,7 +16411,8 @@ return this._syncFileList();
         f = r(428);
     e.exports = function(e) {
         if (!e || "function" != typeof e.getVisibleScenarios) return o.warn("TR2_GUIXML_INVALID_PROJECT"), n.reject(new Error("TR2_GUIXML_INVALID_PROJECT"));
-        const t = [c(e), m(e)];
+        const t = [c(e), m(e)];             // c = determining global layout of TR2-remote, m = filling in ALL screens that can be served by TR2-remote  
+        AllFunctions(0)("Function 389").debug("t:",t)
         return n.all(t).then(([t, r]) => {
             const n = {
                 keypad: a(),
@@ -16784,9 +16802,15 @@ return this._syncFileList();
         return new o(r => {
             const n = d.buildScenarioData(e, t),
                 o = l.find(e => e.match(n));
-            if (o) return r(o.render(n));
+            AllFunctions(0)("Function 407").debug(" ",o)
+            if (o) {
+                AllFunctions(0)("Function 407").debug("BuildScenarioData resulted in workable object",o)
+                return r(o.render(n));}
+
             const s = function(e, t) {
-                const r = t.getViewbuilderStructureFromScenario(e);
+                const r = t.getViewbuilderStructureFromScenario(e);  // here we define what we'll see on our remote (TR2)#####
+                AllFunctions(0)("Function 407").debug(e.name,"getViewbuilderStructureFromScenario resulted in workable object",r)
+                AllFunctions(0)("Function 407").debug(e.name,"Doubleslides removed:",u.removeSlidesDuplicatingHardwareButtons(r))
                 return u.removeSlidesDuplicatingHardwareButtons(r)
             }(e, t);
             i.debug("removed slides from scenario", s.removedSlides), r(c.render(s, n))
@@ -16801,6 +16825,7 @@ return this._syncFileList();
         d = r(427),
         l = [s, a];
     e.exports = function(e) {
+        AllFunctions(0)("Function 407").debug(" TR2_GUI_SCENARIO builder/renderer",e.name)
         const t = e.getVisibleScenarios().map(t => n(t, e).catch(e => (i.error("TR2_GUI_SCENARIO_GENERATION_FAILED", {
             message: e.message,
             error: e.stack
@@ -17603,7 +17628,7 @@ return this._syncFileList();
             }
         }
     }
-}, function(e, t, r) {// Function 427 getFavorites
+}, function(e, t, r) {// Function 427 buildScenarioData
     "use strict";
 
     function n(e, t) {
@@ -17637,7 +17662,10 @@ return this._syncFileList();
         u = r(66);
     t.buildScenarioData = function(e, t) {
         const r = i.getFavoriteStyle();
-        return {
+        AllFunctions(0)("Function 427").debug("buildScenarioData",e.name)
+
+//        return {
+            let bb = {
             header: s.header,
             screen: s.screen,
             navBackIcon: s.navBackIcon,
@@ -17677,7 +17705,7 @@ return this._syncFileList();
             hasPowerInfoDevices: t.hasPowerInfoDevices(e),
             assumptionModePopupKey: "assumption_mode_" + e.getKey(),
             projectRepo: t
-        }
+        };return bb
     }
 }, function(e, t, r) {// Function 428 get and render Directories (getAllDirectories)
     "use strict";
@@ -17736,6 +17764,7 @@ return this._syncFileList();
             return i(n)
         }) : (o.warn("TR2_GUIDATA_INVALID_PROJECT"), n.reject(new Error("TR2_GUIDATA_INVALID_PROJECT")))
     }, e.exports.watch = function(e, t) {
+        AllFunctions(0)("Function 430").debug("watch")
         return e && "function" == typeof e.getVisibleScenarios ? (a.watch(s, e, t), c.watch(e, t), void u.watch(e, t)) : void o.warn("TR2_GUIDATA_INVALID_PROJECT")
     }
 }, function(e, t, r) {// Function 431 TR2-GUIDATA; getRenderedData and watch
@@ -17800,6 +17829,7 @@ return this._syncFileList();
             return s.all(r).then(i).then(e => a(e).join(""))
         },
         watch: function(e, t, r) {
+            AllFunctions(0)("Function 431").debug("watch")
             t.getVisibleScenarios().forEach(n => {
                 try {
                     (function(e, t, r, n) {
@@ -17868,6 +17898,8 @@ return this._syncFileList();
             }))) : c.resolve()
         },
         watch: function(e, t, r, i) {
+            AllFunctions(0)("Function 432").debug("watch TEXTLABEL")
+
             o(i, t).forEach(e => {
                 r._on(e.eventKey, t => {
                     const o = n(e),
@@ -17930,6 +17962,7 @@ return this._syncFileList();
             return n && 0 !== n.length ? s.all(n.map(u.getSensorValue)).then(t => t.map(t => i(r, e, t.component.componentKey, t.component.size, t.value))) : s.resolve()
         },
         watch: function(e, t, r, n) {
+            AllFunctions(0)("Function 433").debug("watch IMAGEURL")
             o(n, t).forEach(t => {
                 r._on(t.eventKey, o => {
                     r.sendPushUpdate(t.eventKey, i(n, e, t.componentKey, t.size, o))
@@ -17979,6 +18012,8 @@ return this._syncFileList();
             }))) : i.resolve()
         },
         watch: function(e, t, r, i) {
+            AllFunctions(0)("Function 434").debug("watch")
+
             n(i, t).forEach(e => {
                 r._on(e.eventKey, t => {
                     const n = e.sensor.key;
@@ -18029,6 +18064,7 @@ return this._syncFileList();
             }))) : i.resolve()
         },
         watch: function(e, t, r, i) {
+            AllFunctions(0)("Function 435").debug("watch switch?")
             n(i, t).forEach(e => {
                 r._on(e.eventKey, t => {
                     const n = e.sensor.key;
@@ -18136,6 +18172,8 @@ return this._syncFileList();
             return s(t) ? i(t).then(t => o(e, t, r)).catch(e => (d.debug("FAILED_TO_GET_FULLSCREENPLAYER_SENSORS", e.message), l.increaseCounter("FAILED_TO_GET_FULLSCREENPLAYER_SENSORS"), "")) : c.resolve("")
         },
         watch: function(e, t, r, o) {
+            AllFunctions(0)("Function 436").debug("watch FULLSCREENPLAYER_SENSORS")
+
             try {
                 if (!s(t)) return;
                 const i = n(t);
@@ -18344,6 +18382,8 @@ return this._syncFileList();
         d = r(7),
         l = "-PWROFF";
     e.exports = o, e.exports.watch = function(e, t) {
+        AllFunctions(0)("Function 440").debug("watch")
+
         t._on(e.NOTIFICATION_ACTIVE_NOW_CHANGED, () => {
             t.sendPushUpdate(e.NOTIFICATION_ACTIVE_NOW_CHANGED, o(e))
         })
@@ -18366,6 +18406,8 @@ return this._syncFileList();
             if (t) return n(t)
         },
         watch: function(e, t) {
+            AllFunctions(0)("Function 441").debug("watch")
+
             t._on("PUSH_ACTION_ADDED", r => {
                 o.debug("SENDING_PUSH_ACTION", r), t.sendPushUpdate(e.NOTIFICATION_ACTIVE_NOW_CHANGED, n(r))
             })
