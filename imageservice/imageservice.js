@@ -795,9 +795,18 @@ module.exports = function (a) {
         kernel: 'lanczos2'
       });
       if ('application/x-lzip-black' === o) {
-        s.background(k).flatten();
+        //s.background(k).flatten();
+        p.sharp(l).flatten({ background: k })
+//  .toBuffer();
       } else {
-        s.background(k).embed();
+        console.log("embedding...");
+        p.sharp(l).resize(m, n, {
+          fit: 'contain',
+        interpolator: 'bilinear',
+        kernel: 'lanczos2'
+      });
+//        s.background(k).embed();
+
       }
       s.raw().toBuffer(function (t, u, v) {
         if (t || !v || 3 > v.channels) {

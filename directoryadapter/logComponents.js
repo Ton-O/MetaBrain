@@ -1,3 +1,4 @@
-const logmodules = {'MetaComponents':["CP6","deviceadapter","directoryadapter","imageserver","homekit"],"ORIGIN":"BRAIN"}
-module.exports = logmodules;
+const logModules = {'MetaComponents':["cp6","deviceadapter","directoryadapter","imageservice","homekit"],"ORIGIN":"BRAIN"}
+const  produceNrSnapshotWhenError = 200;
+module.exports = {logModules,produceNrSnapshotWhenError};
 

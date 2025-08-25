@@ -3,7 +3,7 @@ const logModule = "cp6";
 process.env.StartupPath = __dirname;
 const StartupPath = process.env.StartupPath;
 const path = require('path');
-const logmodules = require(path.join(StartupPath,'logComponents'));
+const {logModules} = require(path.join(StartupPath,'logComponents'));
 
 const { metaMessage, LOG_TYPE, LOG_LEVEL,initialiseLogComponents, initialiseLogSeverity,OverrideLoglevel, getLoglevels } = require("/opt/meta/metaMessage");
 function metaLog(message) {
@@ -12852,7 +12852,7 @@ return this._syncFileList();
                 path: e,
                 err: r.message
             })
-        }), this.queuePromise) : (d.increaseCounter("jn5168-missing-baseurl"), i.reject(new Error("JN5168 baseUrl not set yet")))
+        }), this.queuePromise) : (d.increaseCounter("jn5168-missing-baseurl"), i.reject(/*new Error("JN5168 baseUrl not set yet")*/))
     }, p.prototype._ledOff = function() {
         return this._failsafePostRequest("/blink", "mode=off")
     }, p.prototype._ledOn = function() {
@@ -12914,6 +12914,7 @@ return this._syncFileList();
             }
         })
     }, p.prototype.getRoutingTable = function() {
+        AllFunctions(0)("Function 288").verbose("getRoutingTable")
         return a.debug("fetch NBR neighbors"), this._nbrGetRequest("/neighbors").then(e => e ? (d.setValue("neighbors", e), e.split("\n").map(e => e.trim()).filter(e => e)) : [])
     }
 }, function(e) {// Function 289 Some functons for handling project/home
@@ -13529,6 +13530,7 @@ return this._syncFileList();
             }) : (i = function(e) {
                 const t = e.getComponent();
                 if (!t || !e.smartAction) return !1;
+                
                 const r = t.getDevice(),
                     n = !r.hasMultipleRoles() && r.hasRole(c.ROLE_SOURCE);
                 return t.isPowerStateCorrect() || n
@@ -16198,19 +16200,24 @@ return this._syncFileList();
     let d, l = "";
     e.exports = {
         isTr2Registered: function() {
+             AllFunctions(0)("Function 378").verbose("isTr2Registered");
             return u.isTr2Registered()
         },
         updateTr2Addresses: n,
         addSingleAddress: function(e) {
+             AllFunctions(0)("Function 378").verbose("addSingleAddress");
             u.addSingleAddress(e)
         },
         startSync: function(e) {
+             AllFunctions(0)("Function 378").verbose("startSync");
             return d ? void i.warn("INTERVAL_ALREADY_RUNNING") : !e || 5e3 > e ? void i.warn("INVALID_INTERVAL_TIME", e) : (i.debug("Start routing table sync, intervalMs", e), d = setInterval(o, e), void o())
         },
         stopSync: function() {
+             AllFunctions(0)("Function 378").verbose("stopSync");
             clearInterval(d), d = void 0
         },
         sendPushMessage: function(e) {
+             AllFunctions(0)("Function 378").verbose("sendPushMessage");
             if (!u.isTr2Registered())
                  AllFunctions(0)("Function 378").verbose("Push update to TR2, but no TR2 connected");
 
@@ -19427,8 +19434,8 @@ return this._syncFileList();
     }), o.get("/GetLogLevels", (e, t) => {
         AllFunctions(0)("Function 463").verbose("GetLogLevels received");
         let promiseT = []; let theResult = []; let theUrl = ''; let i;
-        for (i = 0;i < logmodules.MetaComponents.length ; i++) {
-            theUrl="http://127.0.0.1:300"+(i+1)+"/"+logmodules.MetaComponents[i]+"/metaMessageHandler/?doFunc=GetLogLevel";
+        for (i = 0;i < logModules.MetaComponents.length ; i++) {
+            theUrl="http://127.0.0.1:300"+(i+1)+"/"+logModules.MetaComponents[i]+"/metaMessageHandler/?doFunc=GetLogLevel";
             AllFunctions(0)("Function 463").verbose("Getting loglevel by",theUrl)
             let tBody= ''  // post message to the relevant port for this module; uri is all we need, no body required.
             promiseT.push (r(17)({
@@ -19463,8 +19470,8 @@ return this._syncFileList();
         let doFunc="?doFunc=OverrideLogLevel&logLevel="+thelogLevel
         let theUrl = ''
         let i;
-        for (i = 0;i < logmodules.MetaComponents.length ; i++) {
-            if (logmodules.MetaComponents[i] === theModule) 
+        for (i = 0;i < logModules.MetaComponents.length ; i++) {
+            if (logModules.MetaComponents[i] === theModule) 
             {   theUrl="http://127.0.0.1:300"+(i+1)+"/"+theModule+"/metaMessageHandler/"+doFunc;
                 break;
             }
