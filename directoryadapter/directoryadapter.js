@@ -54,7 +54,7 @@ module.exports = function (a) {
     return b(b.s = 28);
   }
   ([function (a, b, c) {
-  //  c(0)('Function 0').debug('Logging Init');
+  //  c(0)('Function 0').verbose('Logging Init');
 
     'use strict';
 
@@ -100,7 +100,7 @@ module.exports = function (a) {
         if (true) {
           var e = d ? c + ' ' + JSON.stringify(d) : c;
           metaLog({type:a, content:"["+ this.label + "] "+e,deviceId:"_"})
-          console.log('%s - %s: [ %s ] %s', new Date().toISOString(), a, this.label, e);
+          //console.log('%s - %s: [ %s ] %s', new Date().toISOString(), a, this.label, e);
         }
         var g = {
           host: i,
@@ -154,7 +154,7 @@ module.exports = function (a) {
     };
   }, function (a) {
     'use strict';
-    //c(0)('Function 0').debug('Init setup pgm env (var, env, ip, directories, log)');
+    //c(0)('Function 0').verbose('Init setup pgm env (var, env, ip, directories, log)');
   
     var b = process.env.IP || '127.0.0.1';
     var c = process.env.PORT || 3003;
@@ -198,7 +198,7 @@ module.exports = function (a) {
       }
     };
   }, function (a) {
-    //c(0)('Function 1').debug('Init');
+    //c(0)('Function 1').verbose('Init');
 
 
     a.exports = require('express');
@@ -251,7 +251,7 @@ module.exports = function (a) {
     };
   }, function (a, b, c) {
     'use strict';
-    c(0)('Function 3').debug('Init Spotify');
+    c(0)('Function 3').verbose('Init Spotify');
 
     var d = c(26);
     var e = c(12);
@@ -264,7 +264,7 @@ module.exports = function (a) {
     a.exports = require('bluebird');
   }, function (a, b, c) {
     'use strict';
-    c(0)('Function 4').debug('Init statistics');
+    c(0)('Function 4').verbose('Init statistics');
 
     var d = c(1).statistics;
     var e = c(25);
@@ -302,7 +302,7 @@ module.exports = function (a) {
     };
   }, function (a, b, c) {
     'use strict';
-    c(0)('Function 5').debug('server (init handle exceptions)');
+    c(0)('Function 5').verbose('server (init handle exceptions)');
 
     var d = c(0)('server');
     var e = c(9);
@@ -330,7 +330,7 @@ module.exports = function (a) {
     });
   }, function (a, b, c) {
     'use strict';
-    c(0)('Function 6').debug('Init app');
+    c(0)('Function 6').verbose('Init app');
 
     var d = c(2);
     var e = c(18);
@@ -403,7 +403,7 @@ module.exports = function (a) {
     a.exports = g;
   }, function (a, b, c) {
     'use strict';
-    c(0)('Function 7').debug('Init neeo:bootstrap???)');
+    c(0)('Function 7').verbose('Init neeo:bootstrap???)');
 
     function d() {
       return new g(function (a) {
@@ -451,7 +451,7 @@ module.exports = function (a) {
     };
   }, function (a, b, c) {
     'use strict';
-    c(0)('Function 8').debug('Init');
+    c(0)('Function 8').verbose('Init');
 
     var d = c(1).directories;
     var e = c(3);
@@ -479,7 +479,7 @@ module.exports = function (a) {
     };
   }, function (a, b, c) {
     'use strict';
-    c(0)('Function 9').debug('Init Spotify adapter');
+    c(0)('Function 9').verbose('Init Spotify adapter');
 
     var d = Math.max;
     var e = Math.min;
@@ -869,7 +869,7 @@ module.exports = function (a) {
     };
   }, function (a, b, c) {
     'use strict';
-    c(0)('Function 10').debug('Init Spotify Directory');
+    c(0)('Function 10').verbose('Init Spotify Directory');
 
     var d = c(27);
     var e = c(5);
@@ -978,14 +978,14 @@ module.exports = function (a) {
     };
   }, function (a, b, c) {
     'use strict';
-    c(0)('Function 11').debug('Init store');
+    c(0)('Function 11').verbose('Init store');
 
     var d = c(1).store;
     var e = c(14);
     a.exports = new e(d);
   }, function (a, b, c) {
     'use strict';
-    c(0)('Function 12').debug('Init store');
+    c(0)('Function 12').verbose('Init store');
 
     function d(a, b) {
       if (!(a instanceof b)) {
@@ -1072,7 +1072,7 @@ module.exports = function (a) {
     a.exports = j;
   }, function (a, b, c) {
     'use strict';
-    c(0)('Function 13').debug('Init router');
+    c(0)('Function 13').verbose('Init router');
 
     var d = c(2);
     var e = d.Router();
@@ -1093,7 +1093,7 @@ module.exports = function (a) {
     a.exports = e;
   }, function (a, b, c) {
     'use strict';
-    c(0)('Function 14').debug('Init router (getrootitems)');
+    c(0)('Function 14').verbose('Init router (getrootitems)');
 
     var d = c(2);
     var e = d.Router();
@@ -1121,7 +1121,7 @@ module.exports = function (a) {
     a.exports = e;
   }, function (a, b, c) {
     'use strict';
-    c(0)('Function 15').debug('Init routes Spotify');
+    c(0)('Function 15').verbose('Init routes Spotify');
 
     var d = c(2);
     var e = d.Router();
@@ -1202,9 +1202,9 @@ module.exports = function (a) {
     a.exports = c(7);
   }]);
 function metaMessageHandler(req, res,f)
-{ f.debug("metaMessageHandler");
+{ f.verbose("metaMessageHandler");
   if (req.query.doFunc == undefined)
-  { f.debug('imageservice missing function for messagehandler routine',req.doFunc);
+  { f.verbose('imageservice missing function for messagehandler routine',req.doFunc);
     return "imageservice missing function for messagehandler routine"
   };
   var doFunc = req.query.doFunc;
