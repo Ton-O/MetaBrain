@@ -9606,10 +9606,10 @@ AllFunctions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             uri: this.baseUrl + "/config",
             timeout: c,
             agent: i
-        }).catch(e => {
+        }).catch(e => {AllFunctions(0)("Function 214").error("get-config failed",uri)
             n.error("DIRECTORYADAPTER_GET_CONFIG_FAILED", {
                 error: e.message
-            })
+            });
         })
     }, u.prototype.setConfig = function(e) {
         return a.increaseCounter("directoryadapter-get-config"), o({
@@ -10000,7 +10000,7 @@ AllFunctions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
                 uri: r + o.path + "/" + encodeURIComponent(t.getAdapterDeviceId()),
                 agent: c
             }).then(Sensor => {/*AllFunctions(0)("Function 215").debug("deviceadapter returned",Sensor,"for",e.name );*/ return Sensor.value})
-            .catch(n => AllFunctions(0)("Function 215").error("getValue ERROR (from deviceadapter)",e.name) );
+            .catch(n => {AllFunctions(0)("Function 215").error("getValue ERROR (from deviceadapter)",e.name) ;return undefined})
         }).catch(err => AllFunctions(0)("Function 215").error(" ERROR getValue getDevice:",err ))
     }, T.prototype.browse = function(e, t, r) {
         return h.increaseCounter("deviceadapter-send-browse"), this._getBaseUrl(t).then(t => o(t, e)).then(t => (u.debug("browse directory", {
@@ -12841,7 +12841,8 @@ return this._syncFileList();
         })
     }, p.prototype._nbrGetRequest = function(e) {
         AllFunctions(0)("Function 288").verbose("_nbrGetRequest",e)
-        return this.baseUrl ? (this.queuePromise = this.queuePromise.then(() => n({
+        return i.resolve('')
+/*        return this.baseUrl ? (this.queuePromise = this.queuePromise.then(() => n({
             method: "GET",
             pool: this._httpAgent,
             timeout: 4e3,
@@ -12852,7 +12853,7 @@ return this._syncFileList();
                 path: e,
                 err: r.message
             })
-        }), this.queuePromise) : (d.increaseCounter("jn5168-missing-baseurl"), i.reject(/*new Error("JN5168 baseUrl not set yet")*/))
+        }), this.queuePromise) : (d.increaseCounter("jn5168-missing-baseurl"), i.reject(new Error("JN5168 baseUrl not set yet")))*/
     }, p.prototype._ledOff = function() {
         return this._failsafePostRequest("/blink", "mode=off")
     }, p.prototype._ledOn = function() {

@@ -799,7 +799,6 @@ module.exports = function (a) {
         p.sharp(l).flatten({ background: k })
 //  .toBuffer();
       } else {
-        console.log("embedding...");
         p.sharp(l).resize(m, n, {
           fit: 'contain',
         interpolator: 'bilinear',
