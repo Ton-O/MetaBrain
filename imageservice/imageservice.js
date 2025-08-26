@@ -804,7 +804,7 @@ module.exports = function (a) {
         interpolator: 'bilinear',
         kernel: 'lanczos2'
       });
-//        s.background(k).embed();
+//   original NEEO-code (s.background(k).embed();); new version of sharp required background function to be passed as an option
 
       }
       s.raw().toBuffer(function (t, u, v) {

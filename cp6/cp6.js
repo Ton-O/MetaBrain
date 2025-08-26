@@ -10000,8 +10000,8 @@ AllFunctions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
                 uri: r + o.path + "/" + encodeURIComponent(t.getAdapterDeviceId()),
                 agent: c
             }).then(Sensor => {/*AllFunctions(0)("Function 215").debug("deviceadapter returned",Sensor,"for",e.name );*/ return Sensor.value})
-            .catch(n => {AllFunctions(0)("Function 215").error("getValue ERROR (from deviceadapter)",e.name) ;return undefined})
-        }).catch(err => AllFunctions(0)("Function 215").error(" ERROR getValue getDevice:",err ))
+            .catch(n => {AllFunctions(0)("Function 215").warning("getValue ERROR (from deviceadapter)",e.name)})
+        }).catch(err => AllFunctions(0)("Function 215").warning(" ERROR getValue getDevice:",err ))
     }, T.prototype.browse = function(e, t, r) {
         return h.increaseCounter("deviceadapter-send-browse"), this._getBaseUrl(t).then(t => o(t, e)).then(t => (u.debug("browse directory", {
             uri: t,
@@ -14786,6 +14786,7 @@ return this._syncFileList();
             nrOfBackupFiles: r.length
         }), n.all(r)
     }, u.prototype.synchronizeLocalAndRemoteBackup = function() {
+        return 
         return this._inProgress ? (o.warn("BACKUP_SYNC_ALREADY_IN_PROGRESS"), n.reject(new Error("ALREADY_RUNNING"))) : (this._inProgress = !0, c.increaseCounter("backup-check-start"), n.all([a.listVersions(), i.listBackups()]).then(e => {
             const t = e[0];
             let r = [];
