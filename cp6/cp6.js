@@ -13263,13 +13263,13 @@ return this._syncFileList();
                 debounceTimeout: 20
             }).watch((e, t) => e ? void i.error("GPIO_WATCH", e.message) : void this.touchbutton.registerKeypress(1 === t))
         };
-        // next code commented out as we (most likely) do not have a lid to push to
-/*        if (i.debug("init", e), this.touchbutton = o.getInstance(t), this.touchDurationMS = e.touchDurationMs, this.regionCode = "UNKNOWN", s) {
-            try {
+        if (i.debug("init", e), this.touchbutton = o.getInstance(t), this.touchDurationMS = e.touchDurationMs, this.regionCode = "UNKNOWN", s) {
+        // next code commented out as we (most likely) do not have a lid to push 
+            /*   try {
                 r(e.touchbuttonPin)
             } catch (e) {AllFunctions(0)("Function 295").debug("GPIO touchbutton failed; e:",e); 
                 i.error("GPIO_WATCHBUTTON_FAILED", e.message)
-            }
+            }*/
             try {
                 this.regionCode = function(e, t) {
                     const r = new s(e, "in").readSync(),
@@ -13289,7 +13289,7 @@ return this._syncFileList();
             } catch (e) {
                 i.error("GPIO_READVERSION_FAILED", e.message)
             }
-        }*/
+        }
     };
     a.prototype.isTouchbuttonPressed = function() {
         return this.touchbutton.isPressed(this.touchDurationMS)

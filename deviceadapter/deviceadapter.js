@@ -179,6 +179,8 @@ module.exports = function(t) {
 
     function m() {
         var L = Date.now();
+        S.resolve   // We're not interested in CEC-functions at the moment.
+        return; 
         return T.registerTriggerScanFunction(N.scheduleOneTimePowerScan, p), T.initializeLibCEC().then(function() {
             N.scheduleOneTimePowerScan(), N.scheduleRecurringPowerScan();
             var U = Date.now() - L;
@@ -3097,9 +3099,9 @@ module.exports = function(t) {
                 return u()
             }).then(function() {
                 return N.initializeService(k)
-            }).then(function() {
+            })/*.then(function() {  // we'll skip cec-initialization for now
                 return R.initializeLibCEC()
-            })
+            })*/
         },
         shutdownServices: function() {
             m('TERMINATE_SERVICES'), R.shutdownLibCEC(), U.close(), N.shutdownService(), I.shutdown(), T.shutdown(), O.shutdown()
