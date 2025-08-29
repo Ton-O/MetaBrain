@@ -1002,7 +1002,6 @@ module.exports = function (a) {
   });
   e.param('url', g.validateUrl);
   e.get('/get/:url', function (k, l, m) {
-    console.log("function 21",k.url);
     c(1)("Function 21").verbose("router, /get",k.url)
     g.fetchImage(k.url, k, l, m);
   });

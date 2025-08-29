@@ -1952,7 +1952,7 @@ const currChannelArray = [];
             return e ? t && !Array.isArray(t) ? n.reject(new Error("Args parameter must be an array")) : (r && (s.timeout = r), t && !t.every(e => {
                 const t = typeof e;
                 return "boolean" == t || "string" == t || "number" == t
-            }) ? n.reject(new Error("All arguments must be a boolean, string or number")) : (i.debug("33 Run", e, " with arguments:", t), new n((r, n) => {
+            }) ? n.reject(new Error("All arguments must be a boolean, string or number")) : (i.debug("34 Run", e, " with arguments:", t), new n((r, n) => {
                 let a = "";
                 try {
                     const c = o(e, t, s, e => {
@@ -5255,7 +5255,7 @@ const currChannelArray = [];
             if (CloudReplacementUrl  =='' &&  e.baseUrl.substring(0,16) != "http://127.0.0.1" )
                 {var urlComponents = e.baseUrl.split(':')
                 CloudReplacement = urlComponents[0]+":"+urlComponents[1];
-                CloudReplacementUrl   = CloudReplacement+":6468/download"
+                CloudReplacementUrl = CloudReplacement+":6468/download"
                 AllFunctions(0)("Function 119").always("We've assigned ",urlComponents[0]+":"+urlComponents[1],"as the source to replace NEEO cloud")
                 }
 
@@ -7337,14 +7337,15 @@ const currChannelArray = [];
                 error: r ? r.message : "unknown"
             }), e))
         }
-}, function(e, t, r) {// Function 157 schedule periodical backup.synchronizeLocalAndRemoteBackup
+}, function(e, t, r) {// Function 157 schedule periodical backup.synchronizeLocalAndRemoteBackup ######
     "use strict";
     AllFunctions(0)("Function 157").verbose("backup/synchronizelocalandremotebackup")
     const n = r(2).backup,
         o = r(342),
         i = r(6)("cp6:lib:backup:index"),
         s = new o(n);
-    e.exports = s, e.exports.startTask = function() {
+    e.exports = s, e.exports.startTask = function() { 
+        return Promise.resolve(); // removed cloud based backup strategy as cloud is gone
         return i("startTask, intervall", n.checkIntervalSeconds), setInterval(() => {
             i("backup.synchronizeLocalAndRemoteBackup"), s.synchronizeLocalAndRemoteBackup().catch(() => {})
         }, 1e3 * n.checkIntervalSeconds)
@@ -9549,7 +9550,7 @@ AllFunctions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             AllFunctions(0)("Function 212").verbose("runCloudFunction: e",e)
             AllFunctions(0)("Function 212").verbose("runCloudFunction: t",t)
             AllFunctions(0)("Function 212").verbose("runCloudFunction: r",r)
-
+            return Promise.resolve(); // No more cloud, so function isn't applicable anymore. 
             return s.increaseCounter("parse-run-cloudfunction"), a.debug("Calling function:", t, r), i.Cloud.run(t, r, {
                 sessionToken: e.token
             }).catch(r => {
@@ -13262,10 +13263,11 @@ return this._syncFileList();
                 debounceTimeout: 20
             }).watch((e, t) => e ? void i.error("GPIO_WATCH", e.message) : void this.touchbutton.registerKeypress(1 === t))
         };
-        if (i.debug("init", e), this.touchbutton = o.getInstance(t), this.touchDurationMS = e.touchDurationMs, this.regionCode = "UNKNOWN", s) {
+        // next code commented out as we (most likely) do not have a lid to push to
+/*        if (i.debug("init", e), this.touchbutton = o.getInstance(t), this.touchDurationMS = e.touchDurationMs, this.regionCode = "UNKNOWN", s) {
             try {
                 r(e.touchbuttonPin)
-            } catch (e) {
+            } catch (e) {AllFunctions(0)("Function 295").debug("GPIO touchbutton failed; e:",e); 
                 i.error("GPIO_WATCHBUTTON_FAILED", e.message)
             }
             try {
@@ -13287,7 +13289,7 @@ return this._syncFileList();
             } catch (e) {
                 i.error("GPIO_READVERSION_FAILED", e.message)
             }
-        }
+        }*/
     };
     a.prototype.isTouchbuttonPressed = function() {
         return this.touchbutton.isPressed(this.touchDurationMS)
@@ -15187,6 +15189,7 @@ return this._syncFileList();
     }
 
     function o() {
+        return Promise.resolve()  // pm2 stats is probably only supported on older pm2; I really don't see the need for this, so removed.
         return s(l, p).then(JSON.parse).then(n).then(e => {
             c.info("PM2_STATS", e)
         }).catch(e => {
