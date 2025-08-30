@@ -19271,7 +19271,7 @@ return this._syncFileList();
         {AllFunctions(0)("Function 460").verbose("last resort u.use, d:",d )
         const n = new Error("Not Found");
         n.status = 404, r(n)
-    }), d  ? (u.use(function(e, t, r, n) { // changed this to test debug fucntionality
+    }), d  ? (u.use(function(e, t, r, n) { // changed this to test debug functionality
         AllFunctions(0)("Function 460").verbose("u,.use EXPREESS NEEDS NEXT PARAMETER",n)
         n || a.debug("EXPRESS_NEEDS_NEXT_PARAMETER_WEBPACK_TOO"), a.error("SERVER_ERROR", {
             url: t.url,
@@ -19434,8 +19434,6 @@ return this._syncFileList();
             timeout: 4e3
         }).then(() => AllFunctions(0)("Function 463").verbose("Returned from request 463"),t.json({"Result":"Cache cleared!!"}))
 
-
-
     }), o.get("/GetLogLevels", (e, t) => {
         AllFunctions(0)("Function 463").verbose("GetLogLevels received");
         let promiseT = []; let theResult = []; let theUrl = ''; let i;
@@ -19501,6 +19499,9 @@ return this._syncFileList();
             },
             body: tBody
         }).then((theResult) => (AllFunctions(0)("Function 463").verbose("Returned from post request"),t.json(theResult)))
+
+    }), o.get("/PowerState", (e,t) => {
+        r(27).get().then(r => r.getDevices()).then(bb => t.json(bb))
 
     }), o.get("/TouchButton", (e, t) => {
         AllFunctions(0)("Function 463").verbose("TOUCHBUTTON simulated"),
