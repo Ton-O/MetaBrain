@@ -13529,7 +13529,7 @@ return this._syncFileList();
                     o = c.STUPID_DEVICE_TYPES.includes(r.details.type);
                     return n && o
             }(r) ? void d.debug("SKIP_ACTION", {
-                name: o,component:t.getDevice()
+                name: o 
             }) : (i = function(e) {
                 const t = e.getComponent();
                 if (!t || !e.smartAction) return !1;
@@ -13600,6 +13600,7 @@ return this._syncFileList();
             }), new f
         }
     }, f.prototype.start = function() {
+console.log("prototype start")        
         this.startTime || (this.startTime = Date.now())
     }, f.prototype.markAsDone = function() {
         this.endTime = Date.now(), this.error ? this._reject(this.error) : this._resolve()
