@@ -3,7 +3,7 @@ const logModule = "cp6";
 process.env.StartupPath = __dirname;
 const StartupPath = process.env.StartupPath;
 const path = require('path');
-const {logModules} = require(path.join(StartupPath,'logComponents'));
+const {logModules,GlobalLogLevel} = require(path.join(StartupPath,'logComponents'));
 
 const { metaMessage, LOG_TYPE, LOG_LEVEL,initialiseLogComponents, initialiseLogSeverity,OverrideLoglevel, getLoglevels } = require("/opt/meta/metaMessage");
 function metaLog(message) {
@@ -11,8 +11,9 @@ function metaLog(message) {
     let myMessage = {...initMessage, ...message}
     return metaMessage (myMessage);
   } 
-initialiseLogSeverity("QUIET",logModule); 
-//OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
+if (GlobalLogLevel==undefined)
+    GlobalLogLevel="QUIET";
+  initialiseLogSeverity(GlobalLogLevel,logModule); 
 //OverrideLoglevel("DEBUG",logModule) // but activate this line if you want DEBUG logging (or VERBOSE etc)
 
 const moment = require('moment');
@@ -4381,6 +4382,7 @@ const currChannelArray = [];
     e.exports = {
         startTask: function(e) {
             c || (c = setInterval(() => (function(e) {
+                AllFunctions(0)("Function 91").verbose("AUTO_UPDATE_CHECK_Initiated (but skipped as cloud is gone)"); return Promise.resolve();
                 return o.checkDevicesForUpdate(e).then(e => (s.debug("AUTO_UPDATE_DEVICES_AVAILABLE", e.length), o.bulkUpdateDevices(e))).then(t => {
                     if (0 < t) return s.debug("AUTO_UPDATE_SUCCESSFUL", {
                         updatedDeviceCount: t
@@ -8961,9 +8963,10 @@ AllFunctions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
         })
     }, I.prototype.getCloudConfigFor = function() {
         const e = n();
-        AllFunctions(0)("Function 186").verbose("selectNeeoCloudReplacementUrl   getCloudConfigFor")
+        AllFunctions(0)("Function 186").verbose("getCloudConfigFor")
         return this.initializeParse(e).then(() => e)
     }, I.prototype.checkDevicesForUpdates = function(e) {
+        AllFunctions(0)("Function 186").verbose("checkDevicesForUpdates")
         return this._runCloudFunction("getDevicesWithUpdates", {
             devices: e
         })
@@ -11634,7 +11637,9 @@ return this._syncFileList();
     e.exports = {
         checkDevicesForUpdate: function(e) {
             p.debug("AUTO_UPDATE_CHECK_STARTING");
+            p.debug("AUTO_UPDATE_CHECK_SKIPPED as qwe have no cloud anymore");            
             const t = e.getDevices().filter(i).map(s);
+            return Promise.resolve();  // no cloud, so no updates from cloud.
             return f.getDevicesWithUpdates(t).then(t => (function(e, t) {
                 return e.getDevices().filter(function(e) {
                     return t.some(t => t.name === e.details.name && t.type === e.details.type && t.manufacturer === e.details.manufacturer)
@@ -13529,7 +13534,7 @@ return this._syncFileList();
                     o = c.STUPID_DEVICE_TYPES.includes(r.details.type);
                     return n && o
             }(r) ? void d.debug("SKIP_ACTION", {
-                name: o 
+                name: o
             }) : (i = function(e) {
                 const t = e.getComponent();
                 if (!t || !e.smartAction) return !1;
@@ -19277,7 +19282,8 @@ console.log("prototype start")
         n || a.debug("EXPRESS_NEEDS_NEXT_PARAMETER_WEBPACK_TOO"), a.error("SERVER_ERROR", {
             url: t.url,
             method: t.method,
-            error: e.message,
+            //error: e.message,
+            error: e,
             stack: e.stack
         }), r.status(e.status || 500), r.json({
             message: e.message,
@@ -19307,6 +19313,7 @@ console.log("prototype start")
             url: t.url,
             method: t.method,
             error: e.message
+            //error: e.message
         }), r.status(e.status || 500), r.header("Access-Control-Allow-Origin", "*"), r.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-NEEO-Secure"), r.json({
             message: e.message,
             error: {}
@@ -19438,8 +19445,8 @@ console.log("prototype start")
     }), o.get("/GetLogLevels", (e, t) => {
         AllFunctions(0)("Function 463").verbose("GetLogLevels received");
         let promiseT = []; let theResult = []; let theUrl = ''; let i;
-        for (i = 0;i < logModules.MetaComponents.length ; i++) {
-            theUrl="http://127.0.0.1:300"+(i+1)+"/"+logModules.MetaComponents[i]+"/metaMessageHandler/?doFunc=GetLogLevel";
+        for (i = 0;i < logModules.LogComponent.length ; i++) {
+            theUrl="http://127.0.0.1:300"+(i+1)+"/"+logModules.LogComponent[i]+"/metaMessageHandler/?doFunc=GetLogLevel";
             AllFunctions(0)("Function 463").verbose("Getting loglevel by",theUrl)
             let tBody= ''  // post message to the relevant port for this module; uri is all we need, no body required.
             promiseT.push (r(17)({
@@ -19474,8 +19481,8 @@ console.log("prototype start")
         let doFunc="?doFunc=OverrideLogLevel&logLevel="+thelogLevel
         let theUrl = ''
         let i;
-        for (i = 0;i < logModules.MetaComponents.length ; i++) {
-            if (logModules.MetaComponents[i] === theModule) 
+        for (i = 0;i < logModules.LogComponent.length ; i++) {
+            if (logModules.LogComponent[i] === theModule) 
             {   theUrl="http://127.0.0.1:300"+(i+1)+"/"+theModule+"/metaMessageHandler/"+doFunc;
                 break;
             }
@@ -21518,9 +21525,9 @@ function metaMessageHandler(req, res,f)
   if (doFunc.toUpperCase() == "OVERRIDELOGLEVEL")
     {f.verbose("Setting loglevel")
       const o = req.query.logLevel;
-      return OverrideLoglevel(o,logModule) 
+      return OverrideLoglevel(o,logModule,"BRAIN") 
     }
-    metaLog({type:LOG_TYPE.ERROR,content:"Unknown function requestedmetaMessageHandler "+req.query.doFunc});
+    metaLog({type:LOG_TYPE.ERROR,content:"Unknown function requested in metaMessageHandler "+req.query.doFunc});
     metaLog({type:LOG_TYPE.ERROR,content:"logLevel passed "+req.query.logLevel});
     return "Returning error"
 }

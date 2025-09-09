@@ -1,13 +1,16 @@
 const logModule = "imageservice";
 process.env.StartupPath = __dirname;
+const StartupPath = process.env.StartupPath;
 const { metaMessage, LOG_TYPE, LOG_LEVEL,initialiseLogComponents, initialiseLogSeverity,OverrideLoglevel, getLoglevels } = require("/opt/meta/metaMessage");
 function metaLog(message) {
     let initMessage = { component:logModule, ORIGIN:logModule,type:LOG_TYPE.ERROR, content:'', deviceId: "" };
     let myMessage = {...initMessage, ...message}
     return metaMessage (myMessage);
   } 
-initialiseLogSeverity("QUIET",logModule); 
-//OverrideLoglevel("QUIET",logModule)   // normally, no logs will be produced
+const {logModules,GlobalLogLevel} = require(path.join(StartupPath,'logComponents'));
+if (GlobalLogLevel==undefined)
+    GlobalLogLevel="QUIET";
+  initialiseLogSeverity(GlobalLogLevel,logModule); 
 //OverrideLoglevel("DEBUG",logModule) // but activate this line if you want DEBUG logging (or VERBOSE etc)
 module.exports = function (a) {
   function b(d) {
@@ -1092,7 +1095,7 @@ function metaMessageHandler(req, res,f)
   if (doFunc.toUpperCase() == "OVERRIDELOGLEVEL")
     {f.verbose("Setting loglevel")
       const o = req.query.logLevel;
-      return OverrideLoglevel(o,logModule.toLowerCase()) 
+      return OverrideLoglevel(o,logModule,"BRAIN") 
     }
     metaLog({type:LOG_TYPE.ERROR,content:"Unknown function requestedmetaMessageHandler "+req.query.doFunc});
     metaLog({type:LOG_TYPE.ERROR,content:"logLevel passed "+req.query.logLevel});
