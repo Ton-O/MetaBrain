@@ -1,5 +1,6 @@
 const logModule = "imageservice";
 process.env.StartupPath = __dirname;
+const path = require('path');
 const StartupPath = process.env.StartupPath;
 const { metaMessage, LOG_TYPE, LOG_LEVEL,initialiseLogComponents, initialiseLogSeverity,OverrideLoglevel, getLoglevels } = require("/opt/meta/metaMessage");
 function metaLog(message) {
@@ -7,10 +8,8 @@ function metaLog(message) {
     let myMessage = {...initMessage, ...message}
     return metaMessage (myMessage);
   } 
-const {logModules,GlobalLogLevel} = require(path.join(StartupPath,'logComponents'));
-if (GlobalLogLevel==undefined)
-    GlobalLogLevel="QUIET";
-  initialiseLogSeverity(GlobalLogLevel,logModule); 
+const {logModules} = require(path.join(StartupPath,'logComponents'));
+initialiseLogSeverity(logModule); 
 //OverrideLoglevel("DEBUG",logModule) // but activate this line if you want DEBUG logging (or VERBOSE etc)
 module.exports = function (a) {
   function b(d) {

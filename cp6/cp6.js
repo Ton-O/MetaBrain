@@ -11,9 +11,7 @@ function metaLog(message) {
     let myMessage = {...initMessage, ...message}
     return metaMessage (myMessage);
   } 
-if (GlobalLogLevel==undefined)
-    GlobalLogLevel="QUIET";
-  initialiseLogSeverity(GlobalLogLevel,logModule); 
+initialiseLogSeverity(logModule); 
 //OverrideLoglevel("DEBUG",logModule) // but activate this line if you want DEBUG logging (or VERBOSE etc)
 
 const moment = require('moment');
