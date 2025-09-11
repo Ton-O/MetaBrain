@@ -1,6 +1,5 @@
 const logModule = "homekit";
 process.env.StartupPath = __dirname;
-const path = require('path');
 const StartupPath = process.env.StartupPath;
 const { metaMessage, LOG_TYPE, LOG_LEVEL,initialiseLogComponents, initialiseLogSeverity,OverrideLoglevel, getLoglevels } = require("/opt/meta/metaMessage");
 function metaLog(message) {
@@ -8,7 +7,6 @@ function metaLog(message) {
     let myMessage = {...initMessage, ...message}
     return metaMessage (myMessage);
   } 
-const {logModules} = require(path.join(StartupPath,'logComponents'));
 initialiseLogSeverity(logModule); 
 //OverrideLoglevel("DEBUG",logModule) // but activate this line if you want DEBUG logging (or VERBOSE etc)
 var theLog;
@@ -284,7 +282,7 @@ var theLog;
     'use strict';
     var d = c(4),
         e = c(28),
-        f = c(0)('app'),
+        f = c(0)('app'), 
         g = d();
     g.disable('x-powered-by'), g.use(e.json({
         limit: '2mb'

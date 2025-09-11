@@ -19440,27 +19440,30 @@ console.log("prototype start")
             timeout: 4e3
         }).then(() => AllFunctions(0)("Function 463").verbose("Returned from request 463"),t.json({"Result":"Cache cleared!!"}))
 
-    }), o.get("/GetLogLevels", (e, t) => {
+    }), o.get("/GetLogLevels", (e, t) => { 
         AllFunctions(0)("Function 463").verbose("GetLogLevels received");
         let promiseT = []; let theResult = []; let theUrl = ''; let i;
-        for (i = 0;i < logModules.LogComponent.length ; i++) {
-            theUrl="http://127.0.0.1:300"+(i+1)+"/"+logModules.LogComponent[i]+"/metaMessageHandler/?doFunc=GetLogLevel";
-            AllFunctions(0)("Function 463").verbose("Getting loglevel by",theUrl)
-            let tBody= ''  // post message to the relevant port for this module; uri is all we need, no body required.
-            promiseT.push (r(17)({
-                uri: theUrl,
-                method: "POST",
-                pool: this._httpAgent,
-                timeout: 4e3,
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "Content-Length": tBody.length
-                },
-                body: tBody
-            }).then( (thisResult) => {(AllFunctions(0)("Function 463").debug("Returned from single post request",thisResult),theResult.push(JSON.parse(thisResult)[0]))})
-            .catch ( (err) => {(AllFunctions(0)("Function 463").error("Error calling getloglevel",theUrl))})            
-            )
-        }
+        let j = 0
+        logModules.forEach((Component) =>
+            {if (Component.logComponent.toUpperCase()!="GLOBAL")
+                {theUrl="http://127.0.0.1:300"+(++j)+"/"+Component.logComponent+"/metaMessageHandler/?doFunc=GetLogLevel";
+                AllFunctions(0)("Function 463").verbose("Getting loglevel by",theUrl)
+                let tBody= ''  // post message to the relevant port for this module; uri is all we need, no body required.
+                promiseT.push (r(17)({
+                    uri: theUrl,
+                    method: "POST",
+                    pool: this._httpAgent,
+                    timeout: 4e3,
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Content-Length": tBody.length
+                    },
+                    body: tBody
+                }).then( (thisResult) => {(AllFunctions(0)("Function 463").debug("Returned from single post request",thisResult),theResult.push(JSON.parse(thisResult)[0]))})
+                .catch ( (err) => {(AllFunctions(0)("Function 463").error("Error calling getloglevel "+theUrl,err))})            
+                )
+            }
+        })
         Promise.all(promiseT).then((values) => {
             return (AllFunctions(0)("Function 463").verbose("Returned from all post requests"),
                     AllFunctions(0)("Function 463").debug("returned:",theResult),
@@ -19479,9 +19482,10 @@ console.log("prototype start")
         let doFunc="?doFunc=OverrideLogLevel&logLevel="+thelogLevel
         let theUrl = ''
         let i;
-        for (i = 0;i < logModules.LogComponent.length ; i++) {
-            if (logModules.LogComponent[i] === theModule) 
-            {   theUrl="http://127.0.0.1:300"+(i+1)+"/"+theModule+"/metaMessageHandler/"+doFunc;
+    
+        for (i = 0;i < logModules.length ; i++) {
+            if (logModules[i].logComponent === theModule) 
+            {   theUrl="http://127.0.0.1:300"+(i)+"/"+theModule+"/metaMessageHandler/"+doFunc;
                 break;
             }
         }
