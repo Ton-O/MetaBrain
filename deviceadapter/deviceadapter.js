@@ -40,9 +40,9 @@ module.exports = function(t) {
     }, LogFunc=r(0),AllFunctions = r, r.p = '/', r(r.s = 212)
 }
 ([ 
-    function(t, r, o) {
+    function(t, r, o) { //o(0)("Function 0").verbose(" handle logging");
     'use strict';
-    //o(0)("Function 0").verbose("");
+    
     function n() {
         S || /true/.test(p.network) && (f = u.createClient({
             token: p.token,
@@ -74,13 +74,21 @@ module.exports = function(t) {
         return function() {
             var A = Array.prototype.shift.call(arguments),
                 C = Array.prototype.slice.call(arguments);
-            if (C.length && (C = 1 === C.length ? C[0] : C)) {
-//                if (C.length && (C = 1 === C.length ? C[0] : C), g) {
-                    var D = C ? A + ' ' + JSON.stringify(C) : A;
-                //console.log('%s - %s: [ %s ] %s', new Date().toISOString(), T, this.label, D)
-                metaLog({type:T, content:"["+ this.label + "] "+D,deviceId:"_"})
-            }
-    
+                if (C.length)
+                    if (C.length == 1) 
+                       C = C[0];
+                        
+            var D;
+            if (C.length)
+                if (C.length == 1) 
+                    D =  A + ' ' + JSON.stringify(C[0]);
+                    //D = C[0];
+                else
+                    D =  A + ' ' + JSON.stringify(C);
+            else
+                    D =  A;
+            //console.log('%s - %s: [ %s ] %s', new Date().toISOString(), T, this.label, D)
+            metaLog({type:T, content:"["+ this.label + "] "+D,deviceId:"_"})    
             var R = {
                 host: m,
                 app: p.tag,
@@ -93,6 +101,7 @@ module.exports = function(t) {
             R.params = ['string', 'number', 'boolean'].includes('undefined' == typeof C ? 'undefined' : c(C)) ? {
                 msg: C
             } : C, N && f && (O++, O < p.maximalUpstreamLogMessagePerHour ? f.log(R) : O === p.maximalUpstreamLogMessagePerHour && (R.source = 'LOG', R.message = 'LOG_COUNT_EXCEEDED', R.level = 'WARN', R.params = void 0, f.log(R))), 'error' === T && I && I(R)
+             
         }
 //    }, d.prototype.debug = d._log('debug', !1), d.prototype.verbose = d._log('verbose', !1), d.prototype.info = d._log('info', !0), d.prototype.warn = d._log('warn', !0), d.prototype.error = d._log('error', !0), t.exports = function(T) {
     }, d.prototype.always = d._log(LOG_TYPE.ALWAYS, !1), d.prototype.debug = d._log(LOG_TYPE.DEBUG, !1), d.prototype.verbose = d._log(LOG_TYPE.VERBOSE, !1), d.prototype.info = d._log(LOG_TYPE.INFO, !0), d.prototype.warn = d._log(LOG_TYPE.WARNING, !0), d.prototype.error = d._log(LOG_TYPE.ERROR, !0), t.exports = function(T) {
@@ -257,7 +266,7 @@ module.exports = function(t) {
     var R = 12000,
         P = 5e3,
         w = 0
-}, function(t) {
+}, function(t) { // o(0)("Function 5").verbose("");
     'use strict';
     var n = process.env.IP || '127.0.0.1',
         d = process.env.PORT || 3002,
@@ -3412,7 +3421,7 @@ module.exports = function(t) {
         }
     };
     var S = void 0
-}, function(t) {
+}, function(t) { o(0)("Function  69").verbose(" getSetStreamPathPayload");
     'use strict';
 
     function n(y) {
