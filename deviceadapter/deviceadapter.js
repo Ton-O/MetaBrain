@@ -2862,19 +2862,21 @@ module.exports = function(t) {
         g = o(0)('SDK Adapter'),
         y = m.COMPONENTS,
         S = void 0;
-    u.param('adapterid', function(f, I, O, T) {
-        console.log("deviceadapter routes:",u)
+    u.param('adapterid', function(f, I, O, T) { o(0)("Function  57").verbose(" param adapterid");
+        // console.log("deviceadapter routes:",u)
+
         return p.getAdapter(T).then(function(N) {
             return N ? (f.adapter = N, O(), null) : void n('ADAPTER_NOT_FOUND', O)
         }).catch(function(N) {
             d('GET_ADAPTER_FAILED', N.message), n('GET_ADAPTER_FAILED', O)
         })
-    }), u.param('component', function(f, I, O, T) {
+    }), u.param('component', function(f, I, O, T) { o(0)("Function  57").verbose(" param component");
         var N = f.adapter.handler.get(T);
         if (N) return f.handler = N, O();
         var A = f.adapter.adapterName;
         return A ? void(m.storeDataInRequest(f, A, T), O()) : (d('handler not defined for', T), void n('COMPONENT_HANDLER_NOT_FOUND', O))
-    }), u.param('deviceid', function(f, I, O, T) {
+    }), u.param('deviceid', function(f, I, O, T) { o(0)("Function  57").verbose(" param deviceid");
+
         f.deviceid = T;
         var N = m.validateDeviceIdRoute(f);
         if (!N) return n('DEVICEID_ROUTE_INVALID_PARAMETERS', O);
@@ -3422,7 +3424,7 @@ module.exports = function(t) {
         }
     };
     var S = void 0
-}, function(t) { o(0)("Function  69").verbose(" getSetStreamPathPayload");
+}, function(t) { console.log("Function 69 getSetStreamPathPayload");//o(0)("Function  69").verbose(" getSetStreamPathPayload");
     'use strict';
 
     function n(y) {
@@ -4578,6 +4580,7 @@ module.exports = function(t) {
         };
     t.exports = {
         buildDevices: function() {
+             o(0)("Function  85").verbose(" LIFX:SDK buildDevices')");
             var S = o(86);
             try {
                 var f = d.buildCustomDevice('Smart Light').setManufacturer('LIFX').addAdditionalSearchToken('lamp').setType('LIGHT').addButtonGroup('Power').addButton(g).addButton(y).addButtonHandler(S.onButtonPressed).addSlider(u, S.brightnessSliderCallback).addSwitch(p, S.powerSwitchCallback).addSensor(m, S.ambientLightSensorCallback).addPowerStateSensor(S.powerSwitchCallback).enableDiscovery(E, S.discoverDevices).registerSubscriptionFunction(S.registerStateUpdateCallback).registerInitialiseFunction(S.initialise);
@@ -4667,6 +4670,7 @@ module.exports = function(t) {
     var d = o(204).Client;
     t.exports = {
         buildLifxClientInstance: function() {
+            o(0)("Function  87").verbose(" buildLifxClientInstance function");
             return new d
         }
     }
@@ -11316,75 +11320,75 @@ module.exports = function(t) {
             error: {}
         })
     }), t.exports = S
-}, function(t) {
+}, function(t) { //178
     t.exports = require('blocked')
-}, function(t) {
+}, function(t) { //179
     t.exports = require('body-parser')
-}, function(t) {
+}, function(t) { //180
     t.exports = require('bonjour')
-}, function(t) {
+}, function(t) { //181
     t.exports = require('child_process')
-}, function(t) {
+}, function(t) { //182
     t.exports = require('dgram')
-}, function(t) {
+}, function(t) { //183
     t.exports = require('dns')
-}, function(t) {
+}, function(t) { //184
     t.exports = require('fs')
-}, function(t) {
+}, function(t) { //185
     t.exports = require('jfs') 
-}, function(t) {
+}, function(t) { //186
     t.exports = require('lodash/flatten')
-}, function(t) {
+}, function(t) { //187
     t.exports = require('lodash/forEach')
-}, function(t) {
+}, function(t) { //188
     t.exports = require('lodash/get')
-}, function(t) {
+}, function(t) { //189
     t.exports = require('lodash/isNil')
-}, function(t) {
+}, function(t) { //190
     t.exports = require('lodash/remove')
-}, function(t) {
+}, function(t) { //191
     t.exports = require('lodash/uniq')
-}, function(t) {
+}, function(t) { //192
     t.exports = require('lodash/uniqBy')
-}, function(t) {
+}, function(t) { //193
     t.exports = require('lodash/values')
-}, function(t) {
+}, function(t) { //194
     t.exports = require('loggly')
-}, function(t) {
+}, function(t) { //195
     t.exports = require('neeo-sdk')
-}, function(t) {
+}, function(t) { //196
     t.exports = require('neeo-sdk/dist/lib/device')
-}, function(t) {
+}, function(t) { //197
     t.exports = require('neeo-sdk/dist/lib/device/brain')
-}, function(t) {
+}, function(t) { //198
     t.exports = require('neeo-sdk/dist/lib/device/implementationservices/promiseCache')
-}, function(t) {
+}, function(t) { // function 199
     t.exports = require('neeo-sdk/dist/lib/dynamicDevice/dynamicDevice')
-}, function(t) {
+}, function(t) { //200
     t.exports = require('neeo-sonos')
-}, function(t) {
+}, function(t) { //201
     t.exports = require('net')
-}, function(t) {
+}, function(t) { //202
     t.exports = require('node-cec/lib/CecKeyCodes')
-}, function(t) {
+}, function(t) { //203
     t.exports = require('node-hue-api')
-}, function(t) {
+}, function(t) { //204
     t.exports = require('node-lifx')
-}, function(t) {
+}, function(t) { //205
     t.exports = require('node-tradfri-client')
-}, function(t) {
+}, function(t) { //206
     t.exports = require('prosysapi') 
-}, function(t) {
+}, function(t) { //207
     t.exports = require('simple-event-statistics')
-}, function(t) {
+}, function(t) { //208
     t.exports = require('sonos-discovery')
-}, function(t) {
+}, function(t) { //209
     t.exports = require('tokensearch.js')
-}, function(t) {
+}, function(t) { //210
     t.exports = require('validate.js') 
-}, function(t) {
+}, function(t) { //211
     t.exports = require('wemo-client')
-}, function(t, r, o) {o(0)("Function 213").verbose("exports = o(62)");
+}, function(t, r, o) {o(0)("Function 212").verbose("exports = o(62)");
     t.exports = o(62)
 }
 
