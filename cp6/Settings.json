@@ -1,0 +1,3 @@
+{"CloudReplacementUrl":"<IP-address of Meta-instance>",
+"BrainBroadLink":{"broadlinkIp": "<IP-address of Broadlink-device>", "broadlinktype": "<Broadlink-type, f.e. 0x520d>", "broadlinkMac": "<Mac-address of Brfoadlink-device>"}
+}

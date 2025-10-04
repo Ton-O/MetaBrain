@@ -1,7 +1,10 @@
 "use strict";
 const logModule = "cp6";
 process.env.StartupPath = __dirname;
-const StartupPath = process.env.StartupPath;
+var StartupPath = process.env.StartupPath;
+if (StartupPath != "/opt/meta")
+   StartupPath = "/opt"; 
+
 const path = require('path');
 const {logModules,GlobalLogLevel} = require(path.join(StartupPath,'logComponents'));
 
@@ -19,21 +22,33 @@ const fs = require("fs");
 var AllFunctions;
 var CloudReplacement;
 var CloudReplacementUrl = '';
-var BrainBroadLink;
-var BrainBroadLinkFile = __dirname + '/BrainBroadLink.json'
-fs.readFile(BrainBroadLinkFile, (err, data) => {
+var BrainBroadLink = {};
+var Settings = {};
+var SettingsFile = __dirname + '/Settings.json'
+fs.readFile(SettingsFile, (err, data) => {
         if (err) {
-          metaLog({type:LOG_TYPE.ERROR, content:'No BrainBroadLink.json file, cannot send IR-DATA'});
+          metaLog({type:LOG_TYPE.ERROR, content:'No Settings.json file, cannot send IR-DATA'});
           }
         else 
           if (data && (data != '')) 
             try {
-                metaLog({type:LOG_TYPE.DEBUG, content:'Parsing BrainBroadLink.json file'});
-                BrainBroadLink = JSON.parse(data);
-                metaLog({type:LOG_TYPE.ALWAYS,content:"Brain uses broadlink! "+BrainBroadLink})
+                metaLog({type:LOG_TYPE.DEBUG, content:'Parsing Settings.json file'});
+                Settings = JSON.parse(data);
+                if (Settings.BrainBroadLink!=undefined)
+                    {BrainBroadLink = Settings.BrainBroadLink;
+                    metaLog({type:LOG_TYPE.ALWAYS,content:"Brain uses broadlink! "+BrainBroadLink})
+                    }
+                else 
+                    metaLog({type:LOG_TYPE.ALWAYS,content:"Please add BrainBroadLink to Settings.json!!!; Without, no Infrared commands possible"})
+                if (Settings.CloudReplacementUrl!=undefined)
+                    {CloudReplacementUrl = "http://"+Settings.CloudReplacementUrl+":6468/download";
+                     metaLog({type:LOG_TYPE.ALWAYS,content:"Cached CloudreplacementUrl used until init CP6 is complete! "+CloudReplacementUrl})
+                    }
+                else 
+                    metaLog({type:LOG_TYPE.ALWAYS,content:"No CloudReplacementUrl in Settings; expect failures in f.e. loading images"})
             }
             catch (err) 
-                    {metaLog({type:LOG_TYPE.ERROR, content:'Invalid BrainBroadLink.json file '+err});
+                    {metaLog({type:LOG_TYPE.ERROR, content:'Invalid Settings.json file '+err});
                     BrainBroadLink = {}
                     }
         })
@@ -5252,9 +5267,12 @@ const currChannelArray = [];
                 name: e.name,
                 baseUrl: e.baseUrl
             };
-            if (CloudReplacementUrl  =='' &&  e.baseUrl.substring(0,16) != "http://127.0.0.1" )
+
+            if (CloudReplacement  == undefined &&  e.baseUrl.substring(0,16) != "http://127.0.0.1" )
                 {var urlComponents = e.baseUrl.split(':')
                 CloudReplacement = urlComponents[0]+":"+urlComponents[1];
+                if (CloudReplacementUrl != CloudReplacement+":6468/download")
+                    ReplaceSettingsFile(urlComponents[1].substring(2,99))
                 CloudReplacementUrl = CloudReplacement+":6468/download"
                 AllFunctions(0)("Function 119").always("We've assigned ",urlComponents[0]+":"+urlComponents[1],"as the source to replace NEEO cloud")
                 }
@@ -7308,9 +7326,11 @@ const currChannelArray = [];
         a = r(338);
     e.exports = {
         addDeviceToRoom: function(e, t, r, n, i) {
+            console.log("Addtoroom");
             return o.getFullSpec(r, i).then(e => c(e, t, r, n)).then(t => u(t, e)).then(e => d(e, n))
         },
         addDeviceToRoomWithSpecdata: function(e, t, r, n) {
+                        console.log("Addtoroomwitspecificdata");
             const o = Object.assign({
                     id: r,
                     name: t
@@ -9793,6 +9813,7 @@ AllFunctions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             timeout: y
         }))
     }, T.prototype.discover = function(e, t) {
+        AllFunctions(0)("Function 215").verbose("Discover devices")
         return h.increaseCounter("deviceadapter-send-discover"), u.debug("DISCOVER_DEVICE", {
             adapterName: e,
             sourceName: t
@@ -10002,8 +10023,8 @@ AllFunctions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
                 uri: r + o.path + "/" + encodeURIComponent(t.getAdapterDeviceId()),
                 agent: c
             }).then(Sensor => {/*AllFunctions(0)("Function 215").debug("deviceadapter returned",Sensor,"for",e.name );*/ return Sensor.value})
-            .catch(n => {AllFunctions(0)("Function 215").warning("getValue ERROR (from deviceadapter)",e.name)})
-        }).catch(err => AllFunctions(0)("Function 215").warning(" ERROR getValue getDevice:",err ))
+            .catch(n => {AllFunctions(0)("Function 215").warn("getValue ERROR (from deviceadapter)",e.name)})
+        }).catch(err => AllFunctions(0)("Function 215").warn(" ERROR getValue getDevice:",err ))
     }, T.prototype.browse = function(e, t, r) {
         return h.increaseCounter("deviceadapter-send-browse"), this._getBaseUrl(t).then(t => o(t, e)).then(t => (u.debug("browse directory", {
             uri: t,
@@ -12844,7 +12865,7 @@ return this._syncFileList();
             })
         })
     }, p.prototype._nbrGetRequest = function(e) {
-        AllFunctions(0)("Function 288").verbose("_nbrGetRequest",e)
+        AllFunctions(0)("Function 288").verbose("Skipping _nbrGetRequest as no Six LowPan is available",e)
         return i.resolve('')
 /*        return this.baseUrl ? (this.queuePromise = this.queuePromise.then(() => n({
             method: "GET",
@@ -15903,7 +15924,7 @@ console.log("prototype start")
             })
         }).catch(url => {
             const width = a.extractInfo(url);
-            s.debug("failed to prefetch image", width.message), d.increaseCounter("image-prefetch-error")
+            s.debug("failed to prefetch image", width.message), d.increaseCounter("image-prefetch-error"),  AllFunctions(0)("Function 371").verbose("this URL:",url.options.url)
         })
     }, h.prototype._fetchFavoritesImages = function(e) {
         AllFunctions(0)("Function 371").verbose("getchfavoritesimages")
@@ -19442,11 +19463,10 @@ console.log("prototype start")
 
     }), o.get("/GetLogLevels", (e, t) => { 
         AllFunctions(0)("Function 463").verbose("GetLogLevels received");
-        let promiseT = []; let theResult = []; let theUrl = ''; let i;
-        let j = 0
+        let promiseT = []; let theResult = []; let theUrl = ''; 
         logModules.forEach((Component) =>
             {if (Component.logComponent.toUpperCase()!="GLOBAL")
-                {theUrl="http://127.0.0.1:300"+(++j)+"/"+Component.logComponent+"/metaMessageHandler/?doFunc=GetLogLevel";
+                {theUrl="http://127.0.0.1:300"+(Component.Enum)+"/"+Component.logComponent+"/metaMessageHandler/?doFunc=GetLogLevel";
                 AllFunctions(0)("Function 463").verbose("Getting loglevel by",theUrl)
                 let tBody= ''  // post message to the relevant port for this module; uri is all we need, no body required.
                 promiseT.push (r(17)({
@@ -19470,6 +19490,7 @@ console.log("prototype start")
                     t.json({"result":theResult}))
         })
 
+
     }), o.get("/OverrideLogLevel", (e, t) => {
         AllFunctions(0)("Function 463").verbose("OverrideLogLevel received");
         var theModule = e.query.Module;
@@ -19482,14 +19503,15 @@ console.log("prototype start")
         let doFunc="?doFunc=OverrideLogLevel&logLevel="+thelogLevel
         let theUrl = ''
         let i;
-    
-        for (i = 0;i < logModules.length ; i++) {
-            if (logModules[i].logComponent === theModule) 
-            {   theUrl="http://127.0.0.1:300"+(i)+"/"+theModule+"/metaMessageHandler/"+doFunc;
-                break;
-            }
-        }
-            
+try {
+
+        logModules.forEach((Component) =>
+            {if (Component.logComponent === theModule) 
+                theUrl="http://127.0.0.1:300"+((Component.Enum))+"/"+theModule+"/metaMessageHandler/"+doFunc;
+        })
+
+}
+catch (err) {console.log("override in cp6:",err)}
         if (theUrl == '')
         {   AllFunctions(0)("Function 463").error("Unrecognised module for loglevel override "+theModule)
             return t.json({"error":"Unrecognised module for loglevel override "+theModule})
@@ -21532,4 +21554,21 @@ function metaMessageHandler(req, res,f)
     metaLog({type:LOG_TYPE.ERROR,content:"Unknown function requested in metaMessageHandler "+req.query.doFunc});
     metaLog({type:LOG_TYPE.ERROR,content:"logLevel passed "+req.query.logLevel});
     return "Returning error"
+}
+function ReplaceSettingsFile(newURL)
+{    
+    Settings.CloudReplacementUrl = newURL
+    var SettingContent = JSON.stringify(Settings);
+        return new Promise(function(resolve, reject) {      // And write these lines with adjusted values to logComponents.js
+            fs.writeFile(SettingsFile, SettingContent+'\n', 'utf-8', function(err) {
+                if (err) 
+                    {console.log("Error writing to Settinfs file:",err);
+                    reject(err);
+                }
+                else  
+                    {AllFunctions(0)("Replace Settings.json file").verbose("Succesfully replaced "+FileName);
+                    resolve();
+                }
+            });
+        });
 }

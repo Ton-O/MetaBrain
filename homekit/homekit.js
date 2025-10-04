@@ -192,7 +192,8 @@ var theLog;
             updatePowerState: 0,
             updateData: 0
         };
-    a.exports.startServer = function() {
+    a.exports.startServer = function() {   theLog("Function init 6").verbose(" startServer");
+
         return g.getSystemMacAddressAsync().then(function(l) {
             f.initializeBridge({
                 hostname: g.getHostname(),
@@ -202,11 +203,11 @@ var theLog;
                 pincode: e.homekit.pincode
             })
         })
-    }, a.exports.stopServer = function() {
+    }, a.exports.stopServer = function() { theLog("Function init 6").verbose(" stopServer");
         f.stopBridge()
-    }, a.exports.resetPairing = function() {
+    }, a.exports.resetPairing = function() { theLog("Function init 6").verbose(" resetPairing");
         d.debug('reset pairing'), f.resetPairing(e.homekit.persistenceDirectory), k.resetPairing++
-    }, a.exports.updatePowerState = function(l, m) {
+    }, a.exports.updatePowerState = function(l, m) { theLog("Function init 6").verbose(" updatePowerState");
         if (l && m) {
             d.debug('update power state', l, m);
             var n = l.powerKey;
@@ -215,7 +216,7 @@ var theLog;
                 f.updateAccessoirePowerState(o, m), k.updatePowerState++
             }
         }
-    }, a.exports.updateData = function(l) {
+    }, a.exports.updateData = function(l) { theLog("Function init 6").verbose(" updateData");
         if (l && Array.isArray(l)) {
             j.clear();
             var m = l.filter(function(n) {
@@ -229,10 +230,10 @@ var theLog;
                 return n
             })), k.updateData++
         }
-    }, a.exports.getStatistics = function() {
+    }, a.exports.getStatistics = function() { theLog("Function init 6").verbose(" getStatistics");
         return k
     }
-}, function(a, b, c) {   theLog("Function init 7").verbose("");
+}, function(a, b, c) {   theLog("Function init 7").verbose("");  // ## TvO
     'use strict';
     var d = c(6),
         e = c(18),
@@ -293,7 +294,7 @@ var theLog;
 
     g.use('/v1', h), g.use('/', h);
     g.post('/homekit/metaMessageHandler',function (req, res) {res.json(metaMessageHandler(req,res,c))
- });
+        });
     var j = {
         braininterface: c(26),
         statistics: c(27)
@@ -330,7 +331,7 @@ var theLog;
     var f = c(30)('neeo:bootstrap'),
         g = c(7).getFacade();
     a.exports = {
-        initializeServices: function() {
+        initializeServices: function() { theLog("Function init 13").verbose(" initializeServices");
             f('BOOTSTRAP_START'), g.startServer()
         },
         shutdownServices: function() {

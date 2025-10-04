@@ -1363,7 +1363,7 @@ module.exports = function(t) {
 }, function(t, r, o) {o(0)("Function  21").verbose("neeo:lib:cec:nodeCecWrapper CEC-Wrapper");
     'use strict';
 
-    function n() {
+    function n() {console.log("Function 21, n.... startCecadapter");
         return w >= P ? (N.debug('CEC_DISABLED_INITIALIZATION_SKIPPED'), O.increaseCounter('CEC_DISABLED_INITILAZATION_SKIPPED'), S.reject(new Error('CEC Max failed startup reached'))) : (N.debug('CEC_INITIALIZATION_START'), f.startCECAdapter(T.port, D.ipcCallbackFunction).catch(function(L) {
             return w++, N.error('CEC_INITIALIZATION', {
                 message: L.message,
@@ -2892,20 +2892,21 @@ module.exports = function(t) {
         S.discover(T).then(function(N) {
             return I.json(N)
         }).catch(O)
-    }), u.post('/:adapterid/register', function(f, I, O) {
+    }), u.post('/:adapterid/register', function(f, I, O) {o(0)("Function  57").verbose(" Route register");
+
         d('register request');
         var T = f.body,
             N = f.adapter.handler.get(y.NEEO_SDK_REGISTER_COMPONENT);
         S.register(N, T).then(function(A) {
             I.json(A)
         }).catch(O)
-    }), u.get('/:adapterid/registered', function(f, I, O) {
+    }), u.get('/:adapterid/registered', function(f, I, O) {o(0)("Function  57").verbose(" Route registered request");
         d('registered request');
         var T = f.adapter.handler.get(y.NEEO_SDK_REGISTER_COMPONENT);
         S.isRegistered(T).then(function(N) {
             return I.json(N)
         }).catch(O)
-    }), u.get('/:adapterid/subscribe/:deviceId/:eventUriPrefix', function(f, I, O) {
+    }), u.get('/:adapterid/subscribe/:deviceId/:eventUriPrefix', function(f, I, O) { o(0)("Function  57").verbose(" Route subscrbe");
         var T = f.params.deviceId,
             N = f.adapter.handler.get(y.NEEO_SDK_DEVICE_SUBSCRIPTION_COMPONENT);
         S.subscribe(N, T).then(function() {
@@ -2913,7 +2914,7 @@ module.exports = function(t) {
                 success: !0
             })
         }).catch(O)
-    }), u.get('/:adapterid/unsubscribe/:deviceId', function(f, I, O) {
+    }), u.get('/:adapterid/unsubscribe/:deviceId', function(f, I, O) { o(0)("Function  57").verbose(" Route unsubscribe");
         var T = f.params.deviceId,
             N = f.adapter.handler.get(y.NEEO_SDK_DEVICE_SUBSCRIPTION_COMPONENT);
         S.unsubscribe(N, T).then(function() {
@@ -2921,7 +2922,7 @@ module.exports = function(t) {
                 success: !0
             })
         }).catch(O)
-    }), u.get('/:adapterid/:component/:deviceid', function(f, I, O) {
+    }), u.get('/:adapterid/:component/:deviceid', function(f, I, O) { o(0)("Function  57").verbose(" Route get request");
         d('get request %o', f.params);
         var T = {
             handler: f.handler,
@@ -2930,7 +2931,7 @@ module.exports = function(t) {
         S.handleGet(T).then(function(N) {
             return I.json(N)
         }).catch(O)
-    }), u.post('/:adapterid/:component/:deviceid', function(f, I, O) {
+    }), u.post('/:adapterid/:component/:deviceid', function(f, I, O) { o(0)("Function  57").verbose(" Route post request");
         d('post request %o', f.params, f.body);
         var T = {
             handler: f.handler,
@@ -2940,7 +2941,7 @@ module.exports = function(t) {
         S.handleGet(T).then(function(N) {
             return I.json(N)
         }).catch(O)
-    }), u.post('/:adapterid/:component/:deviceid/action', function(f, I, O) {
+    }), u.post('/:adapterid/:component/:deviceid/action', function(f, I, O) { o(0)("Function  57").verbose(" Route post request action" );
         d('post request %o', f.params, f.body);
         var T = {
             handler: f.handler,
@@ -2950,7 +2951,7 @@ module.exports = function(t) {
         S.handleAction(T).then(function(N) {
             return I.json(N)
         }).catch(O)
-    }), u.get('/:adapterid/:component/:deviceid/:value', function(f, I, O) {
+    }), u.get('/:adapterid/:component/:deviceid/:value', function(f, I, O) { o(0)("Function  57").verbose(" Route set request to ");
         d('set request %o', f.params);
         var T = {
             handler: f.handler,
@@ -2960,7 +2961,7 @@ module.exports = function(t) {
         S.handleSet(T).then(function(N) {
             return I.json(N)
         }).catch(O)
-    }), u.use(function(f, I, O, T) {
+    }), u.use(function(f, I, O, T) { o(0)("Function  57").verbose(" Request error");
         T || d('EXPRESS_NEEDS_NEXT_PARAMETER_WEBPACK_TOO'), E.increaseCounter('SDK_' + f.message), g.debug('REQUEST_ERROR', {
             msg: f.message,
             stack: f.stack
@@ -4656,7 +4657,7 @@ module.exports = function(t) {
                 reachable: M.reachable
             }
         })
-    }, t.exports.registerStateUpdateCallback = function(F, M) {
+    }, t.exports.registerStateUpdateCallback = function(F, M) {  // Homekit....
         g('registerStateUpdateCallback'), U = F, M && M.powerOnNotificationFunction && (R = M.powerOnNotificationFunction), M && M.powerOffNotificationFunction && (P = M.powerOffNotificationFunction)
     }, t.exports.initialise = function() {
         return k ? (g('already initialised, ignore call'), !1) : void(g('initialise LIFX service, start polling'), L = new y(w), k = setInterval(E, 4e3))
@@ -4696,7 +4697,7 @@ module.exports = function(t) {
             debug: !1
         },
         T = function() {
-            function N(A) {
+            function N(A) { // Homekit
                 n(this, N), this.deviceState = A, this.lifxClient = p.buildLifxClientInstance(), this.lifxClient.init(O), c('LIFX discovery started...'), this.lifxClient.on('light-new', function(C) {
                     c('discovered new light', C.id), A.addDevice(C.id, C)
                 }), this.lifxClient.on('light-online', function(C) {
@@ -11403,7 +11404,7 @@ function metaMessageHandler(req, res)
     if (doFunc.toUpperCase() == "OVERRIDELOGLEVEL")
       {metaLog({type:LOG_TYPE.VERBOSE,content:"Setting loglevel"})
         const o = req.query.logLevel;
-        return OverrideLoglevel(o,logModule,"BRAIN") 
+        return OverrideLoglevel(o,logModule.toLowerCase())
       }
   
     metaLog({type:LOG_TYPE.ERROR,content:"Unknown function requestedmetaMessageHandler "+req.query.doFunc});
