@@ -19,6 +19,7 @@ initialiseLogSeverity(logModule);
 
 const moment = require('moment');
 const fs = require("fs");
+const { forEachRight } = require('lodash');
 var AllFunctions;
 var CloudReplacement;
 var CloudReplacementUrl = '';
@@ -13596,7 +13597,7 @@ return this._syncFileList();
         h = [a.ACTION_POWER_OFF, a.ACTION_POWER_TOGGLE_OFF],
         g = 2e3;
     let m = 0;
-    const f = e.exports = function(e, t = {}) {
+    const f = e.exports = function(e, t = {}) { AllFunctions(0)("Function 306").verbose("execute action");
         this.id = m++, this.action = e, this.options = t, this.startTime = void 0, this.error = void 0, this.name = e ? e.name : void 0, this.type = t.recipeType, t.repeat ? (this.steps = [], this.estimatedDuration = -1) : (this.steps = n(e), this.estimatedDuration = o(function(e) {
             let t = 0;
             const r = {};
@@ -19533,8 +19534,17 @@ catch (err) {console.log("override in cp6:",err)}
         }).then((theResult) => (AllFunctions(0)("Function 463").verbose("Returned from post request"),t.json(theResult)))
 
     }), o.get("/PowerState", (e,t) => {
-        r(27).get().then(r => r.getDevices()).then(bb => t.json(bb))
-
+        r(27).get().then(r => r.getDevices()).then(
+               bb => {bb.forEach(xx => {let qq = xx.macros.store;let SetPower = (xx.hypotheticalPowerState=="ON") ? "POWER OFF" : "POWER ON";
+                console.log(xx.name,"Searching for ",SetPower);
+                        Object.keys(qq).forEach(macro => 
+                            {if (qq[macro].name==SetPower) 
+                                {xx.poweroff = "/v1/projects/home/rooms/"+xx.roomKey+"/devices/"+xx.key+"/macros/"+qq[macro].key+"/trigger"}
+                            } 
+                        )
+                    })
+                    ;
+            t.json(bb)})
     }), o.get("/TouchButton", (e, t) => {
         AllFunctions(0)("Function 463").verbose("TOUCHBUTTON simulated"),
         r(10).send({
