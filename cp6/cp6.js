@@ -36,13 +36,13 @@ fs.readFile(SettingsFile, (err, data) => {
             try {
                 metaLog({type:LOG_TYPE.DEBUG, content:'Parsing Settings.json file'});
                 Settings = JSON.parse(data);
-                if (Settings.BrainBroadLink!=undefined)
+                if (Settings.BrainBroadLink!=undefined&&!!Settings.BrainBroadLink.broadlinkIp.includes("<"))
                     {BrainBroadLink = Settings.BrainBroadLink;
-                    metaLog({type:LOG_TYPE.ALWAYS,content:"Brain uses broadlink! "+BrainBroadLink})
+                    metaLog({type:LOG_TYPE.ALWAYS,content:"Brain uses broadlink! ",params:BrainBroadLink})
                     }
                 else 
                     metaLog({type:LOG_TYPE.ALWAYS,content:"Please add BrainBroadLink to Settings.json!!!; Without, no Infrared commands possible"})
-                if (Settings.CloudReplacementUrl!=undefined)
+                if (Settings.CloudReplacementUrl!=undefined&&!Settings.CloudReplacementUrl.includes("<"))
                     {CloudReplacementUrl = "http://"+Settings.CloudReplacementUrl+":6468/download";
                      metaLog({type:LOG_TYPE.ALWAYS,content:"Cached CloudreplacementUrl used until init CP6 is complete! "+CloudReplacementUrl})
                     }
@@ -21577,7 +21577,7 @@ function ReplaceSettingsFile(newURL)
                     reject(err);
                 }
                 else  
-                    {AllFunctions(0)("Replace Settings.json file").verbose("Succesfully replaced "+FileName);
+                    {AllFunctions(0)("Replace Settings.json file").verbose("Succesfully replaced "+SettingsFile);
                     resolve();
                 }
             });
