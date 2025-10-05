@@ -36,7 +36,7 @@ fs.readFile(SettingsFile, (err, data) => {
             try {
                 metaLog({type:LOG_TYPE.DEBUG, content:'Parsing Settings.json file'});
                 Settings = JSON.parse(data);
-                if (Settings.BrainBroadLink!=undefined&&!!Settings.BrainBroadLink.broadlinkIp.includes("<"))
+                if (Settings.BrainBroadLink!=undefined&&!Settings.BrainBroadLink.broadlinkIp.includes("<"))
                     {BrainBroadLink = Settings.BrainBroadLink;
                     metaLog({type:LOG_TYPE.ALWAYS,content:"Brain uses broadlink! ",params:BrainBroadLink})
                     }
