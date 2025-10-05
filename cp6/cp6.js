@@ -15,7 +15,8 @@ function metaLog(message) {
     return metaMessage (myMessage);
   } 
 initialiseLogSeverity(logModule); 
-//OverrideLoglevel("DEBUG",logModule) // but activate this line if you want DEBUG logging (or VERBOSE etc)
+//OverrideLoglevel("DEBUG",logModule)
+// but activate this line if you want DEBUG logging (or VERBOSE etc)
 
 const moment = require('moment');
 const fs = require("fs");
@@ -19535,8 +19536,7 @@ catch (err) {console.log("override in cp6:",err)}
 
     }), o.get("/PowerState", (e,t) => {
         r(27).get().then(r => r.getDevices()).then(
-               bb => {bb.forEach(xx => {let qq = xx.macros.store;let SetPower = (xx.hypotheticalPowerState=="ON") ? "POWER OFF" : "POWER ON";
-                console.log(xx.name,"Searching for ",SetPower);
+               bb => {bb.forEach(xx => {let qq = xx.macros.store;let SetPower = (xx.hypotheticalPowerState=="on") ? "POWER OFF" : "POWER ON";
                         Object.keys(qq).forEach(macro => 
                             {if (qq[macro].name==SetPower) 
                                 {xx.poweroff = "/v1/projects/home/rooms/"+xx.roomKey+"/devices/"+xx.key+"/macros/"+qq[macro].key+"/trigger"}
@@ -19545,6 +19545,7 @@ catch (err) {console.log("override in cp6:",err)}
                     })
                     ;
             t.json(bb)})
+        
     }), o.get("/TouchButton", (e, t) => {
         AllFunctions(0)("Function 463").verbose("TOUCHBUTTON simulated"),
         r(10).send({
