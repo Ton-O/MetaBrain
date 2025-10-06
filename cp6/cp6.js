@@ -26,22 +26,23 @@ var CloudReplacement;
 var CloudReplacementUrl = '';
 var BrainBroadLink = {};
 var Settings = {};
-var SettingsFile = __dirname + '/Settings.json'
+var CP6SettingsFile = "CP6Settings.json";
+var SettingsFile = __dirname + "/"+CP6SettingsFile 
 fs.readFile(SettingsFile, (err, data) => {
         if (err) {
-          metaLog({type:LOG_TYPE.ERROR, content:'No Settings.json file, cannot send IR-DATA'});
+          metaLog({type:LOG_TYPE.ERROR, content:'No "+ CP6SettingsFile + " file, cannot send IR-DATA'});
           }
         else 
           if (data && (data != '')) 
             try {
-                metaLog({type:LOG_TYPE.DEBUG, content:'Parsing Settings.json file'});
+                metaLog({type:LOG_TYPE.DEBUG, content:'Parsing "+CP6SettingsFile+ " file'});
                 Settings = JSON.parse(data);
                 if (Settings.BrainBroadLink!=undefined&&!Settings.BrainBroadLink.broadlinkIp.includes("<"))
                     {BrainBroadLink = Settings.BrainBroadLink;
                     metaLog({type:LOG_TYPE.ALWAYS,content:"Brain uses broadlink! ",params:BrainBroadLink})
                     }
                 else 
-                    metaLog({type:LOG_TYPE.ALWAYS,content:"Please add BrainBroadLink to Settings.json!!!; Without, no Infrared commands possible"})
+                    metaLog({type:LOG_TYPE.ALWAYS,content:"Please add BrainBroadLink to "+CP6SettingsFile+"!!!; Without, no Infrared commands possible"})
                 if (Settings.CloudReplacementUrl!=undefined&&!Settings.CloudReplacementUrl.includes("<"))
                     {CloudReplacementUrl = "http://"+Settings.CloudReplacementUrl+":6468/download";
                      metaLog({type:LOG_TYPE.ALWAYS,content:"Cached CloudreplacementUrl used until init CP6 is complete! "+CloudReplacementUrl})
@@ -50,7 +51,7 @@ fs.readFile(SettingsFile, (err, data) => {
                     metaLog({type:LOG_TYPE.ALWAYS,content:"No CloudReplacementUrl in Settings; expect failures in f.e. loading images"})
             }
             catch (err) 
-                    {metaLog({type:LOG_TYPE.ERROR, content:'Invalid Settings.json file '+err});
+                    {metaLog({type:LOG_TYPE.ERROR, content:'Invalid "+CP6SettingsFile +" file '+err});
                     BrainBroadLink = {}
                     }
         })
@@ -21577,7 +21578,7 @@ function ReplaceSettingsFile(newURL)
                     reject(err);
                 }
                 else  
-                    {AllFunctions(0)("Replace Settings.json file").verbose("Succesfully replaced "+SettingsFile);
+                    {AllFunctions(0)("Replace "+CP6SettingsFile+" file").verbose("Succesfully replaced "+SettingsFile);
                     resolve();
                 }
             });
