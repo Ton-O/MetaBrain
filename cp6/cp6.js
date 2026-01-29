@@ -2759,7 +2759,6 @@ const currChannelArray = [];
             o.TEST_IS_POWER_ON.test(e) ? s = a.getStandbyCommandDelay() : o.TEST_IS_POWER_OFF.test(e) ? s = a.getShutdownDelay() : o.TEST_IS_POWER_TOGGLE.test(e) ? s = Math.max(a.getStandbyCommandDelay(), a.getShutdownDelay()) : o.TEST_IS_SOURCE_SWITCH.test(e) && (s = a.getSourceSwitchDelay())
         }
             AllFunctions(0)("Function 43").verbose("buildActionOfComponent 2 device",a.name);
-            AllFunctions(0)("Function 43").verbose("buildActionOfComponent 2 action",e);
         return new i(e, {
 //            device: e.device.key,
             component: t,
@@ -4120,10 +4119,15 @@ const currChannelArray = [];
         a = r(108),
         c = r(149),
         u = r(0)("routes.room");
-    a.use("/:project_key/rooms", i), i.param("room_key", function(e, t, r, n) {
+    a.use("/:project_key/rooms", i), i.param("room_key", function(e, t, r, n) { // i masks out /:project_key/rooms from url, leaving room-id as first in remaining url
+        // ###### used when executing a trigger. input: /v1/projects/home/rooms/6989881913292881920/devices/7220833165949009920/macros/7220833166041284609/trigger
+        AllFunctions(0)("Function 85").verbose("use /:project_key/rooms, param room_key",n);
+
         e.room = e.project.getRoomByKey(n), e.room ? r() : r(new Error("no such room"))
-    }), i.get("/", function(e, t) {
+    }), i.get("/", function(e, t) {    
+        AllFunctions(0)("Function 85").verbose("/")        
         let r = e.project.getRooms();
+        AllFunctions(0)("Function 85").verbose("getRooms done",r) 
         !1 === s.getBooleanParam(e, "details") && (r = r.map(e => e.getSummary())), t.json(r)
     }), i.get("/reorder", function(e, t, r) {
         const n = e.project.getRooms(),
@@ -4131,6 +4135,8 @@ const currChannelArray = [];
             i = s.getIntParam(e, "to", n.length);
         c.reorder(n, o, i), e.project.save().then(() => t.json(n)).catch(r)
     }), i.get("/:room_key", function(e, t) {
+        AllFunctions(0)("Function 85").verbose("/:room_key")        
+
         let r = e.room;
         !1 === s.getBooleanParam(e, "details") && (r = r.getSummary()), t.json(r)
     }), i.delete("/:room_key", function(e, t) {
@@ -4243,6 +4249,7 @@ const currChannelArray = [];
             adapterName: d
         })
     }, l.prototype._validate = function() {
+         AllFunctions(0)("Function 89").verbose(" _validate");
         try {
             o(this, {
                 adapterType: {
@@ -4256,14 +4263,19 @@ const currChannelArray = [];
             }), new Error("DEVICEPARSER_VALIDATION_FAILED")
         }
     }, l.prototype.getSourceName = function() {
+        AllFunctions(0)("Function 89").debug(" getSourceName");
         return this.sourceName
     }, l.prototype.getId = function() {
+         AllFunctions(0)("Function 89").debug(" getId");
         return this.sourceName + this.data.id
     }, l.prototype.getName = function() {
+         AllFunctions(0)("Function 89").debug(" getName");
         return this.data.name
     }, l.prototype.getData = function() {
+         AllFunctions(0)("Function 89").debug(" getData");
         return this.data
     }, l.prototype.getScore = function() {
+         AllFunctions(0)("Function 89").verdebugbose(" getScore");
         return this.score
     }, l.prototype.toJSON = function() {
         return {
@@ -4925,10 +4937,9 @@ const currChannelArray = [];
         d = r(55),
         l = o.Router();
     l.param("project_key", function(e, t, r, n) {
-        AllFunctions(0)("Function 108").verbose("l.param('project_key')");
-
-        a.get(n).then(t => {
-            e.project = t, r()
+        AllFunctions(0)("Function 108").verbose("l.param('project_key')");    
+        a.get(n).then(t => {        
+            e.project = t,  r()
         }, t => {
             i.error("PROJECT_READ_FAILED", {
                 url: e.url,
@@ -4950,14 +4961,12 @@ const currChannelArray = [];
         })
     }), l.get("/:project_key/gdpr", function(e, t) {
         AllFunctions(0)("Function 108").verbose("get project gdpr");
-
         const r = e.project.gdprAccepted;
         return t.status(200).json({
             accepted: r
         })
     }), l.post("/:project_key/gdpr", function(e, t) {
         AllFunctions(0)("Function 108").verbose("post gdpr");
-
         e.project.acceptGDPR().then(() => {
             i.info("GDPR_ACCEPTED"), t.json({
                 accepted: !0
@@ -4973,13 +4982,11 @@ const currChannelArray = [];
         })
     }), l.get("/:project_key/configured", function(e, t) {
         AllFunctions(0)("Function 108").verbose("get project_key configured");
-
         t.json({
             configured: e.project.isConfigured()
         })
     }), l.get("/:project_key/activate", function(e, t) {
         AllFunctions(0)("Function 108").verbose("get project_key activate");
-
         e.project.activate().then(() => {
             i.debug("PROJECT_ACTIVATED"), t.json({
                 success: !0
@@ -4993,7 +5000,6 @@ const currChannelArray = [];
         })
     }), l.get("/:project_key/scheduleactivation", function(e, t) {
         AllFunctions(0)("Function 108").verbose("get project_key schedule activateion");
-
         e.project.scheduleActivation(), t.json({})
     }), l.get("/:project_key/devices", function(e, t) {
         AllFunctions(0)("Function 108").verbose("get project_key devices");
@@ -5046,7 +5052,7 @@ const currChannelArray = [];
 
         t.json(e.project.getSensors(e => d.RECIPE_SUPPORTED_TYPES.includes(e.type)))
     }), l.get("/:project_key/sensorvalue/:eventKey", function(e, t) {
-        AllFunctions(0)("Function 108").verbose("get project_key getsensor value");
+        AllFunctions(0)("Function 108").verbose("get :project_key/sensorvalue/:eventKey");
         const r = e.params.eventKey,
             n = e.project.getSensors(e => e.eventKey === r)[0];
         n || t.status(500).json(s(r, "sensor_eventkey"));
@@ -5061,19 +5067,25 @@ const currChannelArray = [];
             o ? u.increaseCounter(`ZWAVE-ERROR-${e.message}`) : i.error("PROJECT_GET_SENSORVALUE_FAILED", e.message), t.status(500).json(s(e, "sensor"))
         })
     }), l.get("/:project_key/recipes/:type?", function(e, t) {
+        AllFunctions(0)("Function 108").verbose("get /:project_key/recipes/:type?");
         const r = e.params.type;
         let n = [];
         n = r ? e.project.getRecipes(e => e.getType() === r) : e.project.getRecipes(), t.json(n)
     }), l.get("/:project_key/activescenariokeys", function(e, t) {
+        AllFunctions(0)("Function 108").verbose("get /:project_key/activescenariokeys");
         t.json(e.project.getActiveScenarioKeys())
     }), l.get("/:project_key/lastchange", function(e, t) {
+        AllFunctions(0)("Function 108").verbose("get /:project_key/lastchange");
         t.json(e.project.getLastChangeTs())
     }), l.get("/:project_key", function(e, t) {
+        AllFunctions(0)("Function 108").verbose("get /:project_key");
         t.json(e.project)
     }), l.post("/:project_key/getdeviceicon", function(e, t) {
+        AllFunctions(0)("Function 108").verbose("get /:project_key/getdeviceicon ");
         const r = e.body.scenariokeys;
         r ? t.json(e.project.scenarioKeyToMaindeviceIcon(r.split(","))) : t.json({})
     }), l.put("/:project_key", function(e, t) {
+        AllFunctions(0)("Function 108").verbose("put /:project_key");
         e.body ? (e.body.label && (e.project.label = e.body.label), e.project.setConfigured(e.body.configured), e.project.save().then(() => {
             t.json(e.project)
         }).catch(r => {
@@ -5084,10 +5096,12 @@ const currChannelArray = [];
             }), t.status(500).json(s(r, "project_save"))
         })) : t.json(e.project)
     }), l.get("/:project_key/label", function(e, t) {
+        AllFunctions(0)("Function 108").verbose("get /:project_key/label");
         t.json({
             label: e.project.label
         })
     }), l.get("/:project_key/controllerRoomName", function(e, t) {
+        AllFunctions(0)("Function 108").verbose("get  /:project_key/controllerRoomName");
         const r = n(e.project.getRooms(), e => e.hasController);
         return r ? void t.json({
             controllerRoomName: r.getName()
@@ -5271,6 +5285,8 @@ const currChannelArray = [];
                 baseUrl: e.baseUrl
             };
 
+
+
             if (CloudReplacement  == undefined &&  e.baseUrl.substring(0,16) != "http://127.0.0.1" )
                 {var urlComponents = e.baseUrl.split(':')
                 CloudReplacement = urlComponents[0]+":"+urlComponents[1];
@@ -5279,6 +5295,10 @@ const currChannelArray = [];
                 CloudReplacementUrl = CloudReplacement+":6468/download"
                 AllFunctions(0)("Function 119").always("We've assigned ",urlComponents[0]+":"+urlComponents[1],"as the source to replace NEEO cloud")
                 }
+            setTimeout(() => {
+            AllFunctions(0)("Function 119").verbose("Calling METAREINIT")
+            this.METAREINIT(e,t,r);
+            }, 3000);
 
             return !0 === e.protected && (t.protected = !0), this.sdkAdapters.set(e.name, t), !0
         }
@@ -5302,6 +5322,52 @@ const currChannelArray = [];
         }
         findUnreferencedAdapters(e) {
             return Array.isArray(e) ? this.getRegisteredAdapters().filter(t => !e.includes(t.name)) : (o.debug("invalid input ignored"), [])
+        }
+        METAREINIT (e,t,r) {
+            console.log("Processing SDKAdapter",e.name)
+            let promiseT = []; let theResult = []; let theUrl = '';
+            let tBody= ''  // post message to the relevant port for this module; uri is all we need, no body required. 
+            AllFunctions(0)("Function 119").debug("Checking devices for METAREINIT button",e.name)
+            r(27).get()
+            .then(e => e.rooms.store)
+            .then(room => 
+                {Object.keys(room).forEach(roomstore => 
+                    {const thisroom = room[roomstore];//console.log("1:",thisroom)
+                    const devices = room[roomstore].devices.store;                
+                    Object.values(devices).forEach(device => 
+                        {if (device.macros && device.macros.store && device.hypotheticalPowerState == "on") 
+                            {Object.entries(device.macros.store).forEach(([key, data]) => 
+                                {if (device.details.sourceName === e.name)    // are we processing the newly added SDKAdapter? 
+                                    {if (data.name == "METAREINIT")             // did we define a METAREINIT button in this device?
+                                        {//console.log(`Room: ${thisroom.name} (${thisroom.key}), Device: ${device.name} (${device.key}) - Macro Name: ${data.name} - Key: ${key}`);
+                                        // Prepare url to trigger the push of the METAREINIT button
+                                        theUrl="http://127.0.0.1:3000/v1/projects/home/rooms/"+thisroom.key+"/devices/"+device.key+"/macros/"+key+"/trigger"
+                                        AllFunctions(0)("Function 119").verbose("Send METAREINIT-button for " + device.name )
+                                        promiseT.push (r(17)({ // prepare http-GET to ourselves with the URL just built
+                                            uri: theUrl,
+                                            method: "GET",
+                                            pool: this._httpAgent,
+                                            timeout: 4e3,
+                                            headers: {
+                                                "Content-Type": "application/x-www-form-urlencoded",
+                                                "Content-Length": tBody.length
+                                            },
+                                            body: tBody
+                                        }).then( (thisResult) => {(AllFunctions(0)("Function 119").debug("Returned from single post request",thisResult),theResult.push(JSON.parse(thisResult)[0]))})
+                                        .catch ( (err) => {(AllFunctions(0)("Function 119").error("Error calling METAREINIT "+theUrl,err))})            
+                                        )
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    });
+                });
+
+                Promise.all(promiseT).then((theResult) => {
+                    return (AllFunctions(0)("Function 119").verbose("Returned from all post requests"),
+                            AllFunctions(0)("Function 119").debug("returned:",theResult))
+                })   
         }
     }
 }, function(e, t, r) {// Function 120 constant containing ALLOWED_ICON_NAMES
@@ -6411,7 +6477,7 @@ const currChannelArray = [];
     }
 }, function(e) {// Function 150 exports = require("lodash/isFunction")
     e.exports = require("lodash/isFunction")
-}, function(e, t, r) {// Function 151 various functions for room
+}, function(e, t, r) {// Function 151 various functions for room, sdk and devices mostly globally used getters and putters
     "use strict";
     AllFunctions(0)("Function 151").verbose("")
 
@@ -6790,13 +6856,16 @@ const currChannelArray = [];
             }
         }).catch(o)
     }, F.prototype.triggerActionByKey = function(e, t) {
+        AllFunctions(0)("Function 151").verbose("triggetriggerActionByKeyrAction")
         if (!e) throw new Error('missing argument to trigger action: "componentKey"');
         const r = this.getComponentByKey(e);
         return this.triggerAction(r, t)
     }, F.prototype.triggerActionByName = function(e, t) {
+        AllFunctions(0)("Function 151").verbose("triggerActionByName")
         if (!e) throw new Error('missing argument to trigger action: "componentName"');
         return this.triggerAction(this.getComponentByName(e, t.generic), t)
     }, F.prototype.triggerAction = function(e, t) {
+        AllFunctions(0)("Function 151").verbose("triggerAction")
         if (!e) throw new Error("could not find component to trigger");
         t = t || {};
         const r = L.buildActionOfComponent(e.getName(), e, t.value);
@@ -6833,7 +6902,7 @@ const currChannelArray = [];
         return this.channelNr
     }, i.prototype.getLogoURL = function() {
         AllFunctions(0)("Function 151").verbose("getLogoURL:",this.channel)
-        //"logoURL":"https://neeo-channel-icons.s3.amazonaws.com/e9364489-00e7-4a28-a127-f010df459eca.png"}
+        //"NEEO-Cloudserver based url: "logoURL":"https://neeo-channel-icons.s3.amazonaws.com/e9364489-00e7-4a28-a127-f010df459eca.png"}
         
         var normalizedChannel = this.channel.name.split(' ')
         AllFunctions(0)("Function 151").verbose("getLogoURL:",normalizedChannel)
@@ -7313,7 +7382,6 @@ const currChannelArray = [];
         },
         checkAirkey: function(e, t) {
             const r = e.airkey;
-//            console.log(e)
             AllFunctions(0)("Function 155").verbose("checkAirKey",c.h64(r, 42).toString(16));
             AllFunctions(0)("Function 155").verbose("Result",{"TR2 uses brain airkey":t,"Brain uses airkey":c.h64(r, 42).toString(16),baseId:r})           
             return t === c.h64(r, 42).toString(16) ? a.resolve() : a.reject(new Error("AIRKEY_NOT_MATCH"))
@@ -7329,11 +7397,9 @@ const currChannelArray = [];
         a = r(338);
     e.exports = {
         addDeviceToRoom: function(e, t, r, n, i) {
-            console.log("Addtoroom");
             return o.getFullSpec(r, i).then(e => c(e, t, r, n)).then(t => u(t, e)).then(e => d(e, n))
         },
         addDeviceToRoomWithSpecdata: function(e, t, r, n) {
-                        console.log("Addtoroomwitspecificdata");
             const o = Object.assign({
                     id: r,
                     name: t
@@ -8427,7 +8493,7 @@ AllFunctions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     e.exports = require("body-parser")
 }, function(e, t, r) {// Function 178 accountMiddleware
     "use strict";
-    AllFunctions(0)("Function 174").verbose("getPaginationAction")
+    AllFunctions(0)("Function 178").verbose("getPaginationAction")
     const n = r(24),
         o = r(0)("accountMiddleware");
     e.exports.requireLoggedInAccountMiddleWare = ((e, t, r) => {
@@ -11234,7 +11300,6 @@ return this._syncFileList();
         },
         setNonAutomatableInfoGetter: function(e) {
             metaLog({type:LOG_TYPE.DEBUG,content:"setNonAutomatableInfoGetter "+e});
-            //console.log("243, e=",e);
             return "function" == typeof e ? void(c = e) : void(c = a)
         }
     }
@@ -13627,7 +13692,7 @@ return this._syncFileList();
             }), new f
         }
     }, f.prototype.start = function() {
-console.log("prototype start")        
+console.log("Function 306 prototype start")        
         this.startTime || (this.startTime = Date.now())
     }, f.prototype.markAsDone = function() {
         this.endTime = Date.now(), this.error ? this._reject(this.error) : this._resolve()
@@ -16847,7 +16912,6 @@ console.log("prototype start")
         return new o(r => {
             const n = d.buildScenarioData(e, t),
                 o = l.find(e => e.match(n));
-//console.log("Function 406; render o",n,o)
             if (o) return r(o.render(n));
             const s = function(e, t) {
                 const r = t.getViewbuilderStructureFromScenario(e);
@@ -19514,7 +19578,7 @@ try {
         })
 
 }
-catch (err) {console.log("override in cp6:",err)}
+catch (err) {console.log("Loglevel override in cp6:",err)}
         if (theUrl == '')
         {   AllFunctions(0)("Function 463").error("Unrecognised module for loglevel override "+theModule)
             return t.json({"error":"Unrecognised module for loglevel override "+theModule})
@@ -19536,15 +19600,18 @@ catch (err) {console.log("override in cp6:",err)}
         }).then((theResult) => (AllFunctions(0)("Function 463").verbose("Returned from post request"),t.json(theResult)))
 
     }), o.get("/PowerState", (e,t) => {
-        r(27).get().then(r => r.getDevices()).then(
-               bb => {bb.forEach(xx => {let qq = xx.macros.store;let SetPower = (xx.hypotheticalPowerState=="on") ? "POWER OFF" : "POWER ON";
-                        Object.keys(qq).forEach(macro => 
-                            {if (qq[macro].name==SetPower) 
-                                {xx.poweroff = "/v1/projects/home/rooms/"+xx.roomKey+"/devices/"+xx.key+"/macros/"+qq[macro].key+"/trigger"}
+        r(27).get().then(r => r.getDevices()).then( // get all devices so we can extract it;s power state and find the opposite of ppower state (toggle power)
+               bb => {bb.forEach(xx => 
+                        {let qq = xx.macros.store;let SetPower = (xx.hypotheticalPowerState=="on") ? "POWER OFF" : "POWER ON";
+                            Object.keys(qq).forEach(macro => 
+                                // above power state of device is negated (device = on, use "power off" and vice versa), now look which macro will be used to trigger this toggle
+                            {   if (qq[macro].name== "METAREINIT")
+                                    {xx.METAREINIT=true;}
+                                if (qq[macro].name==SetPower) 
+                                    {xx.poweroff = "/v1/projects/home/rooms/"+xx.roomKey+"/devices/"+xx.key+"/macros/"+qq[macro].key+"/trigger"}
                             } 
                         )
-                    })
-                    ;
+                    });
             t.json(bb)})
         
     }), o.get("/TouchButton", (e, t) => {
@@ -21574,7 +21641,7 @@ function ReplaceSettingsFile(newURL)
         return new Promise(function(resolve, reject) {      // And write these lines with adjusted values to logComponents.js
             fs.writeFile(SettingsFile, SettingContent+'\n', 'utf-8', function(err) {
                 if (err) 
-                    {console.log("Error writing to Settinfs file:",err);
+                    {metaLog({type:LOG_TYPE.ERROR,content:"Error writing to Settings file:",params:err});
                     reject(err);
                 }
                 else  
