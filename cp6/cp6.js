@@ -7504,11 +7504,7 @@ const currChannelArray = [];
         SysInfo = r(12),
         i = ["jpg", "lz4", "lz4-black", "png"];
     t.getUrlPath = function(e, t) { 
-<<<<<<< Updated upstream
         CP6Functions(0)("Function 160").verbose("getURLPath",e)
-=======
-        AllFunctions(0)("Function 160").debug("getURLPath",e)
->>>>>>> Stashed changes
         if (!e) return "";
         const r = n(t),
             o = r.imageFormat ? "format/" + r.imageFormat + "/" : "";
@@ -9886,11 +9882,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             timeout: y
         }))
     }, T.prototype.discover = function(e, t) {
-<<<<<<< Updated upstream
         CP6Functions(0)("Function 215").verbose("Discover devices")
-=======
-        AllFunctions(0)("Function 215").verbose("Discover devices",t)
->>>>>>> Stashed changes
         return h.increaseCounter("deviceadapter-send-discover"), u.debug("DISCOVER_DEVICE", {
             adapterName: e,
             sourceName: t
@@ -10160,11 +10152,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             return new n((r, n) => {
                 if (this.isDeviceAdapterInternal(e, t)) return r(this.baseUrlDeviceadapter);
                 const o = i.getBaseUrl(t || e);
-<<<<<<< Updated upstream
                 CP6Functions(0)("Function 217").debug("_getBaseUrl",o)
-=======
-                //AllFunctions(0)("Function 217").debug("_getBaseUrl",o)
->>>>>>> Stashed changes
                 o ? r(o) : n(new Error("Could not find SDK instance " + e))
             })
         }
@@ -12540,11 +12528,7 @@ return this._syncFileList();
     }, v.prototype.summary = function() {
         const e = l.get("account", "userEmail") || "",
             t = o.loadavg();
-<<<<<<< Updated upstream
         CP6Functions(0)("Function 286").verbose("summary");
-=======
-        AllFunctions(0)("Function 286").debug("summary");
->>>>>>> Stashed changes
         return {
             hardwareRegion: this.getRegionCode(),
             touchButtonPressed: this.isTouchbuttonPressed(),
@@ -13682,14 +13666,8 @@ return this._syncFileList();
         h = [a.ACTION_POWER_OFF, a.ACTION_POWER_TOGGLE_OFF],
         g = 2e3;
     let m = 0;
-<<<<<<< Updated upstream
     const f = e.exports = function(e, t = {}) { CP6Functions(0)("Function 306").verbose("execute action");
         this.id = m++, this.action = e, this.options = t, this.startTime = void 0, this.error = void 0, this.name = e ? e.name : void 0, this.type = t.recipeType, t.repeat ? (this.steps = [], this.estimatedDuration = -1) : (this.steps = n(e), this.estimatedDuration = o(function(e) {
-=======
-    const f = e.exports = function(e, t = {}) { AllFunctions(0)("Function 306").verbose("execute action");
-        this.id = m++, this.action = e, this.options = t, this.startTime = void 0, this.error = void 0, this.name = e ? e.name : void 0, this.type = t.recipeType, t.repeat ? (this.steps = [], this.estimatedDuration = -1) : (this.steps = n(e), this.estimatedDuration 
-        = o(function(e) {
->>>>>>> Stashed changes
             let t = 0;
             const r = {};
             (e = e || []).forEach(e => {
@@ -13716,10 +13694,6 @@ return this._syncFileList();
             }), new f
         }
     }, f.prototype.start = function() {
-<<<<<<< Updated upstream
-console.log("Function 306 prototype start")        
-=======
->>>>>>> Stashed changes
         this.startTime || (this.startTime = Date.now())
     }, f.prototype.markAsDone = function() {
         this.endTime = Date.now(), this.error ? this._reject(this.error) : this._resolve()
