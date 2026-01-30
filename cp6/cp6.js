@@ -13525,8 +13525,8 @@ return this._syncFileList();
         };
     h.prototype.trigger = function(e, t = {}) {
         const r = i.build(e, t);
-        AllFunctions(0)("Function 305").verbose("Execute recipe ",r.name);
-        r.steps.forEach(xx => {xx.action!=null ? AllFunctions(0)("Function 305").debug("Exec step",xx.action.name+" "+xx.action.component.device.name) : {} })
+        CP6Functions(0)("Function 305").verbose("Execute recipe ",r.name);
+        r.steps.forEach(xx => {xx.action!=null ? CP6Functions(0)("Function 305").debug("Exec step",xx.action.name+" "+xx.action.component.device.name) : {} })
         return r.promise.catch(e => {
             s.debug("JOB_FAILED", {
                 error: e.message,
@@ -19560,30 +19560,28 @@ return this._syncFileList();
 
 
     }), o.get("/OverrideLogLevel", (e, t) => {
-        CP6Functions(0)("Function 463").verbose("OverrideLogLevel received");
+        CP6Functions(0)("Function 463").debug("OverrideLogLevel received");
         var theModule = e.query.Module;
         if (theModule == undefined)
             return t.json({msg: "Missing modulename"})
         else
-            theModule = theModule.toLowerCase()
-        
+            theModule = theModule.toLowerCase()        
         let thelogLevel = e.query.logLevel;
+        CP6Functions(0)("Function 463").verbose("Requesting loglevel for module "+theModule+" to be set to "+thelogLevel)
         let doFunc="?doFunc=OverrideLogLevel&logLevel="+thelogLevel
         let theUrl = ''
         let i;
-try {
-
-        logModules.forEach((Component) =>
-            {if (Component.logComponent === theModule) 
-                theUrl="http://127.0.0.1:300"+((Component.Enum))+"/"+theModule+"/metaMessageHandler/"+doFunc;
-        })
-
-}
-catch (err) {console.log("Loglevel override in cp6:",err)}
-        if (theUrl == '')
-        {   CP6Functions(0)("Function 463").error("Unrecognised module for loglevel override "+theModule)
-            return t.json({"error":"Unrecognised module for loglevel override "+theModule})
+        try {
+            logModules.forEach((Component) =>
+                {if (Component.logComponent === theModule) 
+                    theUrl="http://127.0.0.1:300"+((Component.Enum))+"/"+theModule+"/metaMessageHandler/"+doFunc;
+            })
         }
+        catch (err) {console.log("Loglevel override in cp6:",err)}
+        if (theUrl == '')
+            {   CP6Functions(0)("Function 463").error("Unrecognised module for loglevel override "+theModule)
+                return t.json({"error":"Unrecognised module for loglevel override "+theModule})
+            }
         CP6Functions(0)("Function 463").verbose("Loglevel change; invoking",theUrl)
 
         let tBody= ''  // post message to the relevant port for this module; uri is all we need, no body required.
