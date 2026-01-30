@@ -736,7 +736,7 @@ module.exports = function (a) {
     }) : this.fetchRemoteImage(l);
   };
   j.prototype.fetchRemoteImage = function (l) {
-    c(1)("Function 16").verbose("fetchRemoteImage:",l)
+    c(1)("Function 16").debug("fetchRemoteImage:",l)
     var m = this;
     return new d(function (n) {
       var o = {
@@ -765,7 +765,7 @@ module.exports = function (a) {
   };
   j.prototype._inplaceOrderedDithering = function (l, m) {
     var p;
-    c(1)("Function 16").verbose("_inplaceOrderedDithering")
+    c(1)("Function 16").debug("_inplaceOrderedDithering")
     var n = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
     for (var o = 0; o < l.height; o++) {
       p = l.width * o;
@@ -787,7 +787,7 @@ module.exports = function (a) {
   };
   j.prototype.optimizeImageForTR2 = function (l, m, n, o) {
     var p = this;
-    c(1)("Function 16").verbose("optimizeImageForTR2")
+    c(1)("Function 16").debug("optimizeImageForTR2")
     return new d(function (q) {
       var r = Date.now();
       var s = p.sharp(l).resize(m, n, {
@@ -867,7 +867,7 @@ module.exports = function (a) {
     });
   };
   j.prototype.getCache = function () {
-    c(1)("Function 16").verbose("getCache")
+    c(1)("Function 16").debug("getCache")
     return this.sharp.cache();
   };
   
