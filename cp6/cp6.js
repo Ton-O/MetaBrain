@@ -5324,7 +5324,7 @@ const currChannelArray = [];
             return Array.isArray(e) ? this.getRegisteredAdapters().filter(t => !e.includes(t.name)) : (o.debug("invalid input ignored"), [])
         }
         METAREINIT (e,t,r) {
-            console.log("Processing SDKAdapter",e.name)
+            CP6Functions(0)("Function 119").verbose("Processing SDKAdapter",e.name);
             let promiseT = []; let theResult = []; let theUrl = '';
             let tBody= ''  // post message to the relevant port for this module; uri is all we need, no body required. 
             CP6Functions(0)("Function 119").debug("Checking devices for METAREINIT button",e.name)
@@ -19552,7 +19552,7 @@ return this._syncFileList();
                 )
             }
         })
-        Promise.all(promiseT).then((values) => {
+        Promise.all(promiseT).then((theResult) => {
             return (CP6Functions(0)("Function 463").verbose("Returned from all post requests"),
                     CP6Functions(0)("Function 463").debug("returned:",theResult),
                     t.json({"result":theResult}))
