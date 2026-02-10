@@ -1,4 +1,4 @@
-# Brain functionality for your NEEO-remotes where the original providers abandoned the device. 
+# Brain functionality for your NEEO-remotes as the original providers abandoned the device. 
 ## Function
 This repository provides updated code that could run on a raspberry-Pi, or (as I do) as a Docker container. 
 ## Requirements
