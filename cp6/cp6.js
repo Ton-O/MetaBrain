@@ -886,8 +886,7 @@ const currChannelArray = [];
     CP6Functions(0)("Function 14").verbose("")
     const n = r(111),
         o = e.exports = function() {
-            CP6Functions(0)("Function 14").verbose("export")
-//            console.log(arguments);
+            //CP6Functions(0)("Function 14").verbose("export")
             const e = n.apply(this, arguments);
             if (e) throw new Error("Validation failed: " + JSON.stringify(e))
         };
@@ -2558,11 +2557,18 @@ const currChannelArray = [];
             room: o.roomName
         }), n.deleteDevice(o).then(() => m(l, o)).then(() => n.save()).then(() => t.json(_))
     }), i.post("/", function(e, t, r) {
+        CP6Functions(0)("Function 39").verbose("post /");
         const n = a.getRequestParameter(e, "name", y),
             o = a.getRequestParameter(e, "specId", y),
             i = e.body.fallbackAdapterName,
             s = e.body.adapterDeviceId,
             c = e.body.device;
+        CP6Functions(0)("Function 39").verbose("getRequestParameter done n:",n);
+        CP6Functions(0)("Function 39").verbose("getRequestParameter done o",o);
+        CP6Functions(0)("Function 39").verbose("getRequestParameter done i",i);
+        CP6Functions(0)("Function 39").verbose("getRequestParameter done s:",s);
+        CP6Functions(0)("Function 39").verbose("getRequestParameter done c:",c);
+        
         return c ? (f.debug("Adding device with included devicespec", {
             name: n,
             specId: o,
@@ -3447,9 +3453,12 @@ const currChannelArray = [];
             return n.decrypt({
                 privateKey: u,
                 message: t
-            }).then(e => e.data)
+            }).then(e => (    
+                CP6Functions(0)("Function 71").verbose("Encrypt this",e),
+                e.data))
         },
         encrypt: function(e, t) {
+    CP6Functions(0)("Function 71").verbose("Encrypt this",e);            
             if (!e) return i.reject(new Error("EMPTY_PLAINTEXT"));
             const r = t ? n.key.readArmored(t).keys : d;
             return n.encrypt({
@@ -4127,7 +4136,7 @@ const currChannelArray = [];
     }), i.get("/", function(e, t) {    
         CP6Functions(0)("Function 85").verbose("/")        
         let r = e.project.getRooms();
-        CP6Functions(0)("Function 85").verbose("getRooms done",r) 
+        CP6Functions(0)("Function 85").verbose("getRooms done") 
         !1 === s.getBooleanParam(e, "details") && (r = r.map(e => e.getSummary())), t.json(r)
     }), i.get("/reorder", function(e, t, r) {
         const n = e.project.getRooms(),
@@ -4231,7 +4240,7 @@ const currChannelArray = [];
             this.data = e.sourceData ? this._parseData(e.sourceData, this.sourceName, e.fallbackAdapterName) : e.data, this._validate()
         };
     l.prototype._parseData = function(e, t, r) {
-        CP6Functions(0)("Function 89").verbose(" _parseData");
+        //CP6Functions(0)("Function 89").verbose(" _parseData");
 
         const o = t === n.SOURCE_DUIRO ? s(e) : i(e),
             a = this._handleUnknownDevices(o, r);
@@ -4249,7 +4258,7 @@ const currChannelArray = [];
             adapterName: d
         })
     }, l.prototype._validate = function() {
-         CP6Functions(0)("Function 89").verbose(" _validate");
+         //CP6Functions(0)("Function 89").verbose(" _validate");
         try {
             o(this, {
                 adapterType: {
@@ -4266,7 +4275,7 @@ const currChannelArray = [];
         CP6Functions(0)("Function 89").debug(" getSourceName");
         return this.sourceName
     }, l.prototype.getId = function() {
-         CP6Functions(0)("Function 89").debug(" getId");
+         //CP6Functions(0)("Function 89").debug(" getId");
         return this.sourceName + this.data.id
     }, l.prototype.getName = function() {
          CP6Functions(0)("Function 89").debug(" getName");
@@ -4275,7 +4284,7 @@ const currChannelArray = [];
          CP6Functions(0)("Function 89").debug(" getData");
         return this.data
     }, l.prototype.getScore = function() {
-         CP6Functions(0)("Function 89").verdebugbose(" getScore");
+         //CP6Functions(0)("Function 89").debug(" getScore");
         return this.score
     }, l.prototype.toJSON = function() {
         return {
@@ -4318,14 +4327,14 @@ const currChannelArray = [];
                         l.warn("GUIDATA_FETCH_FAILED", t.message)
                     }),
                     function(e) {
-                        f.getAdapterDevicesBySource(e).then(t => u.mapSeries(t, t => (function(e, t) {
+                        f.getAdapterDevicesBySource(e).then(t => u.mapSeries(t, t => ((function(e, t) { // src-955ff018f39748477b4fda41846377df4311e9ac
                             return g.checkForAndUpdateDevice(e).catch(r => {
                                 l.event(`Failed to update device ${e.name} (${e.roomName})`), l.error("UPDATE_ADAPTER_DEVICE_FAILED", {
                                     msg: r.message,
                                     sourceName: t
                                 })
                             })
-                        })(t, e))).then(() => {
+                        })(t, e)))).then(() => {
                             f.saveProject()
                         })
                     }(e.name), n().then(t)
@@ -5324,25 +5333,24 @@ const currChannelArray = [];
             return Array.isArray(e) ? this.getRegisteredAdapters().filter(t => !e.includes(t.name)) : (o.debug("invalid input ignored"), [])
         }
         METAREINIT (e,t,r) {
-            console.log("Processing SDKAdapter",e.name)
+            CP6Functions(0)("Function 119").debug("Processing SDKAdapter; checking devices for METAREINIT button",e.name)
             let promiseT = []; let theResult = []; let theUrl = '';
             let tBody= ''  // post message to the relevant port for this module; uri is all we need, no body required. 
-            CP6Functions(0)("Function 119").debug("Checking devices for METAREINIT button",e.name)
             r(27).get()
             .then(e => e.rooms.store)
             .then(room => 
                 {Object.keys(room).forEach(roomstore => 
-                    {const thisroom = room[roomstore];//console.log("1:",thisroom)
+                    {const thisroom = room[roomstore];
                     const devices = room[roomstore].devices.store;                
                     Object.values(devices).forEach(device => 
                         {if (device.macros && device.macros.store && device.hypotheticalPowerState == "on") 
                             {Object.entries(device.macros.store).forEach(([key, data]) => 
                                 {if (device.details.sourceName === e.name)    // are we processing the newly added SDKAdapter? 
                                     {if (data.name == "METAREINIT")             // did we define a METAREINIT button in this device?
-                                        {//console.log(`Room: ${thisroom.name} (${thisroom.key}), Device: ${device.name} (${device.key}) - Macro Name: ${data.name} - Key: ${key}`);
+                                        {
                                         // Prepare url to trigger the push of the METAREINIT button
                                         theUrl="http://127.0.0.1:3000/v1/projects/home/rooms/"+thisroom.key+"/devices/"+device.key+"/macros/"+key+"/trigger"
-                                        CP6Functions(0)("Function 119").verbose("Send METAREINIT-button for " + device.name )
+                                        CP6Functions(0)("Function 119").verbose("Send METAREINIT-button for " + device.name+" "+theUrl )
                                         promiseT.push (r(17)({ // prepare http-GET to ourselves with the URL just built
                                             uri: theUrl,
                                             method: "GET",
@@ -5353,8 +5361,8 @@ const currChannelArray = [];
                                                 "Content-Length": tBody.length
                                             },
                                             body: tBody
-                                        }).then( (thisResult) => {(CP6Functions(0)("Function 119").debug("Returned from single post request",thisResult),theResult.push(JSON.parse(thisResult)[0]))})
-                                        .catch ( (err) => {(CP6Functions(0)("Function 119").error("Error calling METAREINIT "+theUrl,err))})            
+                                        }).then( (thisResult) => {(CP6Functions(0)("Function 119").debug("Returned from single post request to "+theUrl,thisResult),theResult.push(JSON.parse(thisResult)[0]))})
+                                        .catch ( (err) => {(CP6Functions(0)("Function 119").error("Error calling METAREINIT ",err))})            
                                         )
                                         }
                                     }
@@ -6301,14 +6309,17 @@ const currChannelArray = [];
             t.addRecipe(E.buildRecipe(e, t))
         }), t
     }, y.prototype.buildScenarios = function() {
+        CP6Functions(0)("Function 149").verbose("buildScenarios")
         h.buildAll({
             deviceStore: this.devices,
             scenarioStore: this.scenarios,
             room: this
         })
     }, y.prototype.getName = function() {
+//        CP6Functions(0)("Function 149").verbose("getName") // we see this a lot, suppress it...
         return this.name
     }, y.prototype.setName = function(e) {
+        CP6Functions(0)("Function 149").verbose("setName")
         this.name = e, this.getDevices().forEach(e => e.setRoom(this))
     }, y.prototype.getIcon = function() {
         return this.icon
@@ -6319,36 +6330,48 @@ const currChannelArray = [];
             const t = e.getName();
             for (let r = 2; r < 100 && this.getDeviceByName(e.getName());) e.setName(t + " (" + r++ + ")")
         }
-        this.devices.put(e), e.setRoom(this)
+        this.devices.put(e), 
+        e.setRoom(this)        
     }, y.prototype.getDeviceByName = function(e) {
+        CP6Functions(0)("Function 149").verbose("getDeviceByName",e)
         return this.devices.get(e)
     }, y.prototype.getDeviceByKey = function(e) {
+        CP6Functions(0)("Function 149").verbose("getDeviceByKey",e)
         return this.devices.getByKey(e)
     }, y.prototype.getDeviceNames = function() {
+        CP6Functions(0)("Function 149").verbose("getDeviceNames")
         return this.devices.map(e => e.getName())
     }, y.prototype.getDevices = function(e) {
+        //CP6Functions(0)("Function 149").verbose("getDevices")
         return this.devices.filter(e)
     }, y.prototype.getDevicesWithCapability = function(e) {
+        CP6Functions(0)("Function 149").verbose("getDevicesWithCapability")
         return this.getDevices(t => t.hasCapability(e))
     }, y.prototype.getNumberOfDevices = function() {
+        CP6Functions(0)("Function 149").verbose("getNumberOfDevices")
         return this.devices.length
     }, y.prototype.addScenario = function(e, t) {
+        CP6Functions(0)("Function 149").verbose("addScenario")
         if (m.increaseCounter("room-scenario-add"), t) {
             const t = e.getName();
             for (let r = 2; r < 100 && this.getScenarioByName(e.getName());) e.setName(t + " (" + r++ + ")")
         }
         return this.scenarios.put(e), e
     }, y.prototype.getScenarioByName = function(e) {
+        CP6Functions(0)("Function 149").verbose("getScenarioByName")
         return this.scenarios.get(e)
     }, y.prototype.getScenarioByKey = function(e) {
+        CP6Functions(0)("Function 149").verbose("getScenarioByKey")
         return this.scenarios.getByKey(e)
     }, y.prototype.getScenariosByMainDeviceKey = function(e) {
         return this.scenarios.get(e, "mainDeviceKey", !0)
     }, y.prototype.getScenarios = function(e) {
+        CP6Functions(0)("Function 149").verbose("getScenarios")
         return this.scenarios.filter(e)
     }, y.prototype.removeScenario = function(e) {
         m.increaseCounter("room-scenario-delete"), this.scenarios.remove(e), this.getRecipesForScenario(e).forEach(e => this.removeRecipe(e))
     }, y.prototype.removeDevice = function(e) {
+        CP6Functions(0)("Function 149").verbose("removeDevice")
         this.devices.remove(e)
     }, y.prototype.renameDevice = function(e, t) {
         if (!t) throw new Error(c(null, "parameter_missing", "newDeviceName").message);
@@ -6375,6 +6398,7 @@ const currChannelArray = [];
             a("reset scenario ", e.getName()), e.resetWiring()
         }), this.rebuildScenarioRecipes(), s.resolve()
     }, y.prototype.deleteDeviceHelper = function(e) {
+        CP6Functions(0)("Function 149").verbose("deleteDeviceHelper")
         return new s((t, r) => {
             if (this._isInvalid(e)) return r(new Error(c(null, "parameter_missing", "device").message));
             const n = this.getScenarios(t => t.mainDeviceKey === e.key),
@@ -6382,6 +6406,7 @@ const currChannelArray = [];
             this._deleteMainScenariosFor(e), this._resetScenariosUsing(e), this._deleteEmptyScenarios(), this.rebuildScenarioRecipes(), this._deleteRecipesTriggeredBy(e), this._cleanRecipesUsing(e, o), this.deleteEmptyCustomRecipes(), this.devices.remove(e), t()
         })
     }, y.prototype._deleteMainScenariosFor = function(e) {
+        CP6Functions(0)("Function 149").verbose("_deleteMainScenariosFor")
         const t = t => t.getMainDevice().getKey() === e.getKey();
         this._forScenarios(e => t(e) && (e => !f.RECIPE_GROUPED_DEVICE_TYPES.includes(e.getMainDevice().getType()))(e), e => {
             a("remove main scenario", e.name), this.resetWiring(e.getMainDevice()), this.removeScenario(e)
@@ -6410,6 +6435,7 @@ const currChannelArray = [];
     }, y.prototype.getRecipesForScenario = function(e) {
         return this.recipes.get(e.getKey(), "scenarioKey", !0)
     }, y.prototype.addRecipe = function(e, t) {
+        CP6Functions(0)("Function 149").verbose("addRecipe")
         if (m.increaseCounter("room-recipe-add"), t) {
             const t = e.getName();
             for (let r = 2; r < 100 && this.getRecipeByName(e.getName());) e.setName(t + " (" + r++ + ")")
@@ -6422,6 +6448,7 @@ const currChannelArray = [];
     }, y.prototype.getRecipeByKey = function(e) {
         return this.recipes.getByKey(e)
     }, y.prototype.getRecipes = function(e) {
+        CP6Functions(0)("Function 149").verbose("")
         return this.recipes.filter(e)
     }, y.prototype.removeRecipe = function(e) {
         return m.increaseCounter("room-recipe-delete"), this.recipes.remove(e), e
@@ -6436,6 +6463,7 @@ const currChannelArray = [];
             }, []).filter(e => e.isDirty).map(e => e.markAsClean())
         }
     }, y.prototype.rebuildScenarioRecipes = function() {
+        CP6Functions(0)("Function 149").verbose("rebuildScenarioRecipes")
         const e = E.getRecipeCookBook(),
             t = e => {
                 const t = e.getSteps().findIndex(e => e.type === E.STEP_TYPE_CONTROLS);
@@ -6460,6 +6488,7 @@ const currChannelArray = [];
             r(E.TYPE_LAUNCH, e), r(E.TYPE_POWEROFF, e)
         })
     }, y.prototype.getSummary = function() {
+        CP6Functions(0)("Function 149").verbose("getSummary")
         return {
             name: this.getName(),
             icon: this.getIcon(),
@@ -6471,8 +6500,10 @@ const currChannelArray = [];
     }, y.prototype._isInvalid = function(e) {
         return o(e) || !i(e.getKey)
     }, y.prototype._forScenarios = function(e, t) {
+        CP6Functions(0)("Function 149").verbose("_forScenarios")
         this.getScenarios(e).forEach(t)
     }, y.prototype._forRecipes = function(e, t) {
+        CP6Functions(0)("Function 149").verbose("_forRecipes")
         this.getRecipes(e).forEach(t)
     }
 }, function(e) {// Function 150 exports = require("lodash/isFunction")
@@ -6582,7 +6613,7 @@ const currChannelArray = [];
             }(this), w.call(this, e.key)
         };
     l.inherits(F, w), F.POWERSTATE_ON = "on", F.POWERSTATE_OFF = "off", F.POWERSTATE_ON_OFF = "transitioning-on-off", F.POWERSTATE_OFF_ON = "transitioning-off-on", F.build = function(e, t) {
-        const r = new F({
+        const r = new F({   //  is this the creation of "specification structure"??"
             name: e.name,
             key: e.key,
             adapterDeviceId: e.adapterDeviceId,
@@ -6774,7 +6805,8 @@ const currChannelArray = [];
         return p.TYPE_TV !== this.getType() || !!u(this.details.useTuner) || this.details.useTuner
     }, F.prototype.setUseTuner = function(e) {
         p.TYPE_TV !== this.getType() || (this.details.useTuner = !0 === e, this.updateRoles(), this.reloadCapabilities())
-    }, F.prototype.setSpec = function(e) {
+    }, F.prototype.setSpec = function(e) {    // ##########
+        CP6Functions(0)("Function 151").verbose("prototype.setSpec",e)
         const t = e.getData();
         O(t, {
             type: {
@@ -7356,16 +7388,20 @@ const currChannelArray = [];
                     hash: t
                 }), t
             }))];
+
             return a.all(t).then(e => {
-                const t = {
-                        project: e[0],
-                        deviceadapter: e[1],
-                        directoryadapter: e[2]
-                    },
-                    r = JSON.stringify(t),
-                    n = o(r),
-                    i = e[3],
-                    s = n !== i;
+            const t = {
+                    project: e[0],
+                    deviceadapter: e[1],
+                    directoryadapter: e[2]
+                },
+                r = JSON.stringify(t),
+                n = o(r),
+                i = e[3],
+                s = n !== i;
+            CP6Functions(0)("Function 155").verbose(s ? "Project needs saving":"No need to save project")
+            // Uncomment below line and comment the nxt one, top prevent updatin g the project-file... Handy when debugging. 
+            //console.log("155 saveproject, save is forcibly skipped",JSON.stringify(e));return 0 ? d.save(t, !0, r).then(() => (function(e) {
                 return s ? d.save(t, !0, r).then(() => (function(e) {
                     u.debug("SAVED_HASH_UPDATING", {
                         hash: e
@@ -7397,9 +7433,11 @@ const currChannelArray = [];
         a = r(338);
     e.exports = {
         addDeviceToRoom: function(e, t, r, n, i) {
+            CP6Functions(0)("Function 156").verbose("addDeviceToRoom");
             return o.getFullSpec(r, i).then(e => c(e, t, r, n)).then(t => u(t, e)).then(e => d(e, n))
         },
         addDeviceToRoomWithSpecdata: function(e, t, r, n) {
+            CP6Functions(0)("Function 156").verbose("addDeviceToRoomWithSpecdata")
             const o = Object.assign({
                     id: r,
                     name: t
@@ -7413,13 +7451,14 @@ const currChannelArray = [];
         }
     };
     const c = (e, t, r, i) => ! function(e) {
+         CP6Functions(0)("Function 156").verbose("156 c-function");
             const t = e.getData().capabilities || [];
             return n.debug("capabilities:", t), 0 < t.length
         }(e) ? (n.debug("FETCH_CAPABILITIES", {
             adapter: e.data.adapterName,
             id: i
         }), o.getCapabilities(r, e.data.adapterName, i).then(r => (n.debug("CAPABILITIES_FETCHED", r), a.build(e, t, i, r)))) : (n.debug("no need to fetch capabilities for", e.data.adapterName), a.build(e, t, i)),
-        u = (e, t) => (t.addDevice(e, !0), e),
+        u = (e, t) => (t.addDevice(e, !0),e),
         d = (e, t) => {
             return "duiro" === e.getSourceName() || !t ? e : s.subscribe(e).catch(r => (n.event("Please update driver for device " + e.name), n.warn("SUBSCRIPTION_FUNCTION_MISSING", {
                 adapterDeviceId: t,
@@ -8412,7 +8451,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     e.exports = require("valid-url")
 }, function(e, t, r) {// Function 176 directory-related functions
     "use strict";
-    CP6Functions(0)("CPCC Function 176").verbose("")
+    CP6Functions(0)("Function 176").verbose("")
     function n(e) {
         const t = o(e);
         return `BrowseDirectory('${e.directoryUrl}', '${t}')`
@@ -9771,6 +9810,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 215 DeviceAdapter //##
     "use strict";
+
     CP6Functions(0)("Function 215").verbose("DeviceAdapter")
 
     function n(e) {
@@ -9801,7 +9841,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
         _ = 12e4,
         v = "AdapterError: ",
         T = e.exports = function(e) {
-            u.debug("init", e), this.baseUrlDeviceadapter = e.baseUrl, this.timeout = e.timeout, this.urlfactory = new f(e.baseUrl)
+            u.debug("init", e), this.discoverNewDevices = this.baseUrlDeviceadapter = e.baseUrl, this.timeout = e.timeout, this.urlfactory = new f(e.baseUrl)
         };
     T.prototype._get = function(e) {
         const {
@@ -10714,13 +10754,14 @@ return this._syncFileList();
     e.exports = require("promisepipe")
 }, function(e) {// Function 227 contains only exports = require("tmp")
     e.exports = require("tmp")
-}, function(e, t, r) {// Function 228 AdapterSpecsSource
+}, function(e, t, r) {// Function 228 AdapterSpecsSource // here we interface with the SDK-adapters we have (like meta)
     "use strict";
 
     function n(e, t = c) {
+        CP6Functions(0)("Function 228").verbose("AdapterSpecsSource: get:",e) 
         return o.get(e, {
             timeout: t
-        }).then(e => JSON.parse(e))
+        }).then(e => (JSON.parse(e)))
     }
     const o = r(17),
         i = r(11),
@@ -10734,8 +10775,7 @@ return this._syncFileList();
         const t = this.baseUrl + "/db/search?q=" + e;
         return s.debug("search adapter:", t), n(t)
     }, u.prototype._getFullSpec = function(e) {
-        CP6Functions(0)("CP6 228").verbose("AdapterSpecsSource: getfullspec . E:",e)
-        
+        CP6Functions(0)("Function 228").verbose("AdapterSpecsSource: getfullspec (get ful spec from source:)",e)        
         return n(this.baseUrl + "/db/" + e)
     }, u.prototype._getAdapterSpec = function(e, t) {
         return n(this.baseUrl + "/db/adapterdefinition/" + e, t)
@@ -11940,7 +11980,7 @@ return this._syncFileList();
                         o = t.driverVersion;
                     return !!o && (!n && 0 < o || n < o)
                 }(e, t) && u.tryAdapterDeviceUpdate(e, t)
-            })(e, t)) : o.resolve(!1)
+            })(e, t)) : (console.log("Not an  SDK-adapter...."),o.resolve(!1))
         }
     }
 }, function(e, t, r) {// Function 265 tryAdapterDeviceUpdate
@@ -11953,15 +11993,68 @@ return this._syncFileList();
             added: a(t, r)
         }
     }
+    const requestpromise = CP6Functions(17);
+    let cachedDiscovery = {"discoveredSDKadapterName": "", discoveredItems:""};
 
-    function o(e, t) {
-        const r = t.capabilities || [];
+    async function o(e, t) { // Function is made asynchronous as it will call for discovery by brain and sdk.... so we must wait fro completion
+        let deviceExistsNow=true;
+        let sourceName=e.details.sourceName;
+        let adapterName=e.details.adapterName
+        let discoveredData = t;
+        let isDiscoveringDriver=false
+
+        if (e.details.setup != undefined) {
+            if (e.details.setup.discovery != undefined  && e.details.setup.discovery === true) 
+                isDiscoveringDriver=true
+            }
+        else
+            if (e.details.deviceCapabilities != undefined) 
+                if (e.details.deviceCapabilities[0] === "dynamicDevice") 
+                    isDiscoveringDriver=true
+        if (isDiscoveringDriver == true) 
+        {   CP6Functions(0)("Function 265").verbose("Activating discovery for updated discoverable driver ",e.name,"Original brain just ignores most of the changes");
+            deviceExistsNow=false;
+            if (adapterName == cachedDiscovery.discoveredSDKadapterName)    // did we discover devices for ths adapter already
+            {    discoveredData=cachedDiscovery.discoveredItems;
+                CP6Functions(0)("Function 265").verbose("re-using cached discovery values: ",cachedDiscovery.discoveredSDKadapterName)
+            }
+            else
+            {   cachedDiscovery.discoveredSDKadapterName = adapterName;
+                const options = {
+                    method: 'GET',
+                    uri: "http://192.168.73.110:3000/v1/deviceadapter/discover/"+sourceName+"/"+adapterName,
+                    json: true, // Wait for complete response
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 10000 // Optional: 10 seconds timeout for a slow SDK's
+                };
+                // execute get and wait for result
+                CP6Functions(0)("Function 265").verbose("Executing discovery for ",adapterName)
+                discoveredData = await requestpromise(options);
+                cachedDiscovery.discoveredItems = discoveredData;           // save discovery result for later
+            }
+
+            for (let count = 0; count < discoveredData.length; count++) 
+                if (discoveredData[count].id == e.adapterDeviceId)
+                    {deviceExistsNow=true;
+                    t = discoveredData[count].device; // replace the "small unpopulated information with the discovered one"
+                    break;
+                    }
+                
+            if (deviceExistsNow==false)
+                CP6Functions(0)("Function 265").warn("Device "+e.name+" is not discovered so cannot be updated");
+            else    
+                CP6Functions(0)("Function 265").info("Success!! We are using discovered device:"+ t.name);
+        }           // end: if (isDiscoveringDriver == true) 
+        r = t.capabilities || [];    
         r.forEach(e => {
             e.name = p.safeDecodeName(e.name)
         });
-        const o = s(r, "name"),
+
+    const o = s(r, "name"),
             i = r.map(e => e.name),
-            a = function(e) {
+            a = function(e) {     
                 const t = [e.sensors.getAll(), e.macros.getAll(), e.switches.getAll(), e.sliders.getAll(), e.textlabels.getAll(), e.imageurls.getAll(), e.directories.getAll()];
                 return Array.prototype.concat.apply([], t)
             }(e),
@@ -11981,10 +12074,11 @@ return this._syncFileList();
             }),
             E = 0 < f.length,
             y = 0 < m.length;
-        return u.debug("components changed:", {
+            u.debug("components changed:", {
             added: m,
             updated: f
         }), y || E
+        return {deviceExistsNow}
     }
     const i = r(74),
         s = r(266),
@@ -11996,21 +12090,35 @@ return this._syncFileList();
         p = r(38),
         h = r(268);
     e.exports = {
-        tryAdapterDeviceUpdate: function(e, t) {
-            const r = o(e, t),
-                n = function(e, t) {
-                    const r = e.details;
-                    if (r && t) {
-                        const n = Object.assign({}, e.details);
-                        return r.setup = t.setup || {}, r.timing = t.timing || {}, r.icon = l(t.icon || t.type), r.driverVersion = t.driverVersion, r.deviceCapabilities = t.deviceCapabilities || [], e.reloadCapabilities(), !i(n, r)
-                    }
-                }(e, t),
-                s = r || n;
-            if (s) {
+        tryAdapterDeviceUpdate: async function(e, t) {
+            const {deviceExistsNow } = await o(e, t);
+            
+            const n = function(e, t) {
+                const r = e.details;
+                if (deviceExistsNow && r && t) {
+                    const n = Object.assign({}, e.details);
+
+                    r.setup = t.setup || {};
+                    r.timing = t.timing || {};
+                    r.icon = l(t.icon || t.type);
+                    r.driverVersion = t.driverVersion;
+                    r.deviceCapabilities = t.deviceCapabilities || [];
+                    e.reloadCapabilities();
+                    return !i(n, r);
+                }
+            }(e, t);
+            let result;
+            if (!deviceExistsNow)
+                {CP6Functions(0)("Function 265").verbose("Instructing brain to not update this device")
+                result=0
+                }
+            else
+                result = r || n;
+            if (deviceExistsNow && result) {
                 const r = `Updated device ${e.name} to version ${t.driverVersion} (${e.roomName})`;
                 u.event(r), u.debug(r)
-            }
-            return s
+            }            
+            return result
         }
     }
 }, function(e) {// Function 266 only contains exports = require("lodash/keyBy")
@@ -13692,7 +13800,6 @@ return this._syncFileList();
             }), new f
         }
     }, f.prototype.start = function() {
-console.log("Function 306 prototype start")        
         this.startTime || (this.startTime = Date.now())
     }, f.prototype.markAsDone = function() {
         this.endTime = Date.now(), this.error ? this._reject(this.error) : this._resolve()
@@ -14809,8 +14916,7 @@ console.log("Function 306 prototype start")
                 msg: e.message
             }), new Error("failed to parse components " + e)
         }
-    }
-    const s = r(0)("DeviceFactory"),
+    }    const s = r(0)("DeviceFactory"),
         a = r(18),
         c = r(8),
         u = r(36),
@@ -14820,6 +14926,7 @@ console.log("Function 306 prototype start")
         h = r(131);
     e.exports = {
         build: function(e, t, r, n) {
+            CP6Functions(0)("Function 338").verbose("DeviceFactory e:",e )
             if (!e) throw new Error("missing devicespec");
             const c = new p({
                 name: t,
@@ -21381,7 +21488,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
 
 }, function(e, t, r) {// Function 505 added function past cloud
     "use strict";
-    CP6Functions(0)("Function 505").verbose("Added function past cloud",e)
+    CP6Functions(0)("Function 505").verbose("Functions to leave cloud behind",e)
         //return xx._download({name:MyDevice,url:CloudReplacementUrl  +"?type=irdevices&name="+MyDevice,_downloadDir : "/tmp"})
 
     const c = r(227),

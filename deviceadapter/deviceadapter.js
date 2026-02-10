@@ -2117,7 +2117,7 @@ module.exports = function(t) {
             S.waitingOnPollingAnswer = !1
         })
     }
-}, function(t, r, o) {o(0)("Function  37").verbose("duplicate of 46 with smaller list of buttons ");
+}, function(t, r, o) {o(0)("Function  37").verbose("Buildbuttonmap Chromecast");
     'use strict';
     var n = o(4),
         d = n.keyCodes,
@@ -2135,7 +2135,7 @@ module.exports = function(t) {
             }
         };
     t.exports = n.buildButtonMap(c)
-}, function(t, r, o) {o(0)("Function  38").verbose("duplicate of 46?");
+}, function(t, r, o) {o(0)("Function  38").verbose("Buildbuttonmap for Amazon FireTV");
     'use strict';
     var n = o(4),
         d = n.keyCodes,
@@ -2311,7 +2311,7 @@ module.exports = function(t) {
     t.exports = {
         DEVICE_NAME: 'Brain'
     }
-}, function(t, r, o) {o(0)("Function  42").verbose("CEC ACTIVATE");
+}, function(t, r, o) {o(0)("Function  42").verbose("CEC ACTIVATE (NEEO BrainbuildCECController)");
     'use strict';
     var n = o(4),
         d = n.keyCodes,
@@ -2328,7 +2328,7 @@ module.exports = function(t) {
         MACRO_LEDON: 'LED_ON',
         ONBOOT_SENSOR: 'ONBOOT'
     }
-}, function(t, r, o) {o(0)("Function  44").verbose(" duplicate of 46?");
+}, function(t, r, o) {o(0)("Function  44").verbose(" Buttonmap for PS3");
     'use strict';
     var n = o(4),
         d = n.keyCodes,
@@ -2376,7 +2376,7 @@ module.exports = function(t) {
             "POWER TOGGLE": d.POWER_TOGGLE_FUNCTION
         };
     t.exports = n.buildButtonMap(c)
-}, function(t, r, o) {o(0)("Function  45").verbose(" duplicate of 46?");
+}, function(t, r, o) {o(0)("Function  45").verbose(" Buttonmap fot PS4");
     'use strict';
     var n = o(4),
         d = n.keyCodes,
@@ -2424,7 +2424,7 @@ module.exports = function(t) {
             "POWER TOGGLE": d.POWER_TOGGLE_FUNCTION
         };
     t.exports = n.buildButtonMap(c)
-}, function(t, r, o) {o(0)("Function  46").verbose(" Build a map of buttons");
+}, function(t, r, o) {o(0)("Function  46").verbose(" Build a map of buttons nvidea SHIELD TV");
     'use strict';
     var n = o(4),
         d = n.keyCodes,
