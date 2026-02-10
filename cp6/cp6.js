@@ -7,7 +7,7 @@ if (StartupPath != "/opt/meta")
 
 const path = require('path');
 const {logModules,GlobalLogLevel} = require(path.join(StartupPath,'logComponents'));
-
+const LogThis=0;
 const { metaMessage, LOG_TYPE, LOG_LEVEL,initialiseLogComponents, initialiseLogSeverity,OverrideLoglevel, getLoglevels } = require("/opt/meta/metaMessage");
 function metaLog(message) {
     let initMessage = { component:logModule, ORIGIN:logModule,type:LOG_TYPE.ERROR, content:'', deviceId: "" };
@@ -164,7 +164,7 @@ const currChannelArray = [];
 }, function(e) { // Function 2 Fill constant with NEEO environment variables
     "use strict";
     
-    (function(t) {//CP6Functions(0)("Function 2").verbose("")
+    (function(t) {//CP6Functions(LogThis)("Function 2").verbose("")
         const r = "127.0.0.1",
             n = process.env.IP || "0.0.0.0",
             o = process.env.PORT || 3001,
@@ -439,7 +439,7 @@ const currChannelArray = [];
     }).call(this, "/")
 }, function(e, t, r) { // Function 3 looks like main watchdog, based on statistics
     "use strict";
-    CP6Functions(0)("Function 3").verbose("")
+    CP6Functions(LogThis)("Function 3").verbose("")
     const n = r(2).statistics,
         o = r(190),
         i = new o(n),
@@ -462,7 +462,7 @@ const currChannelArray = [];
     })
 }, function(e, t, r) {// Function 4 Parse/render TR2
     "use strict";
-    CP6Functions(0)("Function 4").verbose("Parse/render TR2")
+    CP6Functions(LogThis)("Function 4").verbose("Parse/render TR2")
 
     function n(e) {
         return o.parse(e), t => o.render(e, t)
@@ -477,7 +477,7 @@ const currChannelArray = [];
 }, function(e) {// Function 6 exports = require("debug")
     e.exports = require("debug")
 }, function(e, t, r) {// Function 7 set various defaults
-    "use strict";CP6Functions(0)("Function 7").verbose("")
+    "use strict";CP6Functions(LogThis)("Function 7").verbose("")
     const n = r(35);
     e.exports = {
         screen: {
@@ -673,7 +673,7 @@ const currChannelArray = [];
     e.exports.COMPONENT_SWITCH_TYPE_NAME = "switch", e.exports.COMPONENT_SLIDER_TYPE_NAME = "slider", e.exports.COMPONENT_MACRO_TYPE_NAME = "button", e.exports.COMPONENT_TEXTLABEL_TYPE_NAME = "textlabel", e.exports.COMPONENT_IMAGEURL_TYPE_NAME = "imageurl", e.exports.COMPONENT_DIRECTORY_TYPE_NAME = "directory", e.exports.COMPONENT_SENSOR_TYPE_NAME = "sensor", e.exports.COMPONENT_WIDGET_TYPE_NAME = "widget", e.exports.COMPONENT_PROCEDURE_TYPE_NAME = "procedure", e.exports.COMPONENT_GAP_TYPE_NAME = "Spacer"
 }, function(e, t, r) {// Function 9 Array with error-messages
     "use strict";
-    CP6Functions(0)("Function 9").verbose("")
+    CP6Functions(LogThis)("Function 9").verbose("")
     const n = r(2),
         o = r(11),
         i = {
@@ -740,7 +740,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 10 notificationfacade
     "use strict";
-    CP6Functions(0)("Function 10").verbose("")
+    CP6Functions(LogThis)("Function 10").verbose("")
     const n = r(6)("cp6:lib:notificationfacade"),
         o = r(69),
         i = r(187),
@@ -755,7 +755,7 @@ const currChannelArray = [];
         constructor() {
             super(), this.notificationSender = new c, this.zwaveEventLog = new i, this.powerSensorListener = new s(this), this.sensorListener = new a(this), this.setMaxListeners(40), this.on(u.NOTIFICATION_PROJECT_CHANGED, () => {
                 this.powerSensorListener.activatePowerStateSensors()
-            }), setInterval(() => {CP6Functions(0)("Function 10").verbose("Timer expired")
+            }), setInterval(() => {CP6Functions(LogThis)("Function 10").verbose("Timer expired")
                 const e = this.eventNames().reduce((e, t) => e + this.listenerCount(t), 0);
                 d.setValue("notification-listener", e)
             }, l)
@@ -768,7 +768,7 @@ const currChannelArray = [];
                 p.error("INIT_FAILED", e.message)
             }
         }
-        socketioinit(e) {CP6Functions(0)("Function 10").verbose("socketioinit");
+        socketioinit(e) {CP6Functions(LogThis)("Function 10").verbose("socketioinit");
             this.notificationSender.socketioinit(e)
         }
         registerIfNotYetRegistered(e, t) {
@@ -790,7 +790,7 @@ const currChannelArray = [];
                 data: t.sensorValue
             })
         }
-        send(e) {CP6Functions(0)("Function 10").verbose("send"+e.type+" "+e.data);
+        send(e) {CP6Functions(LogThis)("Function 10").verbose("send"+e.type+" "+e.data);
             return !(!e || !e.type) && (this.isInternalNotification(e) ? this.handleInternalNotification(e) : (this.zwaveEventLog.logZWaveEvents(e), this.emit(e.type, e.data), this.needsLegacyNotification(e) ? this.sendLegacySensorNotification(e) : this.notificationSender.send(e)))
         }
         resendAll() {
@@ -799,23 +799,23 @@ const currChannelArray = [];
     };
     e.exports = h
 }, function(e) {// Function 11 exports = require("util")
-    CP6Functions(0)("Function 11").verbose("")
+    CP6Functions(LogThis)("Function 11").verbose("")
     e.exports = require("util")
 }, function(e, t, r) {// Function 12 start systeminfo statistics using r(286))
     "use strict";
-    CP6Functions(0)("Function 12").verbose("socketstart systeminfo statistics using r(286))ioinit");
+    CP6Functions(LogThis)("Function 12").verbose("socketstart systeminfo statistics using r(286))ioinit");
     const n = r(2).systeminfo,
         o = new(r(286))(n),
         i = r(6)("cp6:lib:systeminfo:index");
     e.exports = o, e.exports.startTask = function() {
-        CP6Functions(0)("Function 12").verbose("perform exported functions");
+        CP6Functions(LogThis)("Function 12").verbose("perform exported functions");
         return i("start systeminfo staticstics, intervalS", n.flushIntervalSeconds), setInterval(() => {
             i("systemInfo.logAndFlushStatistics"), o.logAndFlushStatistics()
         }, 1e3 * n.flushIntervalSeconds)
     }
 }, function(e, t, r) {// Function 13 Define projects/home directories for various actions/objects
     "use strict";
-    CP6Functions(0)("Function 13").verbose("")
+    CP6Functions(LogThis)("Function 13").verbose("")
 
     function n(e) {
         const t = e.getRoom();
@@ -883,7 +883,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 14 validation routine (single, integer,array,string,lessthanorequal)
     "use strict";
-    CP6Functions(0)("Function 14").verbose("")
+    CP6Functions(LogThis)("Function 14").verbose("")
     const n = r(111),
         o = e.exports = function() {
             //CP6Functions(0)("Function 14").verbose("export")
@@ -891,20 +891,20 @@ const currChannelArray = [];
             if (e) throw new Error("Validation failed: " + JSON.stringify(e))
         };
     o.single = function() {
-        CP6Functions(0)("Function 14").verbose("isSingle")
+        CP6Functions(LogThis)("Function 14").verbose("isSingle")
         const e = n.single.apply(this, arguments);
         if (e) throw new Error("Validation failed: " + JSON.stringify(e))
     }, o.isInteger = function() {
-        CP6Functions(0)("Function 14").verbose("isIntegr")
+        CP6Functions(LogThis)("Function 14").verbose("isIntegr")
         if (!n.isInteger.apply(this, arguments)) throw new Error("Validation failed: no integer")
     }, o.isArray = function() {
-        CP6Functions(0)("Function 14").verbose("isArray")
+        CP6Functions(LogThis)("Function 14").verbose("isArray")
         if (!n.isArray.apply(this, arguments)) throw new Error("Validation failed: no array")
     }, o.isString = function() {
-        CP6Functions(0)("Function 14").verbose("isString")
+        CP6Functions(LogThis)("Function 14").verbose("isString")
         if (!n.isString.apply(this, arguments)) throw new Error("Validation failed: no string")
     }, o.lessThanOrEqualTo = function(e, t) {
-        CP6Functions(0)("Function 14").verbose("isLTOE")
+        CP6Functions(LogThis)("Function 14").verbose("isLTOE")
         if (n({
                 value: e
             }, {
@@ -917,7 +917,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 15 get boolean and integer parm
     "use strict";
-    CP6Functions(0)("Function 15").verbose("");
+    CP6Functions(LogThis)("Function 15").verbose("");
 
     function n(e, t, r, n) {
         let i = o(e, t);
@@ -971,7 +971,7 @@ const currChannelArray = [];
     t.TYPE_TV = "TV", t.TYPE_DVD = "DVD", t.TYPE_VOD = "VOD", t.TYPE_ACCESSOIRE = "ACCESSOIRE", t.TYPE_PROJECTOR = "PROJECTOR", t.TYPE_DVB = "DVB", t.TYPE_SONOS = "SONOS", t.TYPE_AVRECEIVER = "AVRECEIVER", t.TYPE_AUDIO = "AUDIO", t.TYPE_HDMISWITCH = "HDMISWITCH", t.TYPE_GAMECONSOLE = "GAMECONSOLE", t.TYPE_MEDIAPLAYER = "MEDIAPLAYER", t.TYPE_MUSICPLAYER = "MUSICPLAYER", t.TYPE_SOUNDBAR = "SOUNDBAR", t.TYPE_TUNER = "TUNER", t.TYPE_LIGHT = "LIGHT", t.TYPE_THERMOSTAT = "THERMOSTAT", t.TYPE_HVAC = "CLIMA", t.TYPE_UNKNOWN = "UNKNOWN", t.TYPES = [t.TYPE_TV, t.TYPE_DVD, t.TYPE_VOD, t.TYPE_ACCESSOIRE, t.TYPE_PROJECTOR, t.TYPE_DVB, t.TYPE_SONOS, t.TYPE_AVRECEIVER, t.TYPE_AUDIO, t.TYPE_GAMECONSOLE, t.TYPE_MEDIAPLAYER, t.TYPE_MUSICPLAYER, t.TYPE_SOUNDBAR, t.TYPE_TUNER, t.TYPE_LIGHT, t.TYPE_THERMOSTAT, t.TYPE_HDMISWITCH, t.TYPE_HVAC, t.TYPE_UNKNOWN], t.VOLUME_DEVICE_TYPE_PRIORITY = [t.TYPE_HDMISWITCH, t.TYPE_AVRECEIVER, t.TYPE_SOUNDBAR]
 }, function(e, t, r) {// Function 20 interface towards zwave (and rpc)
     "use strict";
-    CP6Functions(0)("Function 20").verbose("");
+    CP6Functions(LogThis)("Function 20").verbose("");
     const n = r(6)("cp6:lib:adapter:index"),
         o = r(2),
         i = r(214),
@@ -1005,8 +1005,8 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 21 DeviceCapability
     "use strict";
-    CP6Functions(0)("Function 21").verbose("e",e)
-    CP6Functions(0)("Function 21").verbose("t",t)
+    CP6Functions(LogThis)("Function 21").verbose("e",e)
+    CP6Functions(LogThis)("Function 21").verbose("t",t)
 
     function n(e) {
         this.name = e.name, this.check = e.check, this.options = e.options || {}
@@ -1331,7 +1331,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 22 key handler
     "use strict";
-    CP6Functions(0)("Function 22").verbose("");
+    CP6Functions(LogThis)("Function 22").verbose("");
     const n = r(260);
     let o = n;
     const i = e.exports = function(e, t) {
@@ -1363,7 +1363,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 23 fill local variables based on params
     "use strict";
-    CP6Functions(0)("Function 23").verbose("");
+    CP6Functions(LogThis)("Function 23").verbose("");
     const n = r(11),
         o = r(22),
         i = e.exports = function(e) {
@@ -1380,19 +1380,19 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 24 new r(186))(r(2).account)
     //"use strict";
-    CP6Functions(0)("Function 24").verbose("");
+    CP6Functions(LogThis)("Function 24").verbose("");
     const n = r(2).account,   //account: {duiroFormatVersion: "V1"},
         o = new(r(186))(n);   //new(entire Cloud-handler)(){duiroFormatVersion: "V1"})
     e.exports = o
 }, function(e, t) {// Function 25 set (init?) various notificatio fields 
     //"use strict";
-    //CP6Functions(0)("Function 25").verbose("");
+    //CP6Functions(LogThis)("Function 25").verbose("");
     t.NOTIFICATION_ACTIVE_NOW_CHANGED = "active-now-changed", t.NOTIFICATION_ACTIVE_SCENARIOS_CHANGED = "active-scenarios", t.NOTIFICATION_PUSH_ACTION = "push-action", t.NOTIFICATION_PROJECT_CHANGED = "projectchanged", t.NOTIFICATION_DEVICE_SENSOR_UPDATE = "DEVICE_SENSOR_UPDATE", t.NOTIFICATION_CEC_POWERSTATE = "NEEO_CEC_POWERSTATE", t.PROJECT_NAME = "home", t.PROJECT_VERSION = "1.0.10"
 }, function(e) {// Function 26 exports = require("fs")
     e.exports = require("fs")
 }, function(e, t, r) {// Function 27 Looks like HUGE!!! general "activation / setup" routines.
     "use strict";
-    CP6Functions(0)("Function 27").verbose("");
+    CP6Functions(LogThis)("Function 27").verbose("");
 
     function n(e) {
         return p.resolve(U.build(e.project)).then(e => (e.setActive(), e.activate()))
@@ -1459,7 +1459,7 @@ const currChannelArray = [];
             t.addRoom(E.build(e))
         }), y.validateAndClean(t), O.increaseCounter("project-build"), t
     }, U.load = function() {
-        CP6Functions(0)("Function 27").verbose("Load project",{} );
+        CP6Functions(LogThis)("Function 27").verbose("Load project",{} );
         return A.loadLatestProject().then(e => U.build(e.project))
     }, U.createDefault = function(e) {
         const t = new U({
@@ -1632,9 +1632,9 @@ const currChannelArray = [];
     }, U.prototype.getDeviceByKey = function(e) {
         return this.getDevices().find(t => t.getKey() === e)
     }, U.prototype.getDeviceByName = function(e) {
-        return CP6Functions(0)("27").verbose("in getbyname"),this.getDevices().find(t =>t.getName() === e)
+        return CP6Functions(LogThis)("27").verbose("in getbyname"),this.getDevices().find(t =>t.getName() === e)
     }, U.prototype.getDeviceByadapterDeviceId = function(e) {
-        return CP6Functions(0)("27").verbose("in getDeviceByadapterDeviceId"),this.getDevices().find(t => t.adapterDeviceId.trim() === e.trim() )
+        return CP6Functions(LogThis)("27").verbose("in getDeviceByadapterDeviceId"),this.getDevices().find(t => t.adapterDeviceId.trim() === e.trim() )
     }, U.prototype.getSensors = function(e) {
         return u(this.getDevices().map(t => t.getSensors(e)))
     }, U.prototype.getSensorByEventKey = function(e) {
@@ -1678,7 +1678,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 28 Get various layout settings
     "use strict";
-    CP6Functions(0)("Function 29").verbose("");
+    CP6Functions(LogThis)("Function 29").verbose("");
 
     function n() {
         return o.useProUI()
@@ -1850,7 +1850,7 @@ const currChannelArray = [];
     e.exports = require("lodash/values")
 }, function(e, t, r) {// Function 30 roles?
     "use strict";
-    CP6Functions(0)("Function 30").verbose("");
+    CP6Functions(LogThis)("Function 30").verbose("");
     const n = r(125),
         o = r(229),
         i = r(19);
@@ -1863,11 +1863,11 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 31 JN5168 Bootstrap
     "use strict";
-    CP6Functions(0)("Function 31").verbose("JN5168 Bootstrap");
+    CP6Functions(LogThis)("Function 31").verbose("JN5168 Bootstrap");
 
     function n(e) {
         return function(e) {
-            CP6Functions(0)("Function 31").verbose("function n "+  c.port + " "+ c.jn5168Port,e);
+            CP6Functions(LogThis)("Function 31").verbose("function n "+  c.port + " "+ c.jn5168Port,e);
 
             return e ? o.resolve("http://" + e.nbr_web_server + ":" + c.jn5168Port) : o.reject(new Error("INVALID_NBR_FILE_DETECTED"))
         }(e).then(e => (d.baseUrl = e, a.debug("NBR_IPV6_ADDR_FOUND", d.baseUrl), d.sendAirkey())).then(() => {
@@ -1902,8 +1902,8 @@ const currChannelArray = [];
             var e
         }
         a.debug("BOOTSTRAP_JN5168");
-        //CP6Functions(0)("Function 31").verbose("bootstrapJn5168 II");
-        CP6Functions(0)("Function 31 (Outdated)").verbose("bootstrapJn5168 e:",e);
+        //CP6Functions(LogThis)("Function 31").verbose("bootstrapJn5168 II");
+        CP6Functions(LogThis)("Function 31 (Outdated)").verbose("bootstrapJn5168 e:",e);
         return o.resolve();
 /*    const t = c.jn5168RestIpv6File;
         return h = setInterval(() => {
@@ -1916,7 +1916,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 32 Analyse json structure for returncode
     "use strict";
-    CP6Functions(0)("Function 32").verbose("");
+    CP6Functions(LogThis)("Function 32").verbose("");
     const n = r(1),
         o = r(117),
         i = /application\/json;/;
@@ -1950,13 +1950,13 @@ const currChannelArray = [];
     }
 }, function(e, t) {// Function 33 Set (init) various power-fields
     "use strict";
-    CP6Functions(0)("Function 33").verbose("");
+    CP6Functions(LogThis)("Function 33").verbose("");
     t.MACRO_POWER_ON = "POWER ON", t.MACRO_POWER_OFF = "POWER OFF", t.MACRO_POWER_TOGGLE = "POWER TOGGLE", t.MACRO_POWER_TOGGLE_ON = "POWER TOGGLE ON", t.MACRO_POWER_TOGGLE_OFF = "POWER TOGGLE OFF", t.MACRO_VOLUME_UP = "VOLUME UP", t.MACRO_VOLUME_DOWN = "VOLUME DOWN", t.MACRO_MUTE_OFF = "MUTE OFF", t.MACRO_MUTE_ON = "MUTE ON", t.MACRO_MUTE_TOGGLE = "MUTE TOGGLE", t.MACRO_INPUT_TV = "INPUT TUNER 1", t.DISCRETE_POWER_ON_MACROS = [t.MACRO_POWER_ON, t.MACRO_POWER_TOGGLE_ON], t.DISCRETE_POWER_OFF_MACROS = [t.MACRO_POWER_OFF, t.MACRO_POWER_TOGGLE_OFF], t.DISCRETE_POWER_MACROS = [...t.DISCRETE_POWER_ON_MACROS, ...t.DISCRETE_POWER_OFF_MACROS], t.TEST_IS_POWER_ON = /POWER ON/, t.TEST_IS_POWER_OFF = /POWER OFF/, t.TEST_IS_POWER_TOGGLE = /POWER TOGGLE/, t.TEST_IS_SOURCE_SWITCH = /INPUT .+/, t.TEST_IS_VOLUME = /^(VOLUME|MUTE)/, t.isVolume = function(e) {
         return t.TEST_IS_VOLUME.test(e)
     }
 }, function(e, t, r) {// Function 34 execute ... generic function to execute (scropts in a?) file
     "use strict";
-    CP6Functions(0)("Function 34").verbose("");
+    CP6Functions(LogThis)("Function 34").verbose("");
     const n = r(1),
         o = r(138).execFile,
         i = r(0)("execute");
@@ -1964,7 +1964,7 @@ const currChannelArray = [];
 
         execFile: function(e, t, r) {
             const s = {};
-            CP6Functions(0)("Function 34").verbose("Exec",e,t);
+            CP6Functions(LogThis)("Function 34").verbose("Exec",e,t);
             return e ? t && !Array.isArray(t) ? n.reject(new Error("Args parameter must be an array")) : (r && (s.timeout = r), t && !t.every(e => {
                 const t = typeof e;
                 return "boolean" == t || "string" == t || "number" == t
@@ -1991,7 +1991,7 @@ const currChannelArray = [];
     }
 }, function(e) {// Function 35 default settings for a room.. .and much more.....
     "use strict";
-    CP6Functions(0)("Function 35").verbose("");
+    CP6Functions(LogThis)("Function 35").verbose("");
 
     function t(e) {
         if (this.chr = e.chr, this.font = e.font || i, this.color = e.color || s, this.activeColor = e.activeColor || a, !this.chr) throw new Error("icon char is required!")
@@ -2398,7 +2398,7 @@ const currChannelArray = [];
     }, e.exports.touchActiveColor = a
 }, function(e) {// Function 36 some default settings... structure unknown
     "use strict";
-    CP6Functions(0)("Function 36").verbose("");
+    CP6Functions(LogThis)("Function 36").verbose("");
     const t = "manual",
         r = "assumption",
         n = "smartener";
@@ -2412,7 +2412,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 37 sync-read various files 
     "use strict";
-    CP6Functions(0)("Function 37").verbose("e",e);
+    CP6Functions(LogThis)("Function 37").verbose("e",e);
     const n = r(26),
         o = r(2).fileRepoPath;
     t.loadNoCloudFile = function(e) {
@@ -2420,7 +2420,7 @@ const currChannelArray = [];
         return n.readFileSync(e, {
             encoding: "utf-8"
         })}
-        catch (err) {CP6Functions(0)("Function 37").verbose("Catch",err)}
+        catch (err) {CP6Functions(LogThis)("Function 37").verbose("Catch",err)}
 },     t.loadTr2File = function(e) {
         return n.readFileSync(o + "/tr2/" + e, {
             encoding: "utf-8"
@@ -2443,7 +2443,7 @@ const currChannelArray = [];
     }
 }, function(e) {// Function 38 safeDecodeName (decodeURIComponent)
     "use strict";
-    CP6Functions(0)("Function 38").verbose("");
+    CP6Functions(LogThis)("Function 38").verbose("");
     e.exports = {
         safeDecodeName: function(e) {
             try {
@@ -2455,7 +2455,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 39  Router: routes.device
     "use strict";
-    CP6Functions(0)("Function 39").verbose("");
+    CP6Functions(LogThis)("Function 39").verbose("");
 
     function n(e) {
         return {
@@ -2494,7 +2494,7 @@ const currChannelArray = [];
     }), i.get("/", function(e, t) {
         /true/.test(e.query.nocomponents) ? t.json(e.room.getDevices().map(n)) : t.json(e.room.getDevices())
     }), i.get("/:device_key/subscribe", function(e, t, r) {
-        CP6Functions(0)("Function 39").verbose("Router: route devices -subscribe");
+        CP6Functions(LogThis)("Function 39").verbose("Router: route devices -subscribe");
         l.subscribe(e.device).then(() => {
             t.json(_)
         }).catch(r)
@@ -2503,7 +2503,7 @@ const currChannelArray = [];
             t.json(_)
         }).catch(r)
     }), i.get("/:device_key/getdirectoryrootitems", function(e, t) {
-        CP6Functions(0)("Function 39").verbose("Router: routes.device - getdirectoryrootitems");
+        CP6Functions(LogThis)("Function 39").verbose("Router: routes.device - getdirectoryrootitems");
         e.device.getDirectoryRootItems().then(e => {
             t.json(e)
         })
@@ -2642,7 +2642,7 @@ const currChannelArray = [];
     e.exports = require("crypto")
 }, function(e, t, r) {// Function 42 SETTINGSREPO; check various errors from e.message
     "use strict";
-    CP6Functions(0)("Function 42").verbose("");
+    CP6Functions(LogThis)("Function 42").verbose("");
 
     function n(e, t) {
         return u.load(l).then(r => {
@@ -2745,14 +2745,14 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 43 retrieve various localc stored variables (this.)
     "use strict";
-    CP6Functions(0)("Function 43").verbose("");
+    CP6Functions(LogThis)("Function 43").verbose("");
     const n = r(77),
         o = r(33),
         i = e.exports = function(e, t) {
             this.name = e, t.actions ? (this.actions = t.actions, this.component = null, 1 === t.actions.length && t.actions[0].label && (this.label = t.actions[0].label)) : (this.component = t.component, this.actions = null), this.execArg = t.execArg, this.delay = t.delay || 0, this.smartAction = "boolean" != typeof t.smartAction || t.smartAction
         };
     i.buildActionOfActions = function(e, t) {
-        CP6Functions(0)("Function 43").verbose("buildActionOfActions");
+        CP6Functions(LogThis)("Function 43").verbose("buildActionOfActions");
         return new i(e, {
             actions: t
         })
@@ -2760,11 +2760,11 @@ const currChannelArray = [];
         const a = t && t.getDevice();
         if (n(s) && a) {
             const e = t.getName();
-            CP6Functions(0)("Function 43").verbose("buildActionOfComponent component",e);
-            CP6Functions(0)("Function 43").verbose("buildActionOfComponent action",t);
+            CP6Functions(LogThis)("Function 43").verbose("buildActionOfComponent component",e);
+            CP6Functions(LogThis)("Function 43").verbose("buildActionOfComponent action",t);
             o.TEST_IS_POWER_ON.test(e) ? s = a.getStandbyCommandDelay() : o.TEST_IS_POWER_OFF.test(e) ? s = a.getShutdownDelay() : o.TEST_IS_POWER_TOGGLE.test(e) ? s = Math.max(a.getStandbyCommandDelay(), a.getShutdownDelay()) : o.TEST_IS_SOURCE_SWITCH.test(e) && (s = a.getSourceSwitchDelay())
         }
-            CP6Functions(0)("Function 43").verbose("buildActionOfComponent 2 device",a.name);
+            CP6Functions(LogThis)("Function 43").verbose("buildActionOfComponent 2 device",a.name);
         return new i(e, {
 //            device: e.device.key,
             component: t,
@@ -2772,7 +2772,7 @@ const currChannelArray = [];
             delay: s
         })
     }, i.buildFavoriteAction = function(e, t, r) {
-        CP6Functions(0)("Function 43").verbose("buildFavoriteAction");
+        CP6Functions(LogThis)("Function 43").verbose("buildFavoriteAction");
         return new i(e, {
             component: t,
             delay: r,
@@ -2812,7 +2812,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 44 startNotificationListener (various), initialise pm2 statistics, reloadAvahi, disableAccesspointMode, UserBlink 
     "use strict";
-    CP6Functions(0)("Function 44").verbose("");
+    CP6Functions(LogThis)("Function 44").verbose("");
     const n = r(2),
         o = r(347),
         i = r(348),
@@ -2830,7 +2830,7 @@ const currChannelArray = [];
         wifi: g,
         finalsystemtest: c,
         startNotificationListener: function(e) {
-            CP6Functions(0)("Function 44").verbose("StartNotificationListeners");
+            CP6Functions(LogThis)("Function 44").verbose("StartNotificationListeners");
             l("startNotificationListener", d.NOTIFICATION_PROJECT_CHANGED), u.on(d.NOTIFICATION_PROJECT_CHANGED, () => {
                 l("avahi notification"), h.notificationProjectReload({
                     projectLabel: e.label,
@@ -2846,7 +2846,7 @@ const currChannelArray = [];
             return l("start pm2 statistics"), s.startBrainStats(), l("warm up the wifi scanner"), g.scan(), g.loadCredentials()
         },
         reloadAvahi: function() {
-            CP6Functions(0)("Function 44").verbose("ReloadAvahi skipping for now"); ///#####
+            CP6Functions(LogThis)("Function 44").verbose("ReloadAvahi skipping for now"); ///#####
             return;
             return h.reloadAvahi()
         },
@@ -2859,7 +2859,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 45 startNotificationListener
     "use strict";
-    CP6Functions(0)("Function 45").verbose("");
+    CP6Functions(LogThis)("Function 45").verbose("");
     const n = r(6)("cp6:lib:devicespecs:index"),
         o = r(56),
         i = r(2).devicespecs,
@@ -2872,7 +2872,7 @@ const currChannelArray = [];
         })
     }
 }, function(e, t, r) {// Function 46 neeo:viewbuilder / setCustomLogger
-    CP6Functions(0)("Function 46").verbose("");
+    CP6Functions(LogThis)("Function 46").verbose("");
 
 
     "use strict";
@@ -2924,7 +2924,7 @@ const currChannelArray = [];
     e.exports = require("lodash/merge")
 }, function(e, t, r) {// Function 49 Macro interfaces
     "use strict";
-    CP6Functions(0)("Function 49").verbose("");
+    CP6Functions(LogThis)("Function 49").verbose("");
     const n = r(11),
         o = r(0)("Macro"),
         i = r(23),
@@ -2980,7 +2980,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 50 implementation of getDevice, getComponentType, triggered
     "use strict";
-    CP6Functions(0)("Function 50").verbose("");
+    CP6Functions(LogThis)("Function 50").verbose("");
     const n = r(11),
         o = r(22),
         i = r(3),
@@ -2998,7 +2998,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 51 implementation of reloadSchedulerService, buildRecipe, getRecipeCookBook
     "use strict";
-    CP6Functions(0)("Function 51").verbose("");
+    CP6Functions(LogThis)("Function 51").verbose("");
     const n = r(280),
         o = r(79),
         i = r(146),
@@ -3020,7 +3020,7 @@ const currChannelArray = [];
     }, e.exports.TYPE_LAUNCH = s.TYPE_LAUNCH, e.exports.TYPE_POWEROFF = s.TYPE_POWEROFF, e.exports.STEP_TYPE_CONTROLS = o.TYPE_CONTROLS, e.exports.STEP_TYPE_ACTION = s.STEP_TYPE_ACTION
 }, function(e, t, r) {// Function 52 o = new(r(305))(r(2).actionexecutor);
     "use strict";
-    CP6Functions(0)("Function 52").verbose("");
+    CP6Functions(LogThis)("Function 52").verbose("");
     const n = r(2).actionexecutor,
         o = new(r(305))(n);
     e.exports = o
@@ -3030,11 +3030,11 @@ const currChannelArray = [];
     e.exports = require("parse/node")
 }, function(e) {// Function 55 various "TYPE" definitions
     "use strict";
-    //CP6Functions(0)("Function 53").verbose("");
+    //CP6Functions(LogThis)("Function 53").verbose("");
     e.exports.TYPE_ARRAY = "array", e.exports.TYPE_RANGE = "range", e.exports.TYPE_BINARY = "binary", e.exports.TYPE_KEYPAD = "keypad", e.exports.TYPE_STRING = "string", e.exports.TYPE_CUSTOM = "custom", e.exports.TYPE_POWERSTATE = "power", e.exports.RECIPE_SUPPORTED_TYPES = [e.exports.TYPE_RANGE, e.exports.TYPE_BINARY, e.exports.TYPE_POWERSTATE], e.exports.TYPE_BINARY_TRUE = !0, e.exports.TYPE_BINARY_FALSE = !1, e.exports.SENSOR_BINARY_VALID_VALUES = [e.exports.TYPE_BINARY_TRUE, e.exports.TYPE_BINARY_FALSE]
 }, function(e, t) {// Function 56 DeviceFileManager ;set payhs for sync and synced
     "use strict";
-    CP6Functions(0)("Function 56").verbose("");
+    CP6Functions(LogThis)("Function 56").verbose("");
     const r = t.FILE_DEVICES = "devices.json",
         n = t.FILE_CHANNELS = "channels.json";
     t.FILE_LIST = [r, n];
@@ -3042,13 +3042,13 @@ const currChannelArray = [];
     t.NOTIFICATION_SYNC = o + "sync", t.NOTIFICATION_SYNCED = o + "synced"
 }, function(e, t, r) {// Function 57 r(196))(r(2).store)
     "use strict";
-    CP6Functions(0)("Function 57").verbose("");
+    CP6Functions(LogThis)("Function 57").verbose("");
     const n = r(2),
         o = new(r(196))(n.store);
     e.exports = o
 }, function(e) {// Function 58 iconify function.
     "use strict";
-    CP6Functions(0)("Function 58").verbose("");
+    CP6Functions(LogThis)("Function 58").verbose("");
     e.exports = {
         iconify: function(e) {
             return void 0 === e || "string" != typeof e ? void 0 : e.toLowerCase()
@@ -3056,7 +3056,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 59 loadViewbuilderFile, viewbuilder
     "use strict";
-    CP6Functions(0)("Function 59").verbose("");
+    CP6Functions(LogThis)("Function 59").verbose("");
 
     function n(e) {
         return s.loadViewbuilderFile(`definitions/${e}.json`)
@@ -3110,7 +3110,7 @@ const currChannelArray = [];
 }, function(e) {// Function 60 implementation of getMacrosByNames, getMacrosByRegex, getGenericMacrosByRegex
     "use strict";
 
-    CP6Functions(0)("Function 60").verbose("");
+    CP6Functions(LogThis)("Function 60").verbose("");
     function t(e, t) {
         return e[t.name] = t, e
     }
@@ -3212,7 +3212,7 @@ const currChannelArray = [];
     e.exports = a
 }, function(e, t, r) {// Function 62 handler for sensors
     "use strict";
-    CP6Functions(0)("Function 62").verbose("");
+    CP6Functions(LogThis)("Function 62").verbose("");
     const n = r(1),
         o = r(11),
         i = r(0)("Sensor"),
@@ -3239,20 +3239,20 @@ const currChannelArray = [];
     }, u.prototype.getDeviceIcon = function() {
         return this.device ? this.device.getIconName().toLowerCase() : void 0
     }, u.prototype.setCachedValue = function(e) {
-        CP6Functions(0)("Function 62").verbose("SetCachedValue ")
+        CP6Functions(LogThis)("Function 62").verbose("SetCachedValue ")
         this._valueExpiration = void 0, i.debug("SENSOR_CACHED_VALUE_UPDATED", {
             name: this.name
         }), this._valuePromise = n.resolve(e)
     }, u.prototype.getCachedValue = function() {
-        CP6Functions(0)("Function 62").debug("GetCachedValue")
+        CP6Functions(LogThis)("Function 62").debug("GetCachedValue")
         return (this._valueExpiration == undefined || this._valueExpiration < Date.now()) && (i.debug("SENSOR_CACHED_EXPIRED"), this._valuePromise = void 0, this._valueExpiration = void 0), this._valuePromise ? this._valuePromise : (i.debug("SENSOR_CACHED_VALUE_NOT_SET", {
             name: this.name
         }),  this.getValue())
     }, u.prototype.getValue = function() {
-        CP6Functions(0)("Function 62").debug("getValue; now calling deviceadapter to get this value", this.name)
+        CP6Functions(LogThis)("Function 62").debug("getValue; now calling deviceadapter to get this value", this.name)
         return this._valuePromise = c.getValue(this), i.debug("SENSOR_CACHED_VALUE_USING_NEXT_GET_VALUE", { // ###
             name: this.name
-        }), this._valuePromise.catch(() => {CP6Functions(0)("Function 62").verbose("Err.catch valuepromise");
+        }), this._valuePromise.catch(() => {CP6Functions(LogThis)("Function 62").verbose("Err.catch valuepromise");
             this._valueExpiration = Date.now() + 6e4
         }),  this._valuePromise
     }, u.prototype.toJSON = function() {
@@ -3274,25 +3274,25 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 63 interval defaults
     "use strict";
-    CP6Functions(0)("Function 63").verbose("");
+    CP6Functions(LogThis)("Function 63").verbose("");
     const n = r(55);
     e.exports.VALID_INTERVAL_UNITS = {
         second: 1
     }, e.exports.MAXIMAL_INTERVAL_TIME_S = 2147482, e.exports.MINIMAL_INTERVAL_TIME_S = 60, e.exports.MAXIMAL_INTERVAL_TIME_MS = 2147483647, e.exports.MINIMAL_INTERVAL_TIME_MS = 6e4, e.exports.VALID_CONDITION_SENSOR_TYPES = [n.TYPE_POWERSTATE, n.TYPE_BINARY, n.TYPE_RANGE, n.TYPE_KEYPAD], e.exports.BINARY_SENSOR_TYPES = [n.TYPE_POWERSTATE, n.TYPE_BINARY], e.exports.CONDITION_COMPARISON_LT = "lt", e.exports.CONDITION_COMPARISON_GT = "gt", e.exports.CONDITION_COMPARISON_EQ = "equal", e.exports.CONDITION_SENSOR_COMPARISONS = [e.exports.CONDITION_COMPARISON_LT, e.exports.CONDITION_COMPARISON_GT, e.exports.CONDITION_COMPARISON_EQ], e.exports.VALID_BINARY_SENSOR_COMPARISONS = [e.exports.CONDITION_COMPARISON_EQ], e.exports.VALID_KEYPAD_SENSOR_COMPARISONS = [e.exports.CONDITION_COMPARISON_EQ], e.exports.CONDITION_TIME_COMPARISONS = [e.exports.CONDITION_COMPARISON_LT, e.exports.CONDITION_COMPARISON_GT], e.exports.CONDITION_TYPE_ICON = "icon", e.exports.CONDITION_TYPE_TIME = "time", e.exports.CONDITION_TYPE_INTERVAL = "interval", e.exports.CONDITION_TYPE_SENSOR = "sensor", e.exports.TRIGGER_CONDITION_TYPES = [e.exports.CONDITION_TYPE_ICON, e.exports.CONDITION_TYPE_TIME, e.exports.CONDITION_TYPE_INTERVAL, e.exports.CONDITION_TYPE_SENSOR], e.exports.OPTIONAL_CONDITION_TYPES = [e.exports.CONDITION_TYPE_TIME, e.exports.CONDITION_TYPE_SENSOR]
 }, function(e, t, r) {// Function 64 convert TR2-messages to/from coap communication ( called from (84)
     "use strict";
-    CP6Functions(0)("Function 64").verbose("");
+    CP6Functions(LogThis)("Function 64").verbose("");
     const n = r(0)("TR2_COAP_TRANSFORM"),
         o = r(380),
         i = r(163),
         s = r(114);
     e.exports = {
         answerForTr2: function(e, t) {
-            CP6Functions(0)("Function 64").verbose("TR2 answerForTr2")
+            CP6Functions(LogThis)("Function 64").verbose("TR2 answerForTr2")
 
             if (t && t.body && e) {
                 if (c(t)) {
-                    CP6Functions(0)("Function 64").verbose("TR2 already xml",t.body)
+                    CP6Functions(LogThis)("Function 64").verbose("TR2 already xml",t.body)
 
                     return n.debug("response is already xml, try to remove newlines and whitespaces between tags"), t.body.replace(/\>\s+</g, "><").replace(/\n/g, "")
                 }
@@ -3312,7 +3312,7 @@ const currChannelArray = [];
             n.debug("no payload / payload.body / requestUrl")
         },
         transliterationToAscii: function(e) {
-            CP6Functions(0)("Function 64").debug("transliterationToAscii")
+            CP6Functions(LogThis)("Function 64").debug("transliterationToAscii")
 
             return e ? function(e) {
                 return e.split("").map(e => {
@@ -3322,7 +3322,7 @@ const currChannelArray = [];
             }(e) : void 0
         },
         compress: function(e) {
-            CP6Functions(0)("Function 64-TR2").verbose("deflatesync",e)
+            CP6Functions(LogThis)("Function 64-TR2").verbose("deflatesync",e)
 
             return s.deflateSync(e)
         }
@@ -3359,7 +3359,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 66 TR2 get functions getTr2FunctionText, getTr2VisibleText, getTr2VisibleTextFromFunctionEncoded
     "use strict";
-    CP6Functions(0)("Function 66").verbose("");
+    CP6Functions(LogThis)("Function 66").verbose("");
     const n = r(406);
     e.exports = {
         getTr2FunctionText: function(e) {
@@ -3376,7 +3376,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 67 tr2-getsensorvalue 
     "use strict";
-    CP6Functions(0)("Function 67").verbose("");
+    CP6Functions(LogThis)("Function 67").verbose("");
     const n = r(0)("tr2-guidata-sensor");
     e.exports = {
         getSensorValue: function(e) {
@@ -3385,7 +3385,7 @@ const currChannelArray = [];
                 value: ""
             };
             const t = e.sensor;
-            CP6Functions(0)("Function 67").debug("calling t.getCachedValue() ( = F 62)");
+            CP6Functions(LogThis)("Function 67").debug("calling t.getCachedValue() ( = F 62)");
             return t.getCachedValue().then(t => ({
                 component: e,
                 value: t
@@ -3401,7 +3401,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 68 export new(r(437))
     "use strict";
-    CP6Functions(0)("Function 68").verbose("")
+    CP6Functions(LogThis)("Function 68").verbose("")
     const n = new(r(437));
     e.exports = n
 }, function(e) {// Function 69 exports = require("events")
@@ -3410,7 +3410,7 @@ const currChannelArray = [];
     e.exports = require("lodash/defaults")
 }, function(e, t, r) {// Function 71 key handler for NEEO.com
     "use strict";
-    CP6Functions(0)("Function 71").verbose("")
+    CP6Functions(LogThis)("Function 71").verbose("")
     const n = r(216),
         o = r(41),
         i = r(1),
@@ -3480,7 +3480,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 72 startNotificationListener for DeviceFileManager
     "use strict";
-    CP6Functions(0)("Function 72").verbose("");
+    CP6Functions(LogThis)("Function 72").verbose("");
     const n = r(2).devicefilemanager,
         o = r(225),
         i = r(56),
@@ -3495,7 +3495,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 73 generic comparison funcit0ns (not, or, and)
     "use strict";
-    CP6Functions(0)("Function 73").verbose("");
+    CP6Functions(LogThis)("Function 73").verbose("");
 
     function n(e) {
         return t => t instanceof Array ? !!t.length && t.some(e) : e(t)
@@ -3570,7 +3570,7 @@ const currChannelArray = [];
     e.exports = require("lodash/difference")
 }, function(e, t, r) {// Function 76 exports r(287))(r(2).firmware);
     "use strict";
-    CP6Functions(0)("Function 76").verbose("");
+    CP6Functions(LogThis)("Function 76").verbose("");
     const n = r(2).firmware,
         o = new(r(287))(n);
     e.exports = o
@@ -3580,7 +3580,7 @@ const currChannelArray = [];
     e.exports = require("fast-url-parser")
 }, function(e, t, r) {// Function 79 various functions for implementing recipestep
     "use strict";
-    CP6Functions(0)("Function 79").verbose("");
+    CP6Functions(LogThis)("Function 79").verbose("");
 
     function n(e) {
         this.label = e.label, this.validate()
@@ -3644,7 +3644,7 @@ const currChannelArray = [];
         if (!this.address) throw new Error("validation failed: `address` is missing");
         if (!this.text) throw new Error("validation failed: `text` is missing")
     }, o.prototype.execute = function() {
-        CP6Functions(0)("Function 79").verbose("getAction");
+        CP6Functions(LogThis)("Function 79").verbose("getAction");
         return p({
             getAction: () => ({
                 email: this.address,
@@ -3672,7 +3672,7 @@ const currChannelArray = [];
         if (!t) throw new Error("Could not execute `ActionStep`: device " + this.deviceKey + " not found");
         return t
     }, i.prototype.execute = function(e, t) {
-        CP6Functions(0)("Function 79").verbose("execute");
+        CP6Functions(LogThis)("Function 79").verbose("execute");
         const r = this.getDevice(t).getComponentByName(this.componentName, !0);
         if (!r) throw new Error("Could not execute `ActionStep`: component " + this.componentName + " not found");
         const n = this.execArg || r.execArg || null;
@@ -3741,7 +3741,7 @@ const currChannelArray = [];
     }, e.exports.TYPE_ACTION = i.TYPE, e.exports.TYPE_EMAIL = o.TYPE, e.exports.TYPE_DELAY = s.TYPE, e.exports.TYPE_VOLUME = a.TYPE, e.exports.TYPE_CONTROLS = c.TYPE
 }, function(e, t, r) {// Function 80 BaseTrigger
     "use strict";
-    CP6Functions(0)("Function 80").verbose("");
+    CP6Functions(LogThis)("Function 80").verbose("");
     const n = r(16),
         o = r(147);
     class i {
@@ -3774,7 +3774,7 @@ const currChannelArray = [];
     e.exports = i
 }, function(e, t, r) {// Function 81 various functions for implementing recipe
     "use strict";
-    CP6Functions(0)("Function 81").verbose("");
+    CP6Functions(LogThis)("Function 81").verbose("");
     const n = r(16),
         o = r(11),
         i = r(0)("recipe"),
@@ -3959,7 +3959,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 82 various functions for implementing ItemStore
     "use strict";
-    CP6Functions(0)("Function 82").verbose("");
+    CP6Functions(LogThis)("Function 82").verbose("");
     const n = r(16),
         o = r(22),
         i = e.exports = function(e) {
@@ -4018,7 +4018,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 83 projectnotification
     "use strict";
-    CP6Functions(0)("Function 83").verbose("");
+    CP6Functions(LogThis)("Function 83").verbose("");
     const n = r(10),
         o = r(25),
         i = r(6)("cp6:lib:projectnotification"),
@@ -4054,10 +4054,10 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 84 tr2coapserver (84)
     "use strict";
-    CP6Functions(0)("Function 84").verbose("tr2coapserver");
+    CP6Functions(LogThis)("Function 84").verbose("tr2coapserver");
 
     function n(e) {
-        CP6Functions(0)("Function 84").verbose("handleWifiRequest=>443");
+        CP6Functions(LogThis)("Function 84").verbose("handleWifiRequest=>443");
 
         return d.handleWifiRequest(e).catch(() => {})
     }
@@ -4088,7 +4088,7 @@ const currChannelArray = [];
             })
         },
         startTask: function() {
-            CP6Functions(0)("Function 84").verbose("START_TR2_SERVER");
+            CP6Functions(LogThis)("Function 84").verbose("START_TR2_SERVER");
         
             i.debug("START_TR2_SERVER"), p.bind(), E.bind(), f.startNbrSync()
         },
@@ -4101,7 +4101,7 @@ const currChannelArray = [];
     }, E.on("ipv6coapaddress", e => {
         f.registerIpv6Address(e)
     }), E.on("serverstarted", () => {
-        CP6Functions(0)("Function 84").verbose("TR2_COAPSERVER_STARTED");
+        CP6Functions(LogThis)("Function 84").verbose("TR2_COAPSERVER_STARTED");
 
         i.debug("TR2_COAPSERVER_STARTED")
     }), E.on("error", e => {
@@ -4111,7 +4111,7 @@ const currChannelArray = [];
     }), E.on("invalidrequest", e => {
         i.warn("COAP_INVALID_PARAMETER", e)
     }), p.on("udprequest", (e, t) => {
-        CP6Functions(0)("Function 84").verbose("TR2 Send UDP-request, payload",e.toString("utf8"),"from IP@",t.address + ":" + t.port)
+        CP6Functions(LogThis)("Function 84").verbose("TR2 Send UDP-request, payload",e.toString("utf8"),"from IP@",t.address + ":" + t.port)
         i.debug("udp request from", t.address + ":" + t.port), n(e.toString("utf8"))
     }), p.on("serverstarted", e => {
         i.debug("TR2_UDPSERVER_STARTED", e)
@@ -4120,7 +4120,7 @@ const currChannelArray = [];
     })
 }, function(e, t, r) {// Function 85  Router: routes.room 
     "use strict";
-    CP6Functions(0)("Function 85").verbose("");
+    CP6Functions(LogThis)("Function 85").verbose("");
     const n = r(5),
         o = r(14),
         i = n.Router(),
@@ -4130,11 +4130,11 @@ const currChannelArray = [];
         u = r(0)("routes.room");
     a.use("/:project_key/rooms", i), i.param("room_key", function(e, t, r, n) { // i masks out /:project_key/rooms from url, leaving room-id as first in remaining url
         // ###### used when executing a trigger. input: /v1/projects/home/rooms/6989881913292881920/devices/7220833165949009920/macros/7220833166041284609/trigger
-        CP6Functions(0)("Function 85").verbose("use /:project_key/rooms, param room_key",n);
+        CP6Functions(LogThis)("Function 85").verbose("use /:project_key/rooms, param room_key",n);
 
         e.room = e.project.getRoomByKey(n), e.room ? r() : r(new Error("no such room"))
     }), i.get("/", function(e, t) {    
-        CP6Functions(0)("Function 85").verbose("/")        
+        CP6Functions(LogThis)("Function 85").verbose("/")        
         let r = e.project.getRooms();
         CP6Functions(0)("Function 85").verbose("getRooms done") 
         !1 === s.getBooleanParam(e, "details") && (r = r.map(e => e.getSummary())), t.json(r)
@@ -4144,7 +4144,7 @@ const currChannelArray = [];
             i = s.getIntParam(e, "to", n.length);
         c.reorder(n, o, i), e.project.save().then(() => t.json(n)).catch(r)
     }), i.get("/:room_key", function(e, t) {
-        CP6Functions(0)("Function 85").verbose("/:room_key")        
+        CP6Functions(LogThis)("Function 85").verbose("/:room_key")        
 
         let r = e.room;
         !1 === s.getBooleanParam(e, "details") && (r = r.getSummary()), t.json(r)
@@ -4203,7 +4203,7 @@ const currChannelArray = [];
     e.exports = require("lodash/isBoolean")
 }, function(e, t) {// Function 87 generic put/set/clear&getall functions
     "use strict";
-    CP6Functions(0)("Function 87").verbose("");
+    CP6Functions(LogThis)("Function 87").verbose("");
     const r = new Map,
         n = ".";
     t.put = function(e, t, o) {
@@ -4223,7 +4223,7 @@ const currChannelArray = [];
     e.exports = require("lodash/uniqBy")
 }, function(e, t, r) {// Function 89 deviceparser
     "use strict";
-    CP6Functions(0)("Function 89").verbose("");
+    CP6Functions(LogThis)("Function 89").verbose("");
     const n = r(18),
         o = r(14),
         i = r(218), 
@@ -4240,7 +4240,7 @@ const currChannelArray = [];
             this.data = e.sourceData ? this._parseData(e.sourceData, this.sourceName, e.fallbackAdapterName) : e.data, this._validate()
         };
     l.prototype._parseData = function(e, t, r) {
-        //CP6Functions(0)("Function 89").verbose(" _parseData");
+        //CP6Functions(LogThis)("Function 89").verbose(" _parseData");
 
         const o = t === n.SOURCE_DUIRO ? s(e) : i(e),
             a = this._handleUnknownDevices(o, r);
@@ -4272,16 +4272,16 @@ const currChannelArray = [];
             }), new Error("DEVICEPARSER_VALIDATION_FAILED")
         }
     }, l.prototype.getSourceName = function() {
-        CP6Functions(0)("Function 89").debug(" getSourceName");
+        CP6Functions(LogThis)("Function 89").debug(" getSourceName");
         return this.sourceName
     }, l.prototype.getId = function() {
          //CP6Functions(0)("Function 89").debug(" getId");
         return this.sourceName + this.data.id
     }, l.prototype.getName = function() {
-         CP6Functions(0)("Function 89").debug(" getName");
+         CP6Functions(LogThis)("Function 89").debug(" getName");
         return this.data.name
     }, l.prototype.getData = function() {
-         CP6Functions(0)("Function 89").debug(" getData");
+         CP6Functions(LogThis)("Function 89").debug(" getData");
         return this.data
     }, l.prototype.getScore = function() {
          //CP6Functions(0)("Function 89").debug(" getScore");
@@ -4294,7 +4294,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 90 API: getAllRegisteredSdkAdapters
     "use strict";
-    CP6Functions(0)("Function 90").verbose("");
+    CP6Functions(LogThis)("Function 90").verbose("");
 
     function n() {
         const e = E.getRegisteredAdapters();
@@ -4409,7 +4409,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 91 deviceUpdate
     "use strict";
-    CP6Functions(0)("Function 91").verbose("");
+    CP6Functions(LogThis)("Function 91").verbose("");
     const n = r(21),
         o = r(256),
         i = r(264),
@@ -4419,7 +4419,7 @@ const currChannelArray = [];
     e.exports = {
         startTask: function(e) {
             c || (c = setInterval(() => (function(e) {
-                CP6Functions(0)("Function 91").verbose("AUTO_UPDATE_CHECK_Initiated (but skipped as cloud is gone)"); return Promise.resolve();
+                CP6Functions(LogThis)("Function 91").verbose("AUTO_UPDATE_CHECK_Initiated (but skipped as cloud is gone)"); return Promise.resolve();
                 return o.checkDevicesForUpdate(e).then(e => (s.debug("AUTO_UPDATE_DEVICES_AVAILABLE", e.length), o.bulkUpdateDevices(e))).then(t => {
                     if (0 < t) return s.debug("AUTO_UPDATE_SUCCESSFUL", {
                         updatedDeviceCount: t
@@ -4435,13 +4435,13 @@ const currChannelArray = [];
             clearInterval(c), c = void 0
         },
         checkForAndUpdateDevice: function(e) {
-            CP6Functions(0)("Function 91").verbose("checkForAndUpdateDevice");
+            CP6Functions(LogThis)("Function 91").verbose("checkForAndUpdateDevice");
             return e.hasCapability(n.SOURCE_DUIRO) ? o.checkForAndUpdateDevice(e) : e.hasCapability(n.SOURCE_SDK_ADAPTER) ? i.checkForAndUpdateDevice(e) : Promise.reject(new Error("DEVICE_UPDATE_FAILED"))
         }
     }
 }, function(e, t, r) {// Function 92 API: getScenarioViewStructure, generateDeviceViewStructure, getScenarioSlides
     "use strict";
-    CP6Functions(0)("Function 92").verbose("");
+    CP6Functions(LogThis)("Function 92").verbose("");
 
     function n(e) {
         return e.getDevices().reduce((e, t) => (e[t.key] = d.getWidgetsForDevice(t), e), {})
@@ -4482,7 +4482,7 @@ const currChannelArray = [];
         getWidgetsForDevice: d.getWidgetsForDevice,
         getWidgetByName: d.getWidgetByName,
         getScenarioViewStructure: function(e, t) {
-            CP6Functions(0)("Function 92").verbose("getScenarioViewStructure");
+            CP6Functions(LogThis)("Function 92").verbose("getScenarioViewStructure");
             const r = n(e),
                 i = c.getSlides(e, r, e.mainDeviceKey),
                 {
@@ -4496,7 +4496,7 @@ const currChannelArray = [];
             return f.slides = l.process(f.slides), f
         },
         generateDeviceViewStructure: function(e) {
-            CP6Functions(0)("Function 92").verbose("generateDeviceViewStructure");
+            CP6Functions(LogThis)("Function 92").verbose("generateDeviceViewStructure");
 
             const t = i(d.getWidgetsForDevice(e)).reduce((e, t) => (e[t.name] = t, e), {}),
                 r = {
@@ -4512,17 +4512,17 @@ const currChannelArray = [];
             return a.getDuiStructure(u, s)
         },
         getScenarioSlides: function(e) {
-            CP6Functions(0)("Function 92").verbose("getScenarioSlides");
+            CP6Functions(LogThis)("Function 92").verbose("getScenarioSlides");
 
-            CP6Functions(0)("Function 92").verbose("getScenarioSlides");
+            CP6Functions(LogThis)("Function 92").verbose("getScenarioSlides");
             const t = n(e);
-            CP6Functions(0)("Function 92").verbose("getScenarioSlides",t);
+            CP6Functions(LogThis)("Function 92").verbose("getScenarioSlides",t);
             return c.getSlideDescriptions(e, t, e.mainDeviceKey).map(t => Object.assign({}, t, e.slides[t.id]))
         }
     }
 }, function(e, t, r) {// Function 93 API: getKeymappingForDevice, loadDefinitions
     "use strict";
-    CP6Functions(0)("Function 93").verbose("");
+    CP6Functions(LogThis)("Function 93").verbose("");
     const n = r(231),
         o = r(232);
     e.exports = {
@@ -4651,7 +4651,7 @@ const currChannelArray = [];
     e.exports = s
 }, function(e, t, r) {// Function 98 device directory
     "use strict";
-    CP6Functions(0)("Function 98").verbose("");
+    CP6Functions(LogThis)("Function 98").verbose("");
     const n = r(11),
         o = r(22),
         i = r(20).directoryAdapter,
@@ -4762,17 +4762,17 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 99 exports = new r(289)r(57)
     "use strict";
-    CP6Functions(0)("Function 99").verbose("");
+    CP6Functions(LogThis)("Function 99").verbose("");
     const n = r(57),
         o = r(289);
     e.exports = new o(n)
 }, function(e) {// Function 100 some generic IR-definitions
     "use strict";
-    CP6Functions(0)("Function 100").verbose("");
+    CP6Functions(LogThis)("Function 100").verbose("");
     e.exports.IR_PAYLOAD_TYPE_NOP = 0, e.exports.IR_PAYLOAD_TYPE_SIMPLE = 1, e.exports.IR_PAYLOAD_TYPE_OFFSET = 2, e.exports.IR_PAYLOAD_TYPE_TOGGLE = 3, e.exports.MAX_IRREPEAT = 31, e.exports.IR_MAX_FREQ = 5e5, e.exports.IR_MIN_FREQ = 2e4, e.exports.MAX_SEQUENCE_ENTRIES = 500, e.exports.MAX_DURATION_MS = 8e3
 }, function(e, t, r) {// Function 101 functions for implemene=ting forward host
     "use strict";
-    CP6Functions(0)("Function 101").verbose("");
+    CP6Functions(LogThis)("Function 101").verbose("");
     const n = new(r(315)),
         o = r(42);
     e.exports.clear = function() {
@@ -4794,7 +4794,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 102 getters for conditions and actions
     "use strict";
-    CP6Functions(0)("Function 102").verbose("");
+    CP6Functions(LogThis)("Function 102").verbose("");
     const n = r(16),
         o = r(9),
         i = r(147),
@@ -4818,12 +4818,12 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 103 exports r(331)
     "use strict";
-    CP6Functions(0)("Function 103").verbose("");
+    CP6Functions(LogThis)("Function 103").verbose("");
     const n = r(331);
     e.exports = n
 }, function(e, t, r) {// Function 104 ResourceprefetcherFacade: startNotificationListener "project change notify" fetch tr2 xml files
     "use strict";
-    CP6Functions(0)("Function 104").verbose("");
+    CP6Functions(LogThis)("Function 104").verbose("");
     const n = r(17),
         o = r(2),
         i = r(371),
@@ -4848,7 +4848,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 105 shortenUrls
     "use strict";
-    CP6Functions(0)("Function 105").verbose("");
+    CP6Functions(LogThis)("Function 105").verbose("");
     const n = r(2),
         o = new(r(384))(n.urlshortener);
     e.exports = o;
@@ -4858,7 +4858,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 106 tr2-keyboardMappings
     "use strict";
-    CP6Functions(0)("Function 106").verbose("");
+    CP6Functions(LogThis)("Function 106").verbose("");
 
     function n(e) {
         let t = "";
@@ -4882,7 +4882,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 107 tr2-DynamicSlideFactory"
     "use strict";
-    CP6Functions(0)("Function 107").verbose("");
+    CP6Functions(LogThis)("Function 107").verbose("");
     const n = r(0)("tr2-DynamicSlideFactory"),
         o = r(412),
         i = r(7),
@@ -4935,7 +4935,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 108  Router: allow external access to project-fields
     "use strict";
-    CP6Functions(0)("Function 108").verbose("");
+    CP6Functions(LogThis)("Function 108").verbose("");
     const n = r(127),
         o = r(5),
         i = r(0)("routes.project"),
@@ -4946,7 +4946,7 @@ const currChannelArray = [];
         d = r(55),
         l = o.Router();
     l.param("project_key", function(e, t, r, n) {
-        CP6Functions(0)("Function 108").verbose("l.param('project_key')");    
+        CP6Functions(LogThis)("Function 108").verbose("l.param('project_key')");    
         a.get(n).then(t => {        
             e.project = t,  r()
         }, t => {
@@ -4957,25 +4957,25 @@ const currChannelArray = [];
             }), r(t)
         })
     }), l.get("/", function(e, t, r) {
-        CP6Functions(0)("Function 108").verbose(" get / not implemented");
+        CP6Functions(LogThis)("Function 108").verbose(" get / not implemented");
         r(new Error("not implemented"))
     }), l.get("/checkAirkey", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("get checkAirKey");
+        CP6Functions(LogThis)("Function 108").verbose("get checkAirKey");
         const r = e.query.airkey;
-        a.checkAirkey(r).then(() => {CP6Functions(0)("Function 108").verbose("airkey ok"),
+        a.checkAirkey(r).then(() => {CP6Functions(LogThis)("Function 108").verbose("airkey ok"),
             t.status(200).send("OK")
         }).catch(() => { 
             //t.status(200).send("NOT_THE_BRAIN_YOU_ARE_LOOKING_FOR")
             t.status(200).send("OK")
         })
     }), l.get("/:project_key/gdpr", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("get project gdpr");
+        CP6Functions(LogThis)("Function 108").verbose("get project gdpr");
         const r = e.project.gdprAccepted;
         return t.status(200).json({
             accepted: r
         })
     }), l.post("/:project_key/gdpr", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("post gdpr");
+        CP6Functions(LogThis)("Function 108").verbose("post gdpr");
         e.project.acceptGDPR().then(() => {
             i.info("GDPR_ACCEPTED"), t.json({
                 accepted: !0
@@ -4990,12 +4990,12 @@ const currChannelArray = [];
             })
         })
     }), l.get("/:project_key/configured", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("get project_key configured");
+        CP6Functions(LogThis)("Function 108").verbose("get project_key configured");
         t.json({
             configured: e.project.isConfigured()
         })
     }), l.get("/:project_key/activate", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("get project_key activate");
+        CP6Functions(LogThis)("Function 108").verbose("get project_key activate");
         e.project.activate().then(() => {
             i.debug("PROJECT_ACTIVATED"), t.json({
                 success: !0
@@ -5008,17 +5008,17 @@ const currChannelArray = [];
             }), t.status(500).json(s(r, "project_activate"))
         })
     }), l.get("/:project_key/scheduleactivation", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("get project_key schedule activateion");
+        CP6Functions(LogThis)("Function 108").verbose("get project_key schedule activateion");
         e.project.scheduleActivation(), t.json({})
     }), l.get("/:project_key/devices", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("get project_key devices");
+        CP6Functions(LogThis)("Function 108").verbose("get project_key devices");
 
         const r = e.query.capability,
             n = e.query.roomKey;
         let o = e.project;
         return n && (o = e.project.getRoomByKey(n)), r ? t.json(o.getDevicesWithCapability(r)) : t.json(o.getDevices())
     }), l.get("/:project_key/discoverNewDevices/:sourceName/:adapterName/", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("get project_key discovernewdevices");
+        CP6Functions(LogThis)("Function 108").verbose("get project_key discovernewdevices");
         const r = e.params.sourceName,
             n = e.params.adapterName,
             o = e.project.getDevices();
@@ -5057,17 +5057,17 @@ const currChannelArray = [];
     }), l.get("/:project_key/directories", function(e, t) {
         t.json(e.project.getDirectories())
     }), l.get("/:project_key/sensors", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("get project_key getsensors");
+        CP6Functions(LogThis)("Function 108").verbose("get project_key getsensors");
 
         t.json(e.project.getSensors(e => d.RECIPE_SUPPORTED_TYPES.includes(e.type)))
     }), l.get("/:project_key/sensorvalue/:eventKey", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("get :project_key/sensorvalue/:eventKey");
+        CP6Functions(LogThis)("Function 108").verbose("get :project_key/sensorvalue/:eventKey");
         const r = e.params.eventKey,
             n = e.project.getSensors(e => e.eventKey === r)[0];
         n || t.status(500).json(s(r, "sensor_eventkey"));
         const o = n.device && n.device.details && "zwave" === n.device.details.adapterName;
         n.getValue().then(e => {
-            CP6Functions(0)("Function 108").verbose("get project_key getsensor value ",e);
+            CP6Functions(LogThis)("Function 108").verbose("get project_key getsensor value ",e);
 
             t.json({
                 value: e
@@ -5076,25 +5076,25 @@ const currChannelArray = [];
             o ? u.increaseCounter(`ZWAVE-ERROR-${e.message}`) : i.error("PROJECT_GET_SENSORVALUE_FAILED", e.message), t.status(500).json(s(e, "sensor"))
         })
     }), l.get("/:project_key/recipes/:type?", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("get /:project_key/recipes/:type?");
+        CP6Functions(LogThis)("Function 108").verbose("get /:project_key/recipes/:type?");
         const r = e.params.type;
         let n = [];
         n = r ? e.project.getRecipes(e => e.getType() === r) : e.project.getRecipes(), t.json(n)
     }), l.get("/:project_key/activescenariokeys", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("get /:project_key/activescenariokeys");
+        CP6Functions(LogThis)("Function 108").verbose("get /:project_key/activescenariokeys");
         t.json(e.project.getActiveScenarioKeys())
     }), l.get("/:project_key/lastchange", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("get /:project_key/lastchange");
+        CP6Functions(LogThis)("Function 108").verbose("get /:project_key/lastchange");
         t.json(e.project.getLastChangeTs())
     }), l.get("/:project_key", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("get /:project_key");
+        CP6Functions(LogThis)("Function 108").verbose("get /:project_key");
         t.json(e.project)
     }), l.post("/:project_key/getdeviceicon", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("get /:project_key/getdeviceicon ");
+        CP6Functions(LogThis)("Function 108").verbose("get /:project_key/getdeviceicon ");
         const r = e.body.scenariokeys;
         r ? t.json(e.project.scenarioKeyToMaindeviceIcon(r.split(","))) : t.json({})
     }), l.put("/:project_key", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("put /:project_key");
+        CP6Functions(LogThis)("Function 108").verbose("put /:project_key");
         e.body ? (e.body.label && (e.project.label = e.body.label), e.project.setConfigured(e.body.configured), e.project.save().then(() => {
             t.json(e.project)
         }).catch(r => {
@@ -5105,12 +5105,12 @@ const currChannelArray = [];
             }), t.status(500).json(s(r, "project_save"))
         })) : t.json(e.project)
     }), l.get("/:project_key/label", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("get /:project_key/label");
+        CP6Functions(LogThis)("Function 108").verbose("get /:project_key/label");
         t.json({
             label: e.project.label
         })
     }), l.get("/:project_key/controllerRoomName", function(e, t) {
-        CP6Functions(0)("Function 108").verbose("get  /:project_key/controllerRoomName");
+        CP6Functions(LogThis)("Function 108").verbose("get  /:project_key/controllerRoomName");
         const r = n(e.project.getRooms(), e => e.hasController);
         return r ? void t.json({
             controllerRoomName: r.getName()
@@ -5118,7 +5118,7 @@ const currChannelArray = [];
     }), e.exports = l
 }, function(e, t, r) {// Function 109 addevent, clear and getallevents
     "use strict";
-    //CP6Functions(0)("Function 109").verbose("");
+    //CP6Functions(LogThis)("Function 109").verbose("");
     const n = new(r(183))(r(2).log.eventsBufferSize || 64);
     e.exports.addEvent = function(e) {
         n.addEntry(e)
@@ -5135,7 +5135,7 @@ const currChannelArray = [];
     e.exports = require("glob")
 }, function(e, t, r) {// Function 113 readAsync from MAC address
     "use strict";
-    //CP6Functions(0)("Function 113").verbose("");
+    //CP6Functions(LogThis)("Function 113").verbose("");
     const n = r(208).getMac,
         o = r(0)("SystemInfoMac"),
         i = r(1);
@@ -5150,7 +5150,7 @@ const currChannelArray = [];
     e.exports = require("zlib")
 }, function(e, t, r) {// Function 115 Session-info
     "use strict";
-    //CP6Functions(0)("Function 115").verbose("");
+    //CP6Functions(LogThis)("Function 115").verbose("");
 
     function n() {
         p = void 0, h = void 0, g = void 0
@@ -5195,7 +5195,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 116 validateBrowseResult 
     "use strict";
-    //CP6Functions(0)("Function 116").verbose("");
+    //CP6Functions(LogThis)("Function 116").verbose("");
     const n = r(2),
         o = r(14),
         i = n.tr2.listPageSize;
@@ -5235,7 +5235,7 @@ const currChannelArray = [];
     e.exports = require("lodash/isObject")
 }, function(e, t, r) {// Function 118 getSpotifyInfoForSonosProcedureIfNecessary
     "use strict";
-    //CP6Functions(0)("Function 118").verbose("");
+    //CP6Functions(LogThis)("Function 118").verbose("");
 
     function n() {
         return u ? u.getUserData("spotify").then(e => (d = e.username, d)).catch(() => {
@@ -5262,7 +5262,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 119 API Adapter Store"
     "use strict";
-    //CP6Functions(0)("Function 119").verbose("");
+    //CP6Functions(LogThis)("Function 119").verbose("");
     const n = r(69),
         o = r(0)("API Adapter Store"),
         i = r(3),
@@ -5302,10 +5302,10 @@ const currChannelArray = [];
                 if (CloudReplacementUrl != CloudReplacement+":6468/download")
                     ReplaceSettingsFile(urlComponents[1].substring(2,99))
                 CloudReplacementUrl = CloudReplacement+":6468/download"
-                CP6Functions(0)("Function 119").always("We've assigned ",urlComponents[0]+":"+urlComponents[1],"as the source to replace NEEO cloud")
+                CP6Functions(LogThis)("Function 119").always("We've assigned ",urlComponents[0]+":"+urlComponents[1],"as the source to replace NEEO cloud")
                 }
             setTimeout(() => {
-            CP6Functions(0)("Function 119").verbose("Calling METAREINIT")
+            CP6Functions(LogThis)("Function 119").verbose("Calling METAREINIT")
             this.METAREINIT(e,t,r);
             }, 3000);
 
@@ -5373,21 +5373,21 @@ const currChannelArray = [];
                 });
 
                 Promise.all(promiseT).then((theResult) => {
-                    return (CP6Functions(0)("Function 119").verbose("Returned from all post requests"),
-                            CP6Functions(0)("Function 119").debug("returned:",theResult))
+                    return (CP6Functions(LogThis)("Function 119").verbose("Returned from all post requests"),
+                            CP6Functions(LogThis)("Function 119").debug("returned:",theResult))
                 })   
         }
     }
 }, function(e, t, r) {// Function 120 constant containing ALLOWED_ICON_NAMES
     "use strict";
-    //CP6Functions(0)("Function 120").verbose("");
+    //CP6Functions(LogThis)("Function 120").verbose("");
     const n = r(19);
     t.ALLOWED_ICON_NAMES = [...n.TYPES.map(e => e.toLowerCase()), "appletv", "sonos", "neeo-brain"]
 }, function(e) {// Function 121 exports = require("tokensearch.js")
     e.exports = require("tokensearch.js")
 }, function(e, t, r) {// Function 122 DeviceSpecsSource
     "use strict";
-    //CP6Functions(0)("Function 122").verbose("");
+    //CP6Functions(LogThis)("Function 122").verbose("");
     const n = r(1),
         o = r(89),
         i = r(0)("DeviceSpecsSource"),
@@ -5395,19 +5395,19 @@ const currChannelArray = [];
             i.debug("init:", e), this.id = e.id, this.name = e.name, this.type = e.type
         };
     s.parseId = function(e) {
-        CP6Functions(0)("Function 122").verbose("parseId");
+        CP6Functions(LogThis)("Function 122").verbose("parseId");
         return {
             sourceIdx: parseInt(e[0], 10),
             specId: e.slice(1)
         }
     }, s.prototype.getName = function() {
-        //CP6Functions(0)("Function 122").verbose("getName");
+        //CP6Functions(LogThis)("Function 122").verbose("getName");
         return this.name
     }, s.prototype._generateId = function(e) {
-        CP6Functions(0)("Function 122").verbose("generateId");
+        CP6Functions(LogThis)("Function 122").verbose("generateId");
         return this.id + e
     }, s.prototype.search = function(e) {
-        CP6Functions(0)("Function 122").verbose("search");
+        CP6Functions(LogThis)("Function 122").verbose("search");
         return this._search(e).then(e => (e = e || [], e.map(e => new o({
             sourceData: e.item,
             sourceName: this.getName(),
@@ -5417,24 +5417,24 @@ const currChannelArray = [];
             }
         }))))
     }, s.prototype.getFullSpec = function(e, t) {
-        CP6Functions(0)("Function 122").verbose("getFullSpec e",e);
-        CP6Functions(0)("Function 122").verbose("getFullSpec t",t);
+        CP6Functions(LogThis)("Function 122").verbose("getFullSpec e",e);
+        CP6Functions(LogThis)("Function 122").verbose("getFullSpec t",t);
         return e && "undefined" !== e ? 
-        (CP6Functions(0)("Function 122").verbose("getFullSpec calling  _getFullSpec(e)"),
+        (CP6Functions(LogThis)("Function 122").verbose("getFullSpec calling  _getFullSpec(e)"),
             this._getFullSpec(e).then(t => {
                 if (!t) throw new Error("full spec not found: " + e);
                 return this.createNewDeviceSpec(t)
             })) 
             : n.resolve(this.createNewDeviceSpec({}, t))
     }, s.prototype.createNewDeviceSpec = function(e, t) {
-        CP6Functions(0)("Function 122").verbose("createNewDeviceSpec");
+        CP6Functions(LogThis)("Function 122").verbose("createNewDeviceSpec");
         return new o({
             sourceData: e,
             sourceName: this.getName(),
             fallbackAdapterName: t
         })
     }, s.prototype.getSpec = function(e) {
-        CP6Functions(0)("Function 122").verbose("getSpec");
+        CP6Functions(LogThis)("Function 122").verbose("getSpec");
         return this._getSpec(e).then(t => {
             if (!t) throw new Error("spec not found: " + e);
             return new o({
@@ -5450,10 +5450,10 @@ const currChannelArray = [];
     }, s.prototype._search = function() {
         throw new Error("to be implemented")
     }, s.prototype._getFullSpec = function() {
-        CP6Functions(0)("Function 122").verbose("_getFullSpec");
+        CP6Functions(LogThis)("Function 122").verbose("_getFullSpec");
         throw new Error("to be implemented")
     }, s.prototype._getSpec = function() {
-        CP6Functions(0)("Function 122").verbose("_getSpec");
+        CP6Functions(LogThis)("Function 122").verbose("_getSpec");
         throw new Error("to be implemented")
     }, s.prototype._getCapabilities = function() {
         throw new Error("to be implemented")
@@ -5470,7 +5470,7 @@ const currChannelArray = [];
     e.exports = require("lodash/find")
 }, function(e) {// Function 128 functions increaseCounter and  setStatisticsModule
     "use strict";
-    CP6Functions(0)("Function 128").verbose("")
+    CP6Functions(LogThis)("Function 128").verbose("")
     let t;
     e.exports = {
         increaseCounter: function(e) {
@@ -5482,7 +5482,7 @@ const currChannelArray = [];
     }
 }, function(e) {// Function 129 addDataToWidget, match and getAdditionalInfo
     "use strict";
-    CP6Functions(0)("Function 129").verbose("");
+    CP6Functions(LogThis)("Function 129").verbose("");
 
     function t(e, t, s) {
         const a = r(s),
@@ -5537,7 +5537,7 @@ const currChannelArray = [];
     e.exports = require("lodash/flatMap")
 }, function(e, t, r) {// Function 131 verify sourcename = SOURCE_DUIRO
     "use strict";
-    //CP6Functions(0)("Function 131").verbose("");
+    //CP6Functions(LogThis)("Function 131").verbose("");
 
     function n(e, t) {
         function r(e, r) {
@@ -5665,7 +5665,7 @@ const currChannelArray = [];
     }
 }, function(e) {// Function 132 getConnections, getPresetSettings, getHDMIVersion, getCommandSetInfos
     "use strict";
-    CP6Functions(0)("Function 132").verbose("")
+    CP6Functions(LogThis)("Function 132").verbose("")
 
     function t(e) {
         return e.map(e => e.type.replace(r, ""))
@@ -5681,21 +5681,21 @@ const currChannelArray = [];
         },
         i = ["input", "output"];
     e.exports = {
-        getConnections: function(e) {CP6Functions(0)("Function 132").verbose("getconnections");
+        getConnections: function(e) {CP6Functions(LogThis)("Function 132").verbose("getconnections");
             const r = Object.assign({}, n, e.connections);
             return i.reduce((e, n) => (e[o[n]] = t(r[n]), e), {})
         },
-        getPresetSettings: function(e) {CP6Functions(0)("Function 132").verbose("getPresetSettingd");
+        getPresetSettings: function(e) {CP6Functions(LogThis)("Function 132").verbose("getPresetSettingd");
             const t = e.type.toLowerCase(),
                 r = e[t];
             return r ? r.presetSettings : void 0
         },
-        getHDMIVersion: function(e) {CP6Functions(0)("Function 132").verbose("getHDMI Version");
+        getHDMIVersion: function(e) {CP6Functions(LogThis)("Function 132").verbose("getHDMI Version");
             const t = e.type.toLowerCase(),
                 r = e[t];
             return r ? r.hdmiVersion : void 0
         },
-        getCommandSetInfos: function(e) {CP6Functions(0)("Function 132").verbose("getCommnandSetInfo");
+        getCommandSetInfos: function(e) {CP6Functions(LogThis)("Function 132").verbose("getCommnandSetInfo");
             return (e.commandSets || []).map(e => {
                 return {
                     name: e.name,
@@ -5708,7 +5708,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 133 ComponentFactory: parser for various component-types
     "use strict";
-    //CP6Functions(0)("Function 133").verbose("");
+    //CP6Functions(LogThis)("Function 133").verbose("");
 
     function n(e) {
         return {
@@ -6011,7 +6011,7 @@ const currChannelArray = [];
         s = o.hostname(),
         a = o.firmwareVersion();
     e.exports = function(e) {
-        CP6Functions(0)("Function 136").verbose("Send email from recipe")
+        CP6Functions(LogThis)("Function 136").verbose("Send email from recipe")
         const t = e.getAction(),
             r = t.message.replace("%NEEO_HOSTNAME%", s).replace("%NEEO_FIRMWARE%", a),
             o = e.getName();
@@ -6033,13 +6033,13 @@ const currChannelArray = [];
     e.exports = require("semver")
 }, function(e) {// Function 140 fill some TOUCHBUTTON fields
     "use strict";
-    CP6Functions(0)("Function 140").verbose("");
+    CP6Functions(LogThis)("Function 140").verbose("");
     e.exports.NOTIFICATION_TOUCHBUTTONPRESSED = "touchbuttonpressed", e.exports.NOTIFICATION_LONG_TOUCHBUTTONPRESSED = "longtouchbuttonpressed"
 }, function(e) {// Function 141 exports = require("ip-address")
     e.exports = require("ip-address")
 }, function(e, t, r) {// Function 142 getI18nDirectory and r(308)
     "use strict";
-    CP6Functions(0)("Function 142").verbose("");
+    CP6Functions(LogThis)("Function 142").verbose("");
     const n = r(37).getI18nDirectory(),
         o = r(308);
     o.configure({
@@ -6049,7 +6049,7 @@ const currChannelArray = [];
     }), e.exports = o
 }, function(e, t, r) {// Function 143 create structure for using irblaster
     "use strict";
-    CP6Functions(0)("Function 143").verbose("");
+    CP6Functions(LogThis)("Function 143").verbose("");
     const n = r(144),
         o = r(20).deviceAdapter,
         i = new(r(312))({
@@ -6059,7 +6059,7 @@ const currChannelArray = [];
     e.exports = i
 }, function(e, t, r) {// Function 144 functions for communicating irblaster
     "use strict";
-    CP6Functions(0)("Function 144").verbose("");
+    CP6Functions(LogThis)("Function 144").verbose("");
     const n = r(2).irblaster,
         o = r(309),
         i = r(310),
@@ -6089,7 +6089,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 145 Global Cache getter/putter variables 
     "use strict";
-    CP6Functions(0)("Function 145").verbose("global cache");
+    CP6Functions(LogThis)("Function 145").verbose("global cache");
 
     function n(e) {
         return e > i.MAX_IRREPEAT ? i.MAX_IRREPEAT : e
@@ -6144,7 +6144,7 @@ const currChannelArray = [];
     }, e.exports = s
 }, function(e, t, r) {// Function 146 recipe trigger
     "use strict";
-    CP6Functions(0)("Function 146").verbose("")
+    CP6Functions(LogThis)("Function 146").verbose("")
     const n = r(318),
         o = r(319),
         i = r(320),
@@ -6161,7 +6161,7 @@ const currChannelArray = [];
     }, e.exports.TYPE_ICON = n.TYPE, e.exports.TYPE_SENSOR = o.TYPE, e.exports.TYPE_TIME = i.TYPE, e.exports.TYPE_INTERVAL = s.TYPE
 }, function(e, t, r) {// Function 147 recipeconditionvalidator
     "use strict";
-    CP6Functions(0)("Function 147").verbose("");
+    CP6Functions(LogThis)("Function 147").verbose("");
     const n = r(16),
         o = r(0)("recipeconditionvalidator"),
         i = r(14),
@@ -6169,7 +6169,7 @@ const currChannelArray = [];
         a = r(8),
         c = {};
     c.validateCondition = function(e) {
-        CP6Functions(0)("Function 147").verbose("validateCondition");
+        CP6Functions(LogThis)("Function 147").verbose("validateCondition");
         if (!n.isObject(e) || !n.isString(e.type)) return !1;
         switch (e.type) {
             case "interval":
@@ -6209,7 +6209,7 @@ const currChannelArray = [];
                 return !1
         }
         return !0
-    }, c.validateAction = function(e) { CP6Functions(0)("Function 147").verbose("validateAction:")
+    }, c.validateAction = function(e) { CP6Functions(LogThis)("Function 147").verbose("validateAction:")
         if (!n.isObject(e) || !n.isString(e.type)) return !1;
         const t = e.type;
         switch (t) {
@@ -6237,7 +6237,7 @@ const currChannelArray = [];
     }, e.exports = c
 }, function(e) {// Function 148 class BaseCondition
     "use strict";
-    CP6Functions(0)("Function 148").verbose("")
+    CP6Functions(LogThis)("Function 148").verbose("")
     class t {
         constructor(e) {
             if (this.constructor === t) throw new Error("Cannot instantiate abstract class BaseCondition");
@@ -6262,7 +6262,7 @@ const currChannelArray = [];
     e.exports = t
 }, function(e, t, r) {// Function 149 various functions for scenario and recipe
     "use strict";
-    CP6Functions(0)("Function 149").verbose("")
+    CP6Functions(LogThis)("Function 149").verbose("")
     const n = r(29),
         o = r(77),
         i = r(150),
@@ -6510,7 +6510,7 @@ const currChannelArray = [];
     e.exports = require("lodash/isFunction")
 }, function(e, t, r) {// Function 151 various functions for room, sdk and devices mostly globally used getters and putters
     "use strict";
-    CP6Functions(0)("Function 151").verbose("")
+    CP6Functions(LogThis)("Function 151").verbose("")
 
     function n(e, t, r, n) {
         s(n[t]).forEach(n => {
@@ -6888,16 +6888,16 @@ const currChannelArray = [];
             }
         }).catch(o)
     }, F.prototype.triggerActionByKey = function(e, t) {
-        CP6Functions(0)("Function 151").verbose("triggetriggerActionByKeyrAction")
+        CP6Functions(LogThis)("Function 151").verbose("triggetriggerActionByKeyrAction")
         if (!e) throw new Error('missing argument to trigger action: "componentKey"');
         const r = this.getComponentByKey(e);
         return this.triggerAction(r, t)
     }, F.prototype.triggerActionByName = function(e, t) {
-        CP6Functions(0)("Function 151").verbose("triggerActionByName")
+        CP6Functions(LogThis)("Function 151").verbose("triggerActionByName")
         if (!e) throw new Error('missing argument to trigger action: "componentName"');
         return this.triggerAction(this.getComponentByName(e, t.generic), t)
     }, F.prototype.triggerAction = function(e, t) {
-        CP6Functions(0)("Function 151").verbose("triggerAction")
+        CP6Functions(LogThis)("Function 151").verbose("triggerAction")
         if (!e) throw new Error("could not find component to trigger");
         t = t || {};
         const r = L.buildActionOfComponent(e.getName(), e, t.value);
@@ -6916,7 +6916,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 152 getters for Channel-data
     "use strict";
-    CP6Functions(0)("Function 152").verbose("")
+    CP6Functions(LogThis)("Function 152").verbose("")
     const n = r(16),
         o = /\d+(\D\d+)?/,
         i = function(e) {
@@ -6933,15 +6933,15 @@ const currChannelArray = [];
     }, i.prototype.getChannelNr = function() {
         return this.channelNr
     }, i.prototype.getLogoURL = function() {
-        CP6Functions(0)("Function 151").verbose("getLogoURL:",this.channel)
+        CP6Functions(LogThis)("Function 151").verbose("getLogoURL:",this.channel)
         //"NEEO-Cloudserver based url: "logoURL":"https://neeo-channel-icons.s3.amazonaws.com/e9364489-00e7-4a28-a127-f010df459eca.png"}
         
         var normalizedChannel = this.channel.name.split(' ')
-        CP6Functions(0)("Function 151").verbose("getLogoURL:",normalizedChannel)
+        CP6Functions(LogThis)("Function 151").verbose("getLogoURL:",normalizedChannel)
         normalizedChannel = normalizedChannel.join('_')
         var logoType = this.channel.logoUrl.split("/")
         var myname = logoType[3]
-//        CP6Functions(0)("Function 152").verbose("Logotype:",myname)
+//        CP6Functions(LogThis)("Function 152").verbose("Logotype:",myname)
         var extensionPos = myname.indexOf(".") 
         var theReturn = CloudReplacementUrl  +"?type=images&name="+normalizedChannel+myname.substring(extensionPos,99)
         return theReturn 
@@ -6949,7 +6949,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 153 scenario-build
     "use strict";
-    CP6Functions(0)("Function 153").verbose("")
+    CP6Functions(LogThis)("Function 153").verbose("")
 
     function n(e) {
         const t = e.details.type;
@@ -7189,7 +7189,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 154 fields for shortcut.dvd"
     "use strict";
-    CP6Functions(0)("Function 154").verbose("")
+    CP6Functions(LogThis)("Function 154").verbose("")
     const n = r(11),
         o = r(22),
         i = r(8),
@@ -7334,7 +7334,7 @@ const currChannelArray = [];
     }, e.exports = a
 }, function(e, t, r) {// Function 155 loadLatestProject, restoreProject, restoreCloudBackup, saveProject, getProjectVersions
     "use strict";
-    CP6Functions(0)("Function 155").verbose("")
+    CP6Functions(LogThis)("Function 155").verbose("")
 
     function n(e) {
         return i(e).then(e => {
@@ -7380,7 +7380,7 @@ const currChannelArray = [];
             })
         },
         saveProject: function(e) {
-            CP6Functions(0)("Function 155").verbose("saveProject")
+            CP6Functions(LogThis)("Function 155").verbose("saveProject")
             const t = [e.getConfig(), p.getConfig(), h.getConfig(), 
                 g ? (u.debug("SAVED_HASH_USING_CACHE", g), g) : (u.debug("SAVED_HASH_NOT_YET_LOADED"), g = d.loadLatest().catch(() => ({})).then(e => {
                 const t = o(JSON.stringify(e));
@@ -7418,14 +7418,14 @@ const currChannelArray = [];
         },
         checkAirkey: function(e, t) {
             const r = e.airkey;
-            CP6Functions(0)("Function 155").verbose("checkAirKey",c.h64(r, 42).toString(16));
-            CP6Functions(0)("Function 155").verbose("Result",{"TR2 uses brain airkey":t,"Brain uses airkey":c.h64(r, 42).toString(16),baseId:r})           
+            CP6Functions(LogThis)("Function 155").verbose("checkAirKey",c.h64(r, 42).toString(16));
+            CP6Functions(LogThis)("Function 155").verbose("Result",{"TR2 uses brain airkey":t,"Brain uses airkey":c.h64(r, 42).toString(16),baseId:r})           
             return t === c.h64(r, 42).toString(16) ? a.resolve() : a.reject(new Error("AIRKEY_NOT_MATCH"))
         }
     }
 }, function(e, t, r) {// Function 156 deviceAddToRoomBySpec
     "use strict";
-    CP6Functions(0)("Function 156").verbose("")
+    CP6Functions(LogThis)("Function 156").verbose("")
     const n = r(0)("deviceAddToRoomBySpec"),
         o = r(45),
         i = r(89),
@@ -7467,7 +7467,7 @@ const currChannelArray = [];
         }
 }, function(e, t, r) {// Function 157 schedule periodical backup.synchronizeLocalAndRemoteBackup ######
     "use strict";
-    CP6Functions(0)("Function 157").verbose("backup/synchronizelocalandremotebackup")
+    CP6Functions(LogThis)("Function 157").verbose("backup/synchronizelocalandremotebackup")
     const n = r(2).backup,
         o = r(342),
         i = r(6)("cp6:lib:backup:index"),
@@ -7480,7 +7480,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 158 startNotificationListener channel notification 
     "use strict";
-    CP6Functions(0)("Function 158").verbose("startNotificationListener")
+    CP6Functions(LogThis)("Function 158").verbose("startNotificationListener")
     const n = r(343),
         o = r(10),
         i = r(56),
@@ -7493,7 +7493,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 159 homekit resetPairingData and startNotificationListener update project data
     "use strict";
-    CP6Functions(0)("Function 159").verbose("homekit resetPairingData")
+    CP6Functions(LogThis)("Function 159").verbose("homekit resetPairingData")
 
     function n() {
         o("refresh data for homekit"), u.getAllRecipes().then(e => {
@@ -7529,7 +7529,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 160 getUrlPath getLazyUrlPath
     "use strict";
-    CP6Functions(0)("Function 160").verbose("getURLPath, getLazyURLPath")
+    CP6Functions(LogThis)("Function 160").verbose("getURLPath, getLazyURLPath")
 
     function n(e) {
 
@@ -7543,7 +7543,7 @@ const currChannelArray = [];
         SysInfo = r(12),
         i = ["jpg", "lz4", "lz4-black", "png"];
     t.getUrlPath = function(e, t) { 
-        CP6Functions(0)("Function 160").verbose("getURLPath",e)
+        CP6Functions(LogThis)("Function 160").verbose("getURLPath",e)
         if (!e) return "";
         const r = n(t),
             o = r.imageFormat ? "format/" + r.imageFormat + "/" : "";
@@ -7555,7 +7555,7 @@ const currChannelArray = [];
 
         return "v1/imagecache/get/" + o + encodeURIComponent(e)
     }, t.getLazyUrlPath = function(e, t) { 
-        CP6Functions(0)("Function 160").debug("getLazyURLPath")
+        CP6Functions(LogThis)("Function 160").debug("getLazyURLPath")
 
         if (!e) return "";
         const r = n(t),
@@ -7569,7 +7569,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 161 devicesmartener deviceAdapter
     "use strict";
-    CP6Functions(0)("Function 161").verbose("deviceSmartener")
+    CP6Functions(LogThis)("Function 161").verbose("deviceSmartener")
 
     function n(e) {
         return a("SMARTENER_DETECTED_SMTHING %o", e), e.state === d.STATE_FIRST_TOGGLE_DETECTED ? (a("DEVICE_TOGGLE_DETECTED"), void s(f)) : e.state === d.STATE_DEVICE_SMARTENED ? (a("DEVICE_SMARTENED"), i(), void l.smartifyStupidDevice({
@@ -7679,7 +7679,7 @@ const currChannelArray = [];
     e.exports = i
 }, function(e, t, r) {// Function 166 getContentLayout
     "use strict";
-    CP6Functions(0)("Function 166").verbose("")
+    CP6Functions(LogThis)("Function 166").verbose("")
     const n = r(16),
         o = r(53),
         i = r(28),
@@ -7696,7 +7696,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 167 functions addScreen, addScreens, build, getStack, setKeyboardMapping, overridePowerKeyboardMapping, buildNewNavigationStack
     "use strict";
-    CP6Functions(0)("Function 167").verbose("addScreen, build, getStack,setKeyboardMapping,overridePowerkeyboardMapping, buildNavigationStack")
+    CP6Functions(LogThis)("Function 167").verbose("addScreen, build, getStack,setKeyboardMapping,overridePowerkeyboardMapping, buildNavigationStack")
     const n = r(411),
         o = r(106),
         i = function(e) {
@@ -7736,7 +7736,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 168 buildNewWidgetStack
     "use strict";
-    CP6Functions(0)("Function 168").verbose("")
+    CP6Functions(LogThis)("Function 168").verbose("")
 
     function n(e, t) {
         try {
@@ -7764,7 +7764,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 169 isWidgetSupportedAndNotKeymapped
     "use strict";
-    CP6Functions(0)("Function 169").verbose("")
+    CP6Functions(LogThis)("Function 169").verbose("")
 
     function n(e, t) {
         const r = function(e) {
@@ -7975,7 +7975,7 @@ const currChannelArray = [];
     })
 }, function(e, t, r) {// Function 170 gui/scenario/widgets/default/light.xml
     "use strict";
-    CP6Functions(0)("Function 170").verbose("gui/scenario/widgets_default/light.xml")
+    CP6Functions(LogThis)("Function 170").verbose("gui/scenario/widgets_default/light.xml")
 
     function n(e) {
         const t = e && e.name && e.name.toLowerCase();
@@ -8070,7 +8070,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 171 a lot of get-functions, pulling the data from subordinate fiunctions
     "use strict";
-    CP6Functions(0)("Function 171").verbose("")
+    CP6Functions(LogThis)("Function 171").verbose("")
 
     function n(e) {
         const t = {};
@@ -8094,7 +8094,7 @@ const currChannelArray = [];
     let E = !1,
         y = !1;
     e.exports.convert = function(e) {
-        CP6Functions(0)("Function 171").verbose("Convert")
+        CP6Functions(LogThis)("Function 171").verbose("Convert")
         return {
             getImageUrlPath: function(e, t) {
                 if (!t || !t.width || !t.height) throw Error("getImageUrlPath: options invalid");
@@ -8198,7 +8198,7 @@ const currChannelArray = [];
                 return e.getScenarios().find(e => e.getMainDevice().getDirectoryByKey(t))
             },
             getDeviceByKey: function(t) {
-                //CP6Functions(0)("Function 171").verbose("getDeviceByKey",t)
+                //CP6Functions(LogThis)("Function 171").verbose("getDeviceByKey",t)
                 return e.getDeviceByKey(t)
             },
             getDevicesByAdapterDeviceIds: function(t) {
@@ -8219,7 +8219,7 @@ const currChannelArray = [];
                 return n(e.getDeviceByKey(t))
             },
             getInputViewData: function(e) {
-                CP6Functions(0)("Function 171").verbose("getInputViewData")
+                CP6Functions(LogThis)("Function 171").verbose("getInputViewData")
                 if (!e) throw Error("getInputViewData: scenario undefined");
                 return e.getMainDevice().getMacros().map(e => ({
                     name: e.name,
@@ -8279,7 +8279,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 172 some get-functions, pulling the data from subordinate functions
     "use strict";
-    CP6Functions(0)("Function 172").verbose("getDeviceByKey,getScenarioByDeviceKey,getPowerInfoDevices")
+    CP6Functions(LogThis)("Function 172").verbose("getDeviceByKey,getScenarioByDeviceKey,getPowerInfoDevices")
     const n = r(6)("cp6:lib:project:repo"),
         o = r(36);
     e.exports.convert = (e => {
@@ -8301,7 +8301,7 @@ const currChannelArray = [];
     })
 }, function(e, t, r) {// Function 173 tr2:xmlgenerate
     "use strict";
-    CP6Functions(0)("Function 173").verbose("tr2:xmlgenerate")
+    CP6Functions(LogThis)("Function 173").verbose("tr2:xmlgenerate")
 
     function n(e, t) {
 
@@ -8348,10 +8348,10 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 174 TR2 directory-related functions
     "use strict";
-    CP6Functions(0)("Function 174").verbose("TR2 directory-relted functiuons")
+    CP6Functions(LogThis)("Function 174").verbose("TR2 directory-relted functiuons")
 
     function n(e, t) {
-CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
+CP6Functions(LogThis)("Function 174").verbose("checking uiAction e.uiAction",e);
         switch (e.uiAction) {
             case l:
                 return ";ReloadList(0)";
@@ -8386,16 +8386,16 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     e.exports = {
         jsonToBase64: i,
         getTriggerAction: function(e, t = {}, r = "actionIdentifier") {
-            CP6Functions(0)("Function 174").verbose("getTriggerAction e=",e);
+            CP6Functions(LogThis)("Function 174").verbose("getTriggerAction e=",e);
             let o = "";
-            CP6Functions(0)("Function 174").verbose("getTriggerAction test I = if (e && e[r])",(e && e[r]));
+            CP6Functions(LogThis)("Function 174").verbose("getTriggerAction test I = if (e && e[r])",(e && e[r]));
             if (e && e[r] ? o = e[r] : Array.isArray(e) && 0 < e.length && e[0] && e[0][r] && (o = e[0][r]), !o) return "";
-            CP6Functions(0)("Function 174").verbose("getTriggerAction exec I n(e,t.directoryKey)",n(e,t.directoryKey)) 
+            CP6Functions(LogThis)("Function 174").verbose("getTriggerAction exec I n(e,t.directoryKey)",n(e,t.directoryKey)) 
             const i = encodeURIComponent(o);
             return `TriggerAction('${`${a.getDirectoryActionUrl(t.directoryKey)}/?actionIdentifier=${i}`}')${n(e,t.directoryKey)}`
         },
         getImage: function(e, t = 80) {
-            CP6Functions(0)("Function 174").verbose("getImage");
+            CP6Functions(LogThis)("Function 174").verbose("getImage");
             const r = s.isWebUri(e.thumbnailUri) || u.test(e.thumbnailUri);
             if (!e.thumbnailUri || !r) return "";
             const n = c.getLazyUrlPath(e.thumbnailUri, {
@@ -8407,7 +8407,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             return c.hasImageContent(n) ? n : ""
         },
         getBrowseAction: function(e, t = {}) {
-            CP6Functions(0)("Function 174").verbose("getBrowseAction: function(e, t = {}");
+            CP6Functions(LogThis)("Function 174").verbose("getBrowseAction: function(e, t = {}");
             if (!e) return "";
             const r = a.getDirectoryBrowseUrl(t.directoryKey);
             return o({
@@ -8422,7 +8422,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             })
         },
         getParentBrowseAction: function(e = {}) {
-            CP6Functions(0)("Function 174").verbose("getParentBrowseAction: function(e, {}");
+            CP6Functions(LogThis)("Function 174").verbose("getParentBrowseAction: function(e, {}");
             const t = e.history || [];
             if (!t.length) return "";
             const r = t[t.length - 1],
@@ -8435,7 +8435,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             })
         },
         getPaginationAction: function(e, t = {}) {
-            CP6Functions(0)("Function 174").verbose("getPaginationAction:")
+            CP6Functions(LogThis)("Function 174").verbose("getPaginationAction:")
             const r = t.history || [];
             return o({
                 directoryUrl: a.getDirectoryBrowseUrl(t.directoryKey),
@@ -8472,7 +8472,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             return e.data && e.data[t] ? r = e.data[t] : Array.isArray(e) && 0 < e.length && e[0].data && e[0].data[t] && (r = e[0].data[t]), `TriggerAction('${r}')`
         },
         getImage: function(e, t = 80) {
-            CP6Functions(0)("Function 176").verbose("Getimage for directory",e.thumbnailUri)
+            CP6Functions(LogThis)("Function 176").verbose("Getimage for directory",e.thumbnailUri)
             const r = i.isWebUri(e.thumbnailUri) || u.test(e.thumbnailUri);
             if (!e.thumbnailUri || !r) return "";
             const n = c.getLazyUrlPath(e.thumbnailUri, {
@@ -8485,7 +8485,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
         },
         getInfoAction: function(e) {
             const t = e.itemInfo || "";
-            CP6Functions(0)("Function 176").verbose("Popup info item",t)
+            CP6Functions(LogThis)("Function 176").verbose("Popup info item",t)
             return `ShowPopup('message','${a.getTr2FunctionText(t)}')`
         },
         getBrowseAction: function(e, t) {
@@ -8515,7 +8515,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             })
         },
         getPaginationAction: function(e, t) {
-            CP6Functions(0)("Function 176").verbose("getPaginationAction")
+            CP6Functions(LogThis)("Function 176").verbose("getPaginationAction")
 
             const r = t.history || [];
             return n({
@@ -8532,7 +8532,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     e.exports = require("body-parser")
 }, function(e, t, r) {// Function 178 accountMiddleware
     "use strict";
-    CP6Functions(0)("Function 178").verbose("getPaginationAction")
+    CP6Functions(LogThis)("Function 178").verbose("getPaginationAction")
     const n = r(24),
         o = r(0)("accountMiddleware");
     e.exports.requireLoggedInAccountMiddleWare = ((e, t, r) => {
@@ -8695,7 +8695,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 181 Server (express route); exceptionhandler
     "use strict";
-    CP6Functions(0)("Function 181").verbose("")
+    CP6Functions(LogThis)("Function 181").verbose("")
     const n = process.uptime(),
         o = r(0)("server"),
         i = r(40),
@@ -8710,7 +8710,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
         g = r(104);
     let m;
     c.initializeServices().then(function() {
-        CP6Functions(0)("Function 181").verbose("initializeServices")
+        CP6Functions(LogThis)("Function 181").verbose("initializeServices")
         return new Promise(e => {
             o.debug("INITIALIZING SERVER"), m = i.createServer(u);
             const t = a(m, s.socket);
@@ -8766,16 +8766,16 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
         constructor(e) {
             this.entriesToStore = e, this.elements = [], this.position = 0
         }
-        addEntry(e) {CP6Functions(0)("Function 183").verbose("addentry",e)
+        addEntry(e) {CP6Functions(LogThis)("Function 183").verbose("addentry",e)
             this.elements[this.position++] = {
                 timestamp: Date.now(),
                 value: e
             }, this.position %= this.entriesToStore
         }
-        clear() {CP6Functions(0)("Function 183").verbose("clear")
+        clear() {CP6Functions(LogThis)("Function 183").verbose("clear")
             this.elements = [], this.position = 0
         }
-        getAll() {CP6Functions(0)("Function 183").verbose("getall")
+        getAll() {CP6Functions(LogThis)("Function 183").verbose("getall")
             return this.elements.sort(function(e, t) {
                 return e.timestamp > t.timestamp ? -1 : e.timestamp < t.timestamp ? 1 : 0
             })
@@ -8800,12 +8800,12 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 
     function o() {
-        CP6Functions(0)("Function 185").verbose("Init functions (Setfirmwareversion)")
+        CP6Functions(LogThis)("Function 185").verbose("Init functions (Setfirmwareversion)")
         
         return u.setFirmwareVersion(_.version), I.debug("INIT_ACCOUNT"), u.selectNeeoCloudReplacementUrl  ().then(({
             discoverUrl: e,
             isPro: t
-        }) => (CP6Functions(0)("Function 185").verbose("Init functions "),P.setCloudStatusUrl(e), P.updateLicense(t), u.autologin().catch(() => {}).finally(() => {
+        }) => (CP6Functions(LogThis)("Function 185").verbose("Init functions "),P.setCloudStatusUrl(e), P.updateLicense(t), u.autologin().catch(() => {}).finally(() => {
             k = setTimeout(() => (function(e) {
                 I.debug("START_ACCOUNT_RELATED_SERVICES"), _.startChecker().catch(e => I.debug("ERROR_FIRMWARE_CHECK:", e.message)), y.startRegistration(e), p.startTask(), N.startTasks(), R.get().then(e => m.startTask(e)).catch(e => {
                     I.warn("AUTOUPDATE_INIT_FAILED", e.message)
@@ -8815,7 +8815,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 
     function i() {
-        CP6Functions(0)("Function 185").verbose("bootstrap successful, now start notificatiopnlistener (f,h,S,w,E,v,L and D)")
+        CP6Functions(LogThis)("Function 185").verbose("bootstrap successful, now start notificatiopnlistener (f,h,S,w,E,v,L and D)")
         return I.debug("INIT_LISTENERS"), c.all([f.startNotificationListener(), h.startNotificationListener(), R.get().then(e => S.startNotificationListener(e)), w.startNotificationListener(), E.startNotificationListener(), v.startNotificationListener(), L.startNotificationListener(), D.startNotificationListener()]).catch(e => {
             I.warn("ERROR_INIT_LISTENERS", e.message)
         })
@@ -8860,7 +8860,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     let k;
     e.exports = {
         initializeServices: function() {
-            CP6Functions(0)("Function 185").verbose("initializeServices")            
+            CP6Functions(LogThis)("Function 185").verbose("initializeServices")            
             return I.debug("BOOTSTRAP_START"), T.bootstrapJn5168().catch(e => {
                 I.debug("JN_BOOTSTRAP_ERROR", e.message)
             }).then(i).then(n).then(s).then(o).then(a)
@@ -8871,7 +8871,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 186 Higher level functions for account and brain itself 
     "use strict";
-    CP6Functions(0)("Function 186").verbose("")
+    CP6Functions(LogThis)("Function 186").verbose("")
 
     function n() {
         return i.cloud.consumer
@@ -8916,8 +8916,8 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             }), c.debug("init", e), this.parseUser = null, this.duiroFormatVersion = e.duiroFormatVersion, this.firmwareVersion = "unknown", m.readAsync().then(e => this.macAddress = e)
         };
     I.prototype.isLoggedIn = function() {
-        CP6Functions(0)("Function 186").verbose("isLoggedIn")
-        return this.autologin().then(() => {CP6Functions(0)("Function 186").verbose("returning isLoggedIn"), !0}).catch(() => {CP6Functions(0)("Function 186").verbose("not isLoggedIn");!!g.get("account", "userEmail")})
+        CP6Functions(LogThis)("Function 186").verbose("isLoggedIn")
+        return this.autologin().then(() => {CP6Functions(LogThis)("Function 186").verbose("returning isLoggedIn"), !0}).catch(() => {CP6Functions(LogThis)("Function 186").verbose("not isLoggedIn");!!g.get("account", "userEmail")})
     }, I.prototype.getAccountname = function() {
         const e = _.getSessionObject();
         return !e && g.get("account", "userEmail") ? {
@@ -8985,11 +8985,11 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }, I.prototype.getBackupById = function(e) {
         return l.increaseCounter("parse-get-backup-started"), this.autologin().then(t => f.getBackupById(t, e))
     }, I.prototype.getDeviceFileList = function() {
-        CP6Functions(0)("186").verbose("getDeviceFilelist");
+        CP6Functions(LogThis)("186").verbose("getDeviceFilelist");
         const e = "getDeviceFileList" + this.duiroFormatVersion;
         return this._runCloudFunction(e).timeout(12e5)
     }, I.prototype.initializeParse = function(e) {
-        CP6Functions(0)("Function 186").verbose("initializeParse")
+        CP6Functions(LogThis)("Function 186").verbose("initializeParse")
         return new a(t => {
             u(e, {
                 appId: {
@@ -9001,14 +9001,14 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             }), s.initialize(e.appId), s.serverURL = e.parseUrl, t(e)
         })
     }, I.prototype.getPersistedCloudInstanceConfig = function() {
-        CP6Functions(0)("Function 186").verbose("getPersistedCloudInstanceConfig")
+        CP6Functions(LogThis)("Function 186").verbose("getPersistedCloudInstanceConfig")
         return h.load().then(e => e.cloudInstanceConfig)
     }, I.prototype.getFullDeviceSpec = function(e) {
-        CP6Functions(0)("Function 186").verbose("getFullDeviceSpec",e)
+        CP6Functions(LogThis)("Function 186").verbose("getFullDeviceSpec",e)
         l.increaseCounter("parse-run-cloudfunction");
         const t = "getFullDeviceSpec" + i.account.duiroFormatVersion;
         const MyDevice = e.type+"_"+e.manufacturer+"_"+e.name+".json"
-        CP6Functions(0)("Function 186").verbose("getFullDeviceSpec, looking for",MyDevice)
+        CP6Functions(LogThis)("Function 186").verbose("getFullDeviceSpec, looking for",MyDevice)
         
         //return this._download({name:MyDevice,url:"http://192.168.73.110:8000/Cloud/IRDrivers/"+MyDevice,_downloadDir : "/tmp"})
         return this._download({name:MyDevice,targetDir:"/tmp",type:"irdevices",url:CloudReplacementUrl  +"?type=irdevices&name="+MyDevice,_downloadDir : "/tmp"})
@@ -9018,7 +9018,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }, I.prototype.setFirmwareVersion = function(e) {
         this.firmwareVersion = e
     }, I.prototype._copy = function(e, t) {
-        CP6Functions(0)("Function 186").verbose("_copy",e,"to",t)
+        CP6Functions(LogThis)("Function 186").verbose("_copy",e,"to",t)
           if (/*l.debug("Copying", {
                 fromFilePath: e,
                 toFilePath: t
@@ -9030,7 +9030,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
         return   "/tmp/" + e
     },
     I.prototype._checkSum = function(e) {
-    CP6Functions(0)("Function 186").verbose("_checkSum e",e)
+    CP6Functions(LogThis)("Function 186").verbose("_checkSum e",e)
     return new u(t => {
         const r = a.createHash("sha1"),
             n = o.createReadStream(e);
@@ -9048,38 +9048,38 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     })
     },
     I.prototype._xcheckSum = function(e) {
-        CP6Functions(0)("Function 186").verbose("Checksum e",e)
+        CP6Functions(LogThis)("Function 186").verbose("Checksum e",e)
         return new u(t => {                         // r(14)
             const r = NoClouda.createHash("sha1"),  // r(41)
                 n = NoCloudo.createReadStream(e);   // r(26)
-                CP6Functions(0)("Function 186").verbose("e",e)
-                CP6Functions(0)("Function 186").verbose("n",n)
+                CP6Functions(LogThis)("Function 186").verbose("e",e)
+                CP6Functions(LogThis)("Function 186").verbose("n",n)
             n.on("data", e => {
-                CP6Functions(0)("Function 186").verbose("checksum data e:", e)
+                CP6Functions(LogThis)("Function 186").verbose("checksum data e:", e)
                 r.update(e)
             }), n.on("end", () => {
                 const n = r.digest("hex");
-                CP6Functions(0)("Function 186").verbose("checksum end")
+                CP6Functions(LogThis)("Function 186").verbose("checksum end")
                 t(n)
             }), n.on("error", e => {
-                CP6Functions(0)("Function 186").verbose("checksum error t:", t), t()
+                CP6Functions(LogThis)("Function 186").verbose("checksum error t:", t), t()
             })
         })
     }, I.prototype._download = function(e) {
-        CP6Functions(0)("Function 186").verbose("_download",e)
+        CP6Functions(LogThis)("Function 186").verbose("_download",e)
         var fullFileName = e.targetDir+"/"+e.name;
         var myContent;
         return  noCloud.downloadContent(e).then(content => 
             (myContent = content,
             this._checkSum(fullFileName))).then(r => 
-                {CP6Functions(0)("Function 186").verbose("We have this checksum",r,"for",fullFileName);
+                {CP6Functions(LogThis)("Function 186").verbose("We have this checksum",r,"for",fullFileName);
                 n(fullFileName, r.shaSum);
                 if (typeof myContent == "string")
                     return myContent = JSON.parse(myContent)
                 else 
                     return myContent})
 }, I.prototype.selectNeeoCloudReplacementUrl   = function() {
-    CP6Functions(0)("Function 186").verbose("selectNeeoCloudReplacementUrl  ")
+    CP6Functions(LogThis)("Function 186").verbose("selectNeeoCloudReplacementUrl  ")
         return this.getCloudConfigFor().then(e => this.initializeParse(e)).then(e => o({
             cloudInstanceConfig: e
         }).then(() => e)).catch(e => {
@@ -9089,10 +9089,10 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
         })
     }, I.prototype.getCloudConfigFor = function() {
         const e = n();
-        CP6Functions(0)("Function 186").verbose("getCloudConfigFor")
+        CP6Functions(LogThis)("Function 186").verbose("getCloudConfigFor")
         return this.initializeParse(e).then(() => e)
     }, I.prototype.checkDevicesForUpdates = function(e) {
-        CP6Functions(0)("Function 186").verbose("checkDevicesForUpdates")
+        CP6Functions(LogThis)("Function 186").verbose("checkDevicesForUpdates")
         return this._runCloudFunction("getDevicesWithUpdates", {
             devices: e
         })
@@ -9107,7 +9107,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             backupId: e
         })
     }, I.prototype._runCloudFunction = function(e, t = {}) {
-       CP6Functions(0)("Function 186").verbose("runcloudfunction e",e);CP6Functions(0)("Function 186").verbose("runcloudfunction t",t)
+       CP6Functions(LogThis)("Function 186").verbose("runcloudfunction e",e);CP6Functions(LogThis)("Function 186").verbose("runcloudfunction t",t)
         return this.autologin().then(r => E.runCloudFunction(r, e, t))
     }, I.prototype.pairToBrain = function(e, t) {
         return a.resolve(this.login(e.email, e.password)).then(e => E.runCloudFunction(e, "pairIntegratorToBrain", {
@@ -9120,7 +9120,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 187 Looks like zwave alarm handler
     "use strict";
-    CP6Functions(0)("Function 187").verbose("zwave alarm handler")
+    CP6Functions(LogThis)("Function 187").verbose("zwave alarm handler")
     const n = r(0)("EventLog"),
         o = [{
             name: "SENSOR_ALARM+Alarm",
@@ -9165,7 +9165,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 188 notification:powersensorlistener
     "use strict";
-    CP6Functions(0)("Function 188").verbose("powersensorlistener")
+    CP6Functions(LogThis)("Function 188").verbose("powersensorlistener")
     const n = r(6)("cp6:app:lib:notification:powersensorlistener"),
         o = r(55);
     e.exports = class {
@@ -9198,7 +9198,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 189 notificationSensorlistener
     "use strict";
-    CP6Functions(0)("Function 189").verbose("sensorlistener:")
+    CP6Functions(LogThis)("Function 189").verbose("sensorlistener:")
     const n = r(0)("notificationSensorlistener"),
         o = r(3),
         i = r(25);
@@ -9215,7 +9215,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
                 sensorValue: t,
                 sensorEventKey: r
             } = e, i = this.project.getSensorByEventKey(r);
-//            CP6Functions(0)("Function 189").verbose("_handleSensorUpdate:",r,"becomes",t)
+//            CP6Functions(LogThis)("Function 189").verbose("_handleSensorUpdate:",r,"becomes",t)
             return i ? void i.setCachedValue(t) : (n.debug("UNDEFINED_SENSOR_EVENTKEY", {
                 sensorEventKey: r,
                 sensorValue: t
@@ -9256,7 +9256,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     e.exports = require("blocked")
 }, function(e, t, r) {// Function 193 notificationsender; contains socketio-functions
     "use strict";
-    CP6Functions(0)("Function 193").verbose("notificationsender (socketio)")
+    CP6Functions(LogThis)("Function 193").verbose("notificationsender (socketio)")
     const n = r(6)("cp6:lib:notificationsender"),
         o = r(3),
         i = r(194),
@@ -9267,22 +9267,22 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     a.prototype.socketioinit = function(e) {
         this.io = e
     }, a.prototype._socketio = function(e) {
-        CP6Functions(0)("Function 193").verbose("update all but TR2 - _sockeio",e.type,"(e.data)",e.data,e)
+        CP6Functions(LogThis)("Function 193").verbose("update all but TR2 - _sockeio",e.type,"(e.data)",e.data,e)
 
         return this.io ? (this.io.sockets.emit(e.type, e.data), !0) : (n("cannot send notification via socket.io"), !1)
     }, a.prototype._cacheNotification = function(e) {
-        CP6Functions(0)("Function 193").verbose("cache notification (e.type)",e.type,"(e.data)",e.data)
+        CP6Functions(LogThis)("Function 193").verbose("cache notification (e.type)",e.type,"(e.data)",e.data)
         s.includes(e.type) || this.cache.put(e.type, e.data)
     }, a.prototype.send = function(e) {
-        CP6Functions(0)("Function 193").verbose("sending notification (socketio:e)",e)
+        CP6Functions(LogThis)("Function 193").verbose("sending notification (socketio:e)",e)
         //if (e.data != "" && e.data.substring(0,4) == "Play") {
             //e.data = "Playing \n\r this medium"
         //}
         return !(!e || !e.type) && (n("sending notification:", e.type), this._cacheNotification(e), o.increaseCounter("notification-sent"), this._socketio(e))
     }, a.prototype.resendAll = function() {
-        CP6Functions(0)("Function 193").verbose("resending all cached notifications")
+        CP6Functions(LogThis)("Function 193").verbose("resending all cached notifications")
         n("sending re-sending all cached notifications."), this.cache.forEach((e, t) => {
-            CP6Functions(0)("Function 193").verbose("resending this cached notification",t,e)
+            CP6Functions(LogThis)("Function 193").verbose("resending this cached notification",t,e)
             this._socketio({
                 type: t,
                 data: e
@@ -9326,7 +9326,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 195 load/save/delete account file
     "use strict";
-    CP6Functions(0)("Function 195").verbose("oad/save/delete account file")
+    CP6Functions(LogThis)("Function 195").verbose("oad/save/delete account file")
 
     function n() {
         return o.load(i)
@@ -9344,7 +9344,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 196 store functions
     "use strict";
-    CP6Functions(0)("Function 196").verbose("store functions")
+    CP6Functions(LogThis)("Function 196").verbose("store functions")
     const n = r(26),
         o = r(112),
         i = r(1),
@@ -9398,8 +9398,8 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             encoding: this.options.encoding
         })
     }, g.prototype.load = function(e, t, r) {
-        CP6Functions(0)("Function 196").verbose("store functions - load e",e)
-        CP6Functions(0)("Function 196").verbose("store functions - load t",t)
+        CP6Functions(LogThis)("Function 196").verbose("store functions - load e",e)
+        CP6Functions(LogThis)("Function 196").verbose("store functions - load t",t)
         return s(r) || !this.cache[e] || t ? (d.debug("loading", {
             key: e,
             timeStamp: r
@@ -9409,10 +9409,10 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             return this._cache(e, r), r
         })) : (d.debug("loading from cache", e), i.resolve(this.cache[e]))
     }, g.prototype.loadLatest = function(e) {
-        CP6Functions(0)("Function 196").verbose("store functions - loadLatest e",e)
+        CP6Functions(LogThis)("Function 196").verbose("store functions - loadLatest e",e)
         return this.listVersions(e).then(t => t.length ? this.loadLatestVersion(e, t, 0) : this.load(e, !0))
     }, g.prototype.loadLatestVersion = function(e, t, r) {
-        CP6Functions(0)("Function 196").verbose("store functions - loadLatestVersion e",e)
+        CP6Functions(LogThis)("Function 196").verbose("store functions - loadLatestVersion e",e)
         return this.load(e, !0, t[r]).catch(n => {
             if (d.warn("INVALID_STOREFILE_DETECTED", {
                     file: t[r],
@@ -9443,7 +9443,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     e.exports = require("write-file-atomic")
 }, function(e, t, r) {// Function 199 Storechecker
     "use strict";
-    CP6Functions(0)("Function 199").verbose("Storechecker")
+    CP6Functions(LogThis)("Function 199").verbose("Storechecker")
     const n = r(0)("Storechecker");
     e.exports.parseFile = function(e) {
         try {
@@ -9456,7 +9456,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 200 getObsoleteVersions
     "use strict";
-    CP6Functions(0)("Function 200").verbose("getObsoleteVersions:")
+    CP6Functions(LogThis)("Function 200").verbose("getObsoleteVersions:")
 
     function n({
         versions: e,
@@ -9555,7 +9555,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     e.exports = require("getmac")
 }, function(e, t, r) {// Function 209 functiopns for savebackup
     "use strict";
-    CP6Functions(0)("Function 209").verbose("Functions for save backup:")
+    CP6Functions(LogThis)("Function 209").verbose("Functions for save backup:")
 
     function n(e) {
         return l.encrypt(p.getSecret(), e)
@@ -9628,7 +9628,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 210 encrypt/decrypt
     "use strict";
-    CP6Functions(0)("Function 210").verbose("encrypt/decrypt")
+    CP6Functions(LogThis)("Function 210").verbose("encrypt/decrypt")
     const n = r(41),
         o = "aes-256-ctr",
         i = t.encrypt = function(e, t) {
@@ -9650,7 +9650,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 211 PromiseCache
     "use strict";
-    CP6Functions(0)("Function 211").verbose("PromiseCache")
+    CP6Functions(LogThis)("Function 211").verbose("PromiseCache")
     const n = r(0)("PromiseCache");
     (e.exports = function(e) {
         this.fetchPromise = void 0, this.cacheDurationMs = e || 1e4, this.cacheExpire = Date.now(), this.id = this.cacheExpire
@@ -9660,7 +9660,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 212 ParseCloudfunction
     "use strict";
-    CP6Functions(0)("Function 212").verbose("ParseCloudFunction")
+    CP6Functions(LogThis)("Function 212").verbose("ParseCloudFunction")
 
     function n(e) {
         const t = e.message && e.message.message ? e.message : e,
@@ -9676,9 +9676,9 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
         c = ["lookupHostnameSwitch", "updateBrainInformation", "pairIntegratorToBrain"];
     e.exports = {
         runCloudFunction: function(e, t, r) {
-            CP6Functions(0)("Function 212").verbose("runCloudFunction: e",e)
-            CP6Functions(0)("Function 212").verbose("runCloudFunction: t",t)
-            CP6Functions(0)("Function 212").verbose("runCloudFunction: r",r)
+            CP6Functions(LogThis)("Function 212").verbose("runCloudFunction: e",e)
+            CP6Functions(LogThis)("Function 212").verbose("runCloudFunction: t",t)
+            CP6Functions(LogThis)("Function 212").verbose("runCloudFunction: r",r)
             return Promise.resolve(); // No more cloud, so function isn't applicable anymore. 
             return s.increaseCounter("parse-run-cloudfunction"), a.debug("Calling function:", t, r), i.Cloud.run(t, r, {
                 sessionToken: e.token
@@ -9692,7 +9692,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 213 ParseAccount
     "use strict";
-    CP6Functions(0)("Function 213").verbose("ParseAccount:")
+    CP6Functions(LogThis)("Function 213").verbose("ParseAccount:")
     const n = r(54),
         o = r(1),
         i = r(0)("ParseAccount");
@@ -9716,7 +9716,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 214 DirectoryAdapter
     "use strict";
-    CP6Functions(0)("Function 214").verbose("DirectoryAdapter:")
+    CP6Functions(LogThis)("Function 214").verbose("DirectoryAdapter:")
     const n = r(0)("DirectoryAdapter"),
         o = r(17),
         i = new(r(40).Agent)({
@@ -9736,7 +9736,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             uri: this.baseUrl + "/config",
             timeout: c,
             agent: i
-        }).catch(e => {CP6Functions(0)("Function 214").error("get-config failed",uri)
+        }).catch(e => {CP6Functions(LogThis)("Function 214").error("get-config failed",uri)
             n.error("DIRECTORYADAPTER_GET_CONFIG_FAILED", {
                 error: e.message
             });
@@ -9818,7 +9818,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 
     function o(e, t, r = "") {
-        CP6Functions(0)("Function 215").verbose("function o")
+        CP6Functions(LogThis)("Function 215").verbose("function o")
         return e + t.getPath() + "/" + encodeURIComponent(t.getAdapterDeviceId()) + r
     }
     const i = r(1),
@@ -9922,7 +9922,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             timeout: y
         }))
     }, T.prototype.discover = function(e, t) {
-        CP6Functions(0)("Function 215").verbose("Discover devices")
+        CP6Functions(LogThis)("Function 215").verbose("Discover devices")
         return h.increaseCounter("deviceadapter-send-discover"), u.debug("DISCOVER_DEVICE", {
             adapterName: e,
             sourceName: t
@@ -10120,7 +10120,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             spotifyUsername: r
         }), this._getBaseUrlFromDevice(e.getDevice()))).then(r => this._getTriggerOptions(e, t, r)).then(e => (e.agent = c, s(e).catch(n)))
     }, T.prototype.getValue = function(e) {
-        CP6Functions(0)("Function 215").debug("getValue (from deviceadapter)" );
+        CP6Functions(LogThis)("Function 215").debug("getValue (from deviceadapter)" );
         h.increaseCounter("deviceadapter-send-getvalue");
         const t = e.getDevice();
         return u.debug("get value of sensor", {
@@ -10131,9 +10131,9 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             return this._get({
                 uri: r + o.path + "/" + encodeURIComponent(t.getAdapterDeviceId()),
                 agent: c
-            }).then(Sensor => {/*CP6Functions(0)("Function 215").debug("deviceadapter returned",Sensor,"for",e.name );*/ return Sensor.value})
-            .catch(n => {CP6Functions(0)("Function 215").warn("getValue ERROR (from deviceadapter)",e.name)})
-        }).catch(err => CP6Functions(0)("Function 215").warn(" ERROR getValue getDevice:",err ))
+            }).then(Sensor => {/*CP6Functions(LogThis)("Function 215").debug("deviceadapter returned",Sensor,"for",e.name );*/ return Sensor.value})
+            .catch(n => {CP6Functions(LogThis)("Function 215").warn("getValue ERROR (from deviceadapter)",e.name)})
+        }).catch(err => CP6Functions(LogThis)("Function 215").warn(" ERROR getValue getDevice:",err ))
     }, T.prototype.browse = function(e, t, r) {
         return h.increaseCounter("deviceadapter-send-browse"), this._getBaseUrl(t).then(t => o(t, e)).then(t => (u.debug("browse directory", {
             uri: t,
@@ -10148,7 +10148,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             throw u.debug("INVALID_BROWSE_RESULT", t), e.alreadyLogged = !0, e
         })
     }, T.prototype.callDirectoryAction = function(e, t, r) {
-        CP6Functions(0)("Function 215").verbose("/:directory_key/action : translates directorykeypress into action")
+        CP6Functions(LogThis)("Function 215").verbose("/:directory_key/action : translates directorykeypress into action")
         return h.increaseCounter("deviceadapter-send-action"), this._getBaseUrl(t).then(t => o(t, e, "/action")).then(t => (u.debug("call action on directory", {
             uri: t,
             params: r,
@@ -10170,7 +10170,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     e.exports = require("openpgp")
 }, function(e, t, r) {// Function 217 "neeo-deviceadapter", "cec", "sonos", "zwave", "hue"
     "use strict";
-    CP6Functions(0)("Function 217").verbose("Determine baseurl for internal and SDK-adapters (getBaseUrl), builddevices")
+    CP6Functions(LogThis)("Function 217").verbose("Determine baseurl for internal and SDK-adapters (getBaseUrl), builddevices")
     const n = r(1),
         o = r(18),
         i = r(119),
@@ -10192,7 +10192,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             return new n((r, n) => {
                 if (this.isDeviceAdapterInternal(e, t)) return r(this.baseUrlDeviceadapter);
                 const o = i.getBaseUrl(t || e);
-                CP6Functions(0)("Function 217").debug("_getBaseUrl",o)
+                CP6Functions(LogThis)("Function 217").debug("_getBaseUrl",o)
                 o ? r(o) : n(new Error("Could not find SDK instance " + e))
             })
         }
@@ -10210,7 +10210,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 218 adapterparser
     "use strict";
-    CP6Functions(0)("Function 218").verbose("adapterparser")
+    CP6Functions(LogThis)("Function 218").verbose("adapterparser")
 
     function n(e) {
         return function(e) {
@@ -10266,14 +10266,14 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 219 iconify
     "use strict";
-    CP6Functions(0)("Function 219").verbose("iconify:")
+    CP6Functions(LogThis)("Function 219").verbose("iconify:")
     const n = r(58).iconify;
     e.exports = function(e) {
         return e.adapterName = e.type.toLowerCase(), e.icon = n(e.type), e
     }
 }, function(e, t, r) {// Function 220 zwavedevicesync
     "use strict";
-    CP6Functions(0)("Function 220").verbose("zwavedevcesync:")
+    CP6Functions(LogThis)("Function 220").verbose("zwavedevcesync:")
     const n = r(0)("zwavedevicesync"),
         o = "zwave",
         i = "controllerlearn",
@@ -10363,7 +10363,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     e.exports = a
 }, function(e, t, r) {// Function 221 devicespecs
     "use strict";
-    CP6Functions(0)("Function 221").verbose("devicespecs")
+    CP6Functions(LogThis)("Function 221").verbose("devicespecs")
 
     function n(e, t) {
         if (e.data.generic !== t.data.generic) {
@@ -10399,10 +10399,10 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             })
         };
     p.prototype.reloadDuiroData = function() {
-        CP6Functions(0)("Function 221").verbose("devicespecs reloadDuiroData")
+        CP6Functions(LogThis)("Function 221").verbose("devicespecs reloadDuiroData")
         return this.sources[c.SOURCE_DUIRO].reloadIndexFile()
     }, p.prototype.search = function(e) {
-        CP6Functions(0)("Function 221").verbose("devicespecs reloadDuiroData")
+        CP6Functions(LogThis)("Function 221").verbose("devicespecs reloadDuiroData")
         const t = s(this.sources);
         return a.all(t.map(t => t.search(e).catch(e => (l.debug("DEVICESPEC_IGNORED_SOURCE", {
             source: t.name,
@@ -10413,7 +10413,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             return e.reduce((e, t) => t ? e.concat(t) : e, []).filter(o).sort(n).slice(0, this.maxSearchResults).map(e => (e.data.manufacturer = e.data.manufacturer, e.data.name = e.data.name, e.data.type = e.data.type, e.data.adapterName = e.data.adapterName, e.data.id = e.data.id, e.data.isTested = e.data.isTested, e)) || []
         })
     }, p.prototype.splitId = function(e) {
-        CP6Functions(0)("Function 221").verbose("devicespecs splitId")
+        CP6Functions(LogThis)("Function 221").verbose("devicespecs splitId")
         const t = i(this.sources, e => ({
             type: e.type,
             name: e.name
@@ -10430,25 +10430,25 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
         }
         throw new Error("DeviceSpec: Failed to parse ID " + e)
     }, p.prototype.getFullSpec = function(e, t) {
-        CP6Functions(0)("Function 221 ").verbose("devicespecs getFullSpec e:",e)
+        CP6Functions(LogThis)("Function 221 ").verbose("devicespecs getFullSpec e:",e)
         l.debug("getFullSpec", e);
         const r = this.splitId(e);
-        CP6Functions(0)("Function 221").verbose("devicespecs after splitId e:",r,t)
+        CP6Functions(LogThis)("Function 221").verbose("devicespecs after splitId e:",r,t)
         return this.sources[r.sourceName].getFullSpec(r.id, t)
     }, p.prototype.getSpec = function(e) {
-        CP6Functions(0)("Function 221").verbose(" devicespecs getSpec")
+        CP6Functions(LogThis)("Function 221").verbose(" devicespecs getSpec")
         l.debug("getSpec", e);
         const t = this.splitId(e);
         return this.sources[t.sourceName].getSpec(t.id)
     }, p.prototype.getCapabilities = function(e, t, r) {
-        CP6Functions(0)("Function 221").verbose("devicespecs getCapabilities")
+        CP6Functions(LogThis)("Function 221").verbose("devicespecs getCapabilities")
         const n = this.splitId(e);
         return this.sources[n.sourceName].getCapabilities(t, r)
     }, p.prototype.getSourceByName = function(e) {
-        CP6Functions(0)("Function 221").verbose("devicespecs getSourceByName")
+        CP6Functions(LogThis)("Function 221").verbose("devicespecs getSourceByName")
         return this.sources[e]
     }, p.prototype.updateSearchSources = function(e) {
-        CP6Functions(0)("Function 221").verbose("devicespecs updateSearchSources")
+        CP6Functions(LogThis)("Function 221").verbose("devicespecs updateSearchSources")
         if (!Array.isArray(e)) return void l.debug("INVALID_SEARCH_SOURCE_DATA");
         l.debug("UPDATE SEARCH SOURCES");
         const t = {};
@@ -10464,7 +10464,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     e.exports = require("lodash/map")
 }, function(e, t, r) {// Function 223 DuiroSpecsSource
     "use strict";
-    CP6Functions(0)("Function 223").verbose("DuiroSpecsSource:")
+    CP6Functions(LogThis)("Function 223").verbose("DuiroSpecsSource:")
 
     function n(e) {
         return 500 * Math.ceil(e / 500)
@@ -10490,7 +10490,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             threshold: .5
         }), a.debug("device search initialized. device count", e.length)
     }, p.prototype.reloadIndexFile = function() {
-        CP6Functions(0)("Function 223").verbose("DuiroSpecsSource: reloadIndexFile")
+        CP6Functions(LogThis)("Function 223").verbose("DuiroSpecsSource: reloadIndexFile")
 
         return a.debug("RELOAD_INDEX_FILE"), this.deviceFileManager.getDeviceFileContent().then(e => {
             this._init(JSON.parse(e))
@@ -10498,7 +10498,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             a.error("DUIROSPEC_LOAD_INDEX", e.message)
         })
     }, p.prototype.getFullSpecById = function(e) {
-        CP6Functions(0)("Function 223").verbose("DuiroSpecsSource: getFullSpecById",e)
+        CP6Functions(LogThis)("Function 223").verbose("DuiroSpecsSource: getFullSpecById",e)
         return o.resolve(d.getFullDeviceSpec(e)).timeout(32e3).then(e => this._stripGenericCommandsets(e)).then(e => this._roundTimingValueBy500Ms(e))
     }, p.prototype.getDevicesWithUpdates = function(e) {
         return 0 === e.length ? o.resolve([]) : d.checkDevicesForUpdates(e)
@@ -10529,9 +10529,9 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             d = s.concat(c);
         return a.debug("search result:", d.length), o.resolve(d)
     }, p.prototype._getSpec = function(e) {
-        CP6Functions(0)("Function 223").verbose("DuiroSpecsSource: _getSpec",e)
+        CP6Functions(LogThis)("Function 223").verbose("DuiroSpecsSource: _getSpec",e)
         const t = this.devices[e];
-        CP6Functions(0)("Function 223").verbose("DuiroSpecsSource: _getSpec done t",t)
+        CP6Functions(LogThis)("Function 223").verbose("DuiroSpecsSource: _getSpec done t",t)
 
         return t || o.reject(new Error("no such devicespec: " + e)), o.resolve(t)
     }, p.prototype._stripGenericCommandsets = function(e) {
@@ -10555,7 +10555,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }, p.prototype._roundTimingValueBy500Ms = function(e) {
         return e.timing ? (e.timing.standbySourceCommandDelay && (e.timing.standbySourceCommandDelay = n(e.timing.standbySourceCommandDelay)), e.timing.standbyCommandDelay && (e.timing.standbyCommandDelay = n(e.timing.standbyCommandDelay)), e.timing.sourceSwitchDelay && (e.timing.sourceSwitchDelay = n(e.timing.sourceSwitchDelay)), e.timing.shutdownDelay && (e.timing.shutdownDelay = n(e.timing.shutdownDelay)), e) : e
     }, p.prototype._getFullSpec = function(e) {
-        CP6Functions(0)("Function 223").verbose("DuiroSpecsSource: _getFullSpec")
+        CP6Functions(LogThis)("Function 223").verbose("DuiroSpecsSource: _getFullSpec")
         return this._getSpec(e).then(e => this.getFullSpecById({
             type: e.type,
             manufacturer: e.manufacturer,
@@ -10566,7 +10566,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 224 GenericDeviceSearch
     "use strict";
-    CP6Functions(0)("Function 224").verbose("GenericdeviceSearch:")
+    CP6Functions(LogThis)("Function 224").verbose("GenericdeviceSearch:")
     const n = r(0)("GenericDeviceSearch"),
         o = [{
             addTextIfFound: "sony tv",
@@ -10627,7 +10627,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
     }
 }, function(e, t, r) {// Function 225 DeviceFileManager
     "use strict";
-    CP6Functions(0)("Function 225").verbose("DeviceFileManager:")
+    CP6Functions(LogThis)("Function 225").verbose("DeviceFileManager:")
 
     function n(e, t) {
         h.put("devicefilemanager", e, t.substr(0, 7))
@@ -10649,7 +10649,7 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             l.debug("init", e), this.account = r(24), this._downloadDir = e.downloadDir, this._fileDir = e.fileDirectory, this._syncExpiresInMs = e.syncExpiresInMs, this._busy = !1, this._notification = t
         };
     m.prototype._checkSum = function(e) {
-        CP6Functions(0)("Function 225").verbose("_checkSum e",e)
+        CP6Functions(LogThis)("Function 225").verbose("_checkSum e",e)
         return new u(t => {
             const r = a.createHash("sha1"),
                 n = o.createReadStream(e);
@@ -10676,9 +10676,9 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             n = o.createWriteStream(t);
         return s(r, n)
     }, m.prototype._download = function(e,t,r) {
-        CP6Functions(0)("Function 225").verbose(" _download e",e)
-        CP6Functions(0)("Function 225").verbose(" _download t",t)
-        CP6Functions(0)("Function 225").verbose(" _download r",r)
+        CP6Functions(LogThis)("Function 225").verbose(" _download e",e)
+        CP6Functions(LogThis)("Function 225").verbose(" _download t",t)
+        CP6Functions(LogThis)("Function 225").verbose(" _download r",r)
         return n(e, r), this._copy(e, t)
     }, m.prototype._tmpdownload = function(e) {
         try {
@@ -10686,34 +10686,34 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
             {e.targetDir=this._downloadDir;
             e.type="devices";
             }
-            CP6Functions(0)("Function 225").verbose(" new download",e)
+            CP6Functions(LogThis)("Function 225").verbose(" new download",e)
         return  r(505).tmpdownload(e).then(tmp  => 
-            (CP6Functions(0)("Function 225").verbose("returned tmpdownload in 225 with file",tmp),
+            (CP6Functions(LogThis)("Function 225").verbose("returned tmpdownload in 225 with file",tmp),
             this._checkSum(tmp.name)).then(r => 
-                {CP6Functions(0)("Function 225").verbose("We have this checksum",r,"for",tmp.name);
+                {CP6Functions(LogThis)("Function 225").verbose("We have this checksum",r,"for",tmp.name);
                 return tmp.name;
                 }))
             }
-        catch (err) {CP6Functions(0)(err)}
+        catch (err) {CP6Functions(LogThis)(err)}
 
     },  m.prototype._syncPromise = function(e) {
-        CP6Functions(0)("Function 225 ").verbose("_syncPromise, item: ",e)        
+        CP6Functions(LogThis)("Function 225 ").verbose("_syncPromise, item: ",e)        
         const t = this._getLocalFilePath(e.name);
-        return this._tmpdownload(e).then(newf =>  this._checkSum(newf).then(r => (CP6Functions(0)("Function 225").verbose("sha compare",r,e.shaSum),r && r === e.shaSum ? (l.debug("Local file matches shaSum. No need to update", e.name), e.filePath = t, n(e.name, e.shaSum), u.resolve(e)) : (l.debug("Local file does not match shaSum! Downloading", e.name), this._download(newf,t,r)))))
+        return this._tmpdownload(e).then(newf =>  this._checkSum(newf).then(r => (CP6Functions(LogThis)("Function 225").verbose("sha compare",r,e.shaSum),r && r === e.shaSum ? (l.debug("Local file matches shaSum. No need to update", e.name), e.filePath = t, n(e.name, e.shaSum), u.resolve(e)) : (l.debug("Local file does not match shaSum! Downloading", e.name), this._download(newf,t,r)))))
     }, m.prototype._syncFileList = function() {
-        CP6Functions(0)("Function 225").verbose("_syncFileList",e)
+        CP6Functions(LogThis)("Function 225").verbose("_syncFileList",e)
     const n = r(24);
 
     return (n.isLoggedIn().then( () => {
        const e = ['devices.json','channels.json']
-       CP6Functions(0)("Function 225").verbose("_syncFileList; we are loggedIn; devices:",e)
+       CP6Functions(LogThis)("Function 225").verbose("_syncFileList; we are loggedIn; devices:",e)
        //            if (!e) return u.reject(Error("empty reply from server"));
 
        const t = [];
        d(e, (e,r) => {
           var devicefilename = p.FILE_LIST[r];
           var filepath = this._getLocalFilePath(devicefilename);
-          CP6Functions(0)("Function 225").verbose("_syncFileList III, item: ",filepath);
+          CP6Functions(LogThis)("Function 225").verbose("_syncFileList III, item: ",filepath);
           //var sha  = r;
           this._checkSum(filepath).then(sha =>
               t.push(this._syncPromise({
@@ -10726,28 +10726,28 @@ CP6Functions(0)("Function 174").verbose("checking uiAction e.uiAction",e);
           });
 
             return u.all(t);
-        }).then(() => (CP6Functions(0)("Function 225").verbose("Updated list of compatible devices; send 'NOTIFICATION_SYNCED'"),l.event("Updated list of compatible devices"), this._busy = !1, this._lastSync = Date.now(), this._notification.send({
+        }).then(() => (CP6Functions(LogThis)("Function 225").verbose("Updated list of compatible devices; send 'NOTIFICATION_SYNCED'"),l.event("Updated list of compatible devices"), this._busy = !1, this._lastSync = Date.now(), this._notification.send({
             type: p.NOTIFICATION_SYNCED,
             data: this._lastSync
         }))).catch(e => (l.error("SYNC_FAILED", {
             error: e.message
-        }), g.increaseCounter("devicefilelist-synchronize-failed"), this._busy = !1, this._lastSync = !1, u.reject(e)))).catch( err  => {CP6Functions(0)("Function 225").error("Error in getdevicefilelist",err)})
+        }), g.increaseCounter("devicefilelist-synchronize-failed"), this._busy = !1, this._lastSync = !1, u.reject(e)))).catch( err  => {CP6Functions(LogThis)("Function 225").error("Error in getdevicefilelist",err)})
     }, m.prototype.refreshFileList = function() {
-        CP6Functions(0)("Function 225").verbose("devicefilemanager: e")
+        CP6Functions(LogThis)("Function 225").verbose("devicefilemanager: e")
 return this._syncFileList();
 
         const e = Date.now() - this._lastSync;
         return !this._lastSync || e > this._syncExpiresInMs ? (l.debug("refresh file list"), this._syncFileList()) : (l.debug("use cached file list, sync expires:", this._syncExpiresInMs - e), u.resolve())
     }, m.prototype.getFileContent = function(e) {
-        CP6Functions(0)("Function 225").verbose("getFileContent: e",e)
+        CP6Functions(LogThis)("Function 225").verbose("getFileContent: e",e)
         if (0 > p.FILE_LIST.indexOf(e)) return u.reject(new Error("unknown file name " + e));
         if (this._busy) return u.reject(new Error("device file manager is syncing"));
         return u.promisify(o.readFile)(this._getLocalFilePath(e)).catch(t => "ENOENT" === t.code ? u.reject(new Error("no such file " + e)) : u.reject(new Error("unexpected error trying to get file content of " + e)))
     }, m.prototype.getChannelFileContent = function() {
-        CP6Functions(0)("Function 225").verbose("getChannelFileContent")
+        CP6Functions(LogThis)("Function 225").verbose("getChannelFileContent")
         return this.getFileContent(p.FILE_CHANNELS)
     }, m.prototype.getDeviceFileContent = function() {
-        CP6Functions(0)("Function 225").verbose("getDeviceFileContent")
+        CP6Functions(LogThis)("Function 225").verbose("getDeviceFileContent")
         return this.getFileContent(p.FILE_DEVICES)
     }
 }, function(e) {// Function 226 contains only exports = require("promisepipe")
@@ -10775,7 +10775,7 @@ return this._syncFileList();
         const t = this.baseUrl + "/db/search?q=" + e;
         return s.debug("search adapter:", t), n(t)
     }, u.prototype._getFullSpec = function(e) {
-        CP6Functions(0)("Function 228").verbose("AdapterSpecsSource: getfullspec (get ful spec from source:)",e)        
+        CP6Functions(0)("Function 228").debug("AdapterSpecsSource: getfullspec (get ful spec from source:)",e)        
         return n(this.baseUrl + "/db/" + e)
     }, u.prototype._getAdapterSpec = function(e, t) {
         return n(this.baseUrl + "/db/adapterdefinition/" + e, t)
@@ -11038,9 +11038,9 @@ return this._syncFileList();
     let E = {};
     e.exports = {
         getSlides: function(e, t, r) {
-            CP6Functions(0)("Function 234").verbose("getSlides");
+            CP6Functions(LogThis)("Function 234").verbose("getSlides");
             return c(a(function(e, t) {
-                CP6Functions(0)("Function 234").verbose("getSlides after c:",e.name,e.slides);
+                CP6Functions(LogThis)("Function 234").verbose("getSlides after c:",e.name,e.slides);
                 return e.slides && 0 < Object.keys(e.slides).length ? t.reduce((t, r) => {
                     const n = Object.assign({}, r),
                         o = e.slides[r.name];
@@ -11124,7 +11124,7 @@ return this._syncFileList();
     let c = {};
     e.exports = {
         loadWidgets: function(e) {
-            CP6Functions(0)("Function 238").debug("loadWidgets");
+            CP6Functions(LogThis)("Function 238").debug("loadWidgets");
             c = {};
             const t = new Set;
             for (const r in e.widgets) {
@@ -11142,7 +11142,7 @@ return this._syncFileList();
             }
         },
         getWidgets: function() {
-            CP6Functions(0)("Function 238").debug("getWidgets");
+            CP6Functions(LogThis)("Function 238").debug("getWidgets");
 
             return Object.keys(c).reduce((e, t) => {
                 const r = c[t].clone();
@@ -11150,13 +11150,13 @@ return this._syncFileList();
             }, {})
         },
         getWidgetByName: function(e) {
-            CP6Functions(0)("Function 238").debug("getWidgetByName",e);
+            CP6Functions(LogThis)("Function 238").debug("getWidgetByName",e);
             const t = c[e];
             if (!t) throw s.increaseCounter("widget-invalid-name"), new Error(`No widget with name "${e}" found`);
             return s.increaseCounter("widget-requests"), t
         },
         getWidgetsForDevice: function(e) {
-            CP6Functions(0)("Function 238").debug("getWidgetsForDevice",e.name);
+            CP6Functions(LogThis)("Function 238").debug("getWidgetsForDevice",e.name);
             if (!e.key) throw s.increaseCounter("widget-invalid-devicekey"), new Error("device is missing key attribute");
             return o(c).filter(t => t.check(e)).reduce((t, r) => {
                 const n = r.clone();
@@ -11682,7 +11682,7 @@ return this._syncFileList();
     "use strict";
 
     function n(e) {
-        CP6Functions(0)("Function 256").verbose("DuiroDeviceUpdater");
+        CP6Functions(LogThis)("Function 256").verbose("DuiroDeviceUpdater");
         return e.hasCapability(g.SOURCE_DUIRO) ? function(e) {
             const t = a(e.details);
             return f.getFullSpecById(t)
@@ -11774,7 +11774,7 @@ return this._syncFileList();
             })(e, t))
         },
         bulkUpdateDevices: function(e) {
-            CP6Functions(0)("Function 256").verbose("bulkUpdateDevices");
+            CP6Functions(LogThis)("Function 256").verbose("bulkUpdateDevices");
             return l.resolve(e).mapSeries(e => n(e).then(e => (h.increaseCounter("duiro-device-auto-update-count"), e)).catch(t => {
                 h.increaseCounter("duiro-device-auto-update-failed-count");
                 const r = a(e.details);
@@ -11971,7 +11971,7 @@ return this._syncFileList();
         l = s.adapterUpdaterTimeoutMs;
     e.exports = {
         checkForAndUpdateDevice: function(e) {
-            CP6Functions(0)("Function 264").verbose("checkForAndUpdateDevice");
+            CP6Functions(LogThis)("Function 264").verbose("checkForAndUpdateDevice");
             return e.hasCapability(a.SOURCE_SDK_ADAPTER) ? n(e).then(t => (function(e, t) {
                 return !! function(e, t) {
                     const r = e.details;
@@ -12636,7 +12636,7 @@ return this._syncFileList();
     }, v.prototype.summary = function() {
         const e = l.get("account", "userEmail") || "",
             t = o.loadavg();
-        CP6Functions(0)("Function 286").verbose("summary");
+        CP6Functions(LogThis)("Function 286").verbose("summary");
         return {
             hardwareRegion: this.getRegionCode(),
             touchButtonPressed: this.isTouchbuttonPressed(),
@@ -12739,7 +12739,7 @@ return this._syncFileList();
     }, v.prototype.logAndFlushStatistics = function() {
         a.info("STATISTICS_KPI_CP6_SYSTEM", this.summary())
     }, v.prototype.cloudInfo = function() {
-        CP6Functions(0)("Function 286").verbose("getting cloudinfo:",CloudReplacementUrl  +"?type=firmware&name=index.html")
+        CP6Functions(LogThis)("Function 286").verbose("getting cloudinfo:",CloudReplacementUrl  +"?type=firmware&name=index.html")
         return i.get({
             //uri: this._cloudStatusUrl,
             uri: CloudReplacementUrl  +"?type=firmware&name=index.html", // "http://192.168.73.110:3200/iui/index.html",
@@ -12769,7 +12769,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 287 Firmware
     "use strict";
-    CP6Functions(0)("Function 287").verbose("Firmware init",e)
+    CP6Functions(LogThis)("Function 287").verbose("Firmware init",e)
     const n = r(26),
         o = r(1),
         i = r(137),
@@ -12792,18 +12792,18 @@ return this._syncFileList();
             s.debug("init", e), this._updateScriptPath = e.updateScriptPath, this._resetScriptPath = e.resetScriptPath, this._versionFile = e.versionFile, this._newVersionFile = e.newVersionFile, this._downloadDir = e.downloadDir, this._checkInterval = e.checkIntervalMs, this._downloadTimeoutMs = e.downloadTimeoutMs, this._checkIntervalId = null, this._updateInProgress = !1, this._firmwareCheckInProgress = !1, this.version = m.readFromWithFallback(this._versionFile), this.newVersion = m.readFrom(this._newVersionFile), this.updateFailed = !1
         };
     v.prototype._getFirmwarePathByVersion = function(e) {
-        CP6Functions(0)("Function 287").verbose("_getFirmwarePathByVersion")
+        CP6Functions(LogThis)("Function 287").verbose("_getFirmwarePathByVersion")
         return this._downloadDir + "/cp6-fw-" + e + ".tgz"
     }, v.prototype._getAvailableFirmware = function() {
-        CP6Functions(0)("Function 287").verbose("_getNoCloudAvailableFirmware CloudReplacementUrl  :",CloudReplacementUrl  )
+        CP6Functions(LogThis)("Function 287").verbose("_getNoCloudAvailableFirmware CloudReplacementUrl  :",CloudReplacementUrl  )
         return r(505).downloadJSONContent({name: "latest_firmware_info_NoCloud.txt", type:"firmware", targetDir : "/steady/neeo/update"}).then(x =>  x)
 
 
     }, v.prototype._downloadRequired = function(e) {
-        CP6Functions(0)("Function 287").verbose("_downloadRequired e",e)
-        CP6Functions(0)("Function 287").verbose("_downloadRequired ev",e.version)
-        CP6Functions(0)("Function 287").verbose("_downloadRequired tv",this.version)
-        CP6Functions(0)("Function 287").verbose("_downloadRequired tnv",this.newVersion)
+        CP6Functions(LogThis)("Function 287").verbose("_downloadRequired e",e)
+        CP6Functions(LogThis)("Function 287").verbose("_downloadRequired ev",e.version)
+        CP6Functions(LogThis)("Function 287").verbose("_downloadRequired tv",this.version)
+        CP6Functions(LogThis)("Function 287").verbose("_downloadRequired tnv",this.newVersion)
         this.newVersion = e.version
 
         return e && e.version ? (s.debug("FIRMWARE_VERSION_COMPARE", {
@@ -12819,21 +12819,21 @@ return this._syncFileList();
             data: Date.now()
         })
     }, v.prototype._updateNewVersionFile = function(e) {
-        CP6Functions(0)("Function 287").verbose("_updateNewVersionFile e:",this._newVersionFile,e)
+        CP6Functions(LogThis)("Function 287").verbose("_updateNewVersionFile e:",this._newVersionFile,e)
         return 99
     }, v.prototype._cleanup = function() {
         s.debug("FIRMWARE_CLEANUP_START"), this.newVersion = m.UNKNOWN;
         const e = this._getFirmwarePathByVersion("*");
-        CP6Functions(0)("Function 287").verbose("We could set this._newVersionFile here to our version-file....")
+        CP6Functions(LogThis)("Function 287").verbose("We could set this._newVersionFile here to our version-file....")
         return g.deleteDownloadedFiles(e, this._newVersionFile).then(() => {
             this._sendNotification(y), s.debug("FIRMWARE_CLEANUP_DONE")
         })
     }, v.prototype.acceptNewFirmware = function(e) {
-        CP6Functions(0)("Function 287").verbose("acceptNewFirmware e:",e,t);
+        CP6Functions(LogThis)("Function 287").verbose("acceptNewFirmware e:",e,t);
         return e
         //noCloud.moveTempFileToDest(e,t);
     }, v.prototype._downloadFirmwareIfNeeded = function(e) {
-        CP6Functions(0)("Function 287").verbose("_downloadNoCloudFirmwareIfNeeded e:",e)
+        CP6Functions(LogThis)("Function 287").verbose("_downloadNoCloudFirmwareIfNeeded e:",e)
         return this._downloadRequired(e) ? 
         (s.debug("DOWNLOAD_REQUIRED", e.version), o.resolve())
         (s.event("Start download new Firmware"), this._cleanup().then(() => this.acceptNewFirmware(e)).then(e => h.validateChecksum(e)).then(e => this._updateNewVersionFile(e)).then(() => {
@@ -12852,11 +12852,11 @@ return this._syncFileList();
             i(e.getActiveScenarios()) && this.update()
         }), this.firmwareUpdateListenersRegistered = !0)
     }, v.prototype.checkIfNewFirmwareIsAvailable = function() {
-        CP6Functions(0)("Function 287").verbose("checkNoCloudIfNewFirmwareIsAvailable CloudReplacementUrl  :",CloudReplacementUrl  )
+        CP6Functions(LogThis)("Function 287").verbose("checkNoCloudIfNewFirmwareIsAvailable CloudReplacementUrl  :",CloudReplacementUrl  )
         s.debug("start check");
         const e = this.lastChecked ? Date.now() - this.lastChecked : -1;
         return d.setValue("firmware-time-since-last-check", e), this._firmwareCheckInProgress ? (s.debug("check aborted, busy"), o.reject(new Error("FW_CHECK_BUSY"))) : (this._firmwareCheckInProgress = !0, this.lastChecked = Date.now(), this._getAvailableFirmware()
-                        .then(e => (CP6Functions(0)("Function 287").verbose("firmware e=",e),this._downloadFirmwareIfNeeded(e))).then(content  => content)
+                        .then(e => (CP6Functions(LogThis)("Function 287").verbose("firmware e=",e),this._downloadFirmwareIfNeeded(e))).then(content  => content)
                            .then(() => f.loadFirmwareSettings())
                             .then(e => (e.automaticUpdate && this._sendNotification(_), null)).timeout(36e5, "New firmware check timeout")
                             .catch(e => {"ENOENT" !== e.code && s.error("GET_FIRMWARE", {
@@ -12932,25 +12932,25 @@ return this._syncFileList();
         // that means we do not have a JN5168-chip. This chip is used by mens of it;s GPIO for IR, blink and for 6LowPan (wit remote).
         // For now, we're just signaling what needs to happen here, then return.
         // First / next step will be to send IR over a broadlink device.   
-        CP6Functions(0)("Function 288").verbose("_postrequest");
+        CP6Functions(LogThis)("Function 288").verbose("_postrequest");
         if (BrainBroadLink.broadlinkIp == undefined) 
-            {CP6Functions(0)("Function 288").verbose("We need to post a request to Brain's Broadlink, but no BrainBroadLink.js found");
+            {CP6Functions(LogThis)("Function 288").verbose("We need to post a request to Brain's Broadlink, but no BrainBroadLink.js found");
             return  i.reject();
             }
         if (e == "/sendir")
             {} // we'll handle IR-send later in this function
         else
         if (e == "/blink")
-            {CP6Functions(0)("Function 288").verbose("Request to blink... if it was an IR-request, Broadlink will blink, otherwise: no blinky-blink for now")
+            {CP6Functions(LogThis)("Function 288").verbose("Request to blink... if it was an IR-request, Broadlink will blink, otherwise: no blinky-blink for now")
             return  i.resolve();
             }
         else            
         if (e == "/discovery")
-            {CP6Functions(0)("Function 288").verbose("Short touchbutton press detected, discovery started via JN5168")
+            {CP6Functions(LogThis)("Function 288").verbose("Short touchbutton press detected, discovery started via JN5168")
             return  i.resolve();
             }
         else
-            CP6Functions(0)("Function 288").verbose("Unknown request")
+            CP6Functions(LogThis)("Function 288").verbose("Unknown request")
             //}
         //if (!this.baseUrl) return d.increaseCounter("jn5168-missing-baseurl"), i.reject(new Error("JN5168 baseUrl not set yet"));
         r = function(e, t) {
@@ -12968,7 +12968,7 @@ return this._syncFileList();
         a.debug("send Payload to NBR (Now broadlink)", {
             path: e
         });
-        {CP6Functions(0)("Function 288").verbose("Need to send IR-data via Brain; kicking of a broadlink device in-stead")
+        {CP6Functions(LogThis)("Function 288").verbose("Need to send IR-data via Brain; kicking of a broadlink device in-stead")
         // For example NEEO-IR (power on in driver): "sendir,1:1,1,38000,4,1,343,172,21,21,21,21,21,64,21,21,21,21,21,21,21,21,21,21,21,64,21,64,21,21,21,64,21,64,21,64,21,64,21,64,21,21,21,21,
         // var t contains: i=0&f=38000&c=4&o=1&s=343.172.21.21.21.21.21.64.21.21.21.21.21.21.21.21.21.21.21.64.21.64.21.21.2
         // Broadlink payload (gc): "sendir,1:1,1,38000,4,1,343,172,21,21,21,21,21,64,21,21,21,21,21,21,21,21,21,21,21,64,21,64,21,21,21,64,21,64,21,64,21,64,21,64,21,21,21,21,>
@@ -12976,7 +12976,7 @@ return this._syncFileList();
         let IRf,IRc,IRo,IRs;
         let params=t.split("&")
         if (params.length!=5)
-            {CP6Functions(0)("Function 288").verbose("Incorrect number of IR-arguments",params)
+            {CP6Functions(LogThis)("Function 288").verbose("Incorrect number of IR-arguments",params)
             return i.reject(new Error("BrainBroadLink incorrect number of IR-arguments"))
             }
 
@@ -12995,7 +12995,7 @@ return this._syncFileList();
             }
             })
         BrainBroadLinkUri=BrainBroadLinkUri+IRf+","+IRc+","+IRo+","+IRs.replace(/["."]/g, ",") //         (".",",")
-        CP6Functions(0)("Function 288").verbose("http-call to broadlink:",BrainBroadLinkUri)
+        CP6Functions(LogThis)("Function 288").verbose("http-call to broadlink:",BrainBroadLinkUri)
         //return i.resolve();
         }
         const o = n({
@@ -13026,13 +13026,13 @@ return this._syncFileList();
                 path: e,
                 err: o.message,
                 payload: t
-            }), i.reject(n)) : (d.increaseCounter("jn5168-error"), CP6Functions(0)("Function 288").error("Error executing Broadlink gcxmit:",o.message),a.error("Broadlink_UNEXPECTED_ANSWER", {
+            }), i.reject(n)) : (d.increaseCounter("jn5168-error"), CP6Functions(LogThis)("Function 288").error("Error executing Broadlink gcxmit:",o.message),a.error("Broadlink_UNEXPECTED_ANSWER", {
                 statusCode: o.statusCode,
                 path: e
             }), i.reject(n))
         })
     }, p.prototype._failsafePostRequest = function(e, t) {
-        CP6Functions(0)("Function 288").verbose("_failsafePostRequest",e,t)
+        CP6Functions(LogThis)("Function 288").verbose("_failsafePostRequest",e,t)
         return this._postRequest(e, t).catch(t => {
             const r = c.extractInfo(t);
             a.error("JN5168_FAILSAFE_CALL_FAILED", {
@@ -13041,7 +13041,7 @@ return this._syncFileList();
             })
         })
     }, p.prototype._nbrGetRequest = function(e) {
-        CP6Functions(0)("Function 288").verbose("Skipping _nbrGetRequest as no Six LowPan is available",e)
+        CP6Functions(LogThis)("Function 288").verbose("Skipping _nbrGetRequest as no Six LowPan is available",e)
         return i.resolve('')
 /*        return this.baseUrl ? (this.queuePromise = this.queuePromise.then(() => n({
             method: "GET",
@@ -13077,7 +13077,7 @@ return this._syncFileList();
             })
         })
     }, p.prototype.enableDiscoveryMode = function() { //$$$
-        CP6Functions(0)("Function 288").verbose("JN5168 enableDiscoveryMode")
+        CP6Functions(LogThis)("Function 288").verbose("JN5168 enableDiscoveryMode")
         return u.getAirKey().then(e => this._postRequest("/discovery", "enabled=true&airkey=" + e, l)).then(() => {
             a.info("JN5168_DISCOVERY_ENABLED")
         }).catch(() => {
@@ -13116,7 +13116,7 @@ return this._syncFileList();
             }
         })
     }, p.prototype.getRoutingTable = function() {
-        CP6Functions(0)("Function 288").verbose("getRoutingTable")
+        CP6Functions(LogThis)("Function 288").verbose("getRoutingTable")
         return a.debug("fetch NBR neighbors"), this._nbrGetRequest("/neighbors").then(e => e ? (d.setValue("neighbors", e), e.split("\n").map(e => e.trim()).filter(e => e)) : [])
     }
 }, function(e) {// Function 289 Some functons for handling project/home
@@ -13129,7 +13129,7 @@ return this._syncFileList();
             this.store = e
         }
         loadLatest() {
-            CP6Functions(0)("Function 289").verbose("loadlatest store",t,e)
+            CP6Functions(LogThis)("Function 289").verbose("loadlatest store",t,e)
             return this.store.loadLatest(t())
         }
         load(e, r) {
@@ -13237,7 +13237,7 @@ return this._syncFileList();
             })
         },
         validateChecksum: function(e) {
-            CP6Functions(0)("Function 291").verbose("validateChecksum e:",e); 
+            CP6Functions(LogThis)("Function 291").verbose("validateChecksum e:",e); 
             try {
             return new n((t, r) => {
                 const n = Date.now(),
@@ -13258,7 +13258,7 @@ return this._syncFileList();
                 })
             })
             }
-            catch (err) {CP6Functions(0)("Function 92").verbose("valchecks error:",err)}
+            catch (err) {CP6Functions(LogThis)("Function 92").verbose("valchecks error:",err)}
         }
     }
 }, function(e, t, r) {// Function 292 FirmwareCleanup
@@ -13283,7 +13283,7 @@ return this._syncFileList();
         d = a.promisify(i);
     e.exports = {
         deleteDownloadedFiles: function(e, t) {
-            CP6Functions(0)("Function 292").verbose("deleteDownloadedFiles e:",e,t);            
+            CP6Functions(LogThis)("Function 292").verbose("deleteDownloadedFiles e:",e,t);            
             return a.all([n(e), o(t, "VERSIONFILE")])
         }
     }
@@ -13467,7 +13467,7 @@ return this._syncFileList();
         // next code commented out as we (most likely) do not have a lid to push 
             /*   try {
                 r(e.touchbuttonPin)
-            } catch (e) {CP6Functions(0)("Function 295").debug("GPIO touchbutton failed; e:",e); 
+            } catch (e) {CP6Functions(LogThis)("Function 295").debug("GPIO touchbutton failed; e:",e); 
                 i.error("GPIO_WATCHBUTTON_FAILED", e.message)
             }*/
             try {
@@ -13594,7 +13594,7 @@ return this._syncFileList();
     e.exports = require("mailgun-es6")
 }, function(e, t, r) {// Function 304 exec recipe step 
     "use strict";
-    CP6Functions(0)("Function 304").verbose("exec recipe step e:",e,t); 
+    CP6Functions(LogThis)("Function 304").verbose("exec recipe step e:",e,t); 
     const n = r(0)("Schedulerstep: command"),
         o = r(43);
     e.exports = function(e) {
@@ -13613,7 +13613,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 305 action executer
     "use strict";
-    CP6Functions(0)("Function 305").verbose("action executer e:",e,t); 
+    CP6Functions(LogThis)("Function 305").verbose("action executer e:",e,t); 
 
     function n(e) {
         const t = e.action.component.getDevice();
@@ -13633,6 +13633,8 @@ return this._syncFileList();
         };
     h.prototype.trigger = function(e, t = {}) {
         const r = i.build(e, t);
+        CP6Functions(LogThis)("Function 305").verbose("Execute recipe ",r.name);
+        r.steps.forEach(xx => {xx.action!=null ? CP6Functions(LogThis)("Function 305").debug("Exec step",xx.action.name+" "+xx.action.component.device.name) : {} })
         return r.promise.catch(e => {
             s.debug("JOB_FAILED", {
                 error: e.message,
@@ -13708,15 +13710,15 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 306 job  execute action defined; either from a set of commands (f.e. favorites) or single command
     "use strict";
-    CP6Functions(0)("Function 306").verbose("job"); // note e changes format depending on type of originator for action
+    CP6Functions(LogThis)("Function 306").verbose("job"); // note e changes format depending on type of originator for action
 
     function n(e) {
         if (!e) return [];
         const t = [],
             j = r,
             x = r(506);
-        //CP6Functions(0)("Function 306").verbose("e:",e )
-        //CP6Functions(0)("Function 306").verbose("t:",t )
+        //CP6Functions(LogThis)("Function 306").verbose("e:",e )
+        //CP6Functions(LogThis)("Function 306").verbose("t:",t )
         return e.eachLeafAction(r => {
             const n = r.getComponent(),
                 o = r.getName();
@@ -13741,7 +13743,7 @@ return this._syncFileList();
                 name: o,
                 delay: i
             }), 
-            (r.name.substring(0,7) == "CHANNEL")  ? CP6Functions(0)("Function 306").verbose("channelsave start;capabilities:",e.component.device.capabilities) : {},
+            (r.name.substring(0,7) == "CHANNEL")  ? CP6Functions(LogThis)("Function 306").verbose("channelsave start;capabilities:",e.component.device.capabilities) : {},
             (e.component != undefined && e.component.key != undefined && e.component.device.capabilities.findIndex((theCapab) => {return theCapab == "neeo.custom.channelsave"}) >0) && ( r.name.substring(0,5) == "DIGIT")   ? (d.debug("Sending DIGIT", e.getName),x.putCurrDigit(e.name,e.component.device.key)) : {},
             (e.component != undefined && e.component.key != undefined && e.component.device.capabilities.findIndex((theCapab) => {return theCapab == "neeo.custom.channelsave"}) >0) && ( r.name.substring(0,7) == "CHANNEL") ? (d.debug("Sending CHANNEL", e.getName),x.putChannelUpDown(e.name,e.component.device.key,e,j))  : {},
             (void t.push({
@@ -13772,7 +13774,7 @@ return this._syncFileList();
         h = [a.ACTION_POWER_OFF, a.ACTION_POWER_TOGGLE_OFF],
         g = 2e3;
     let m = 0;
-    const f = e.exports = function(e, t = {}) { CP6Functions(0)("Function 306").verbose("execute action");
+    const f = e.exports = function(e, t = {}) { CP6Functions(LogThis)("Function 306").verbose("execute action");
         this.id = m++, this.action = e, this.options = t, this.startTime = void 0, this.error = void 0, this.name = e ? e.name : void 0, this.type = t.recipeType, t.repeat ? (this.steps = [], this.estimatedDuration = -1) : (this.steps = n(e), this.estimatedDuration = o(function(e) {
             let t = 0;
             const r = {};
@@ -13784,15 +13786,15 @@ return this._syncFileList();
 
             const n = Object.keys(r).reduce((e, t) => s(e, r[t]), 0);
             return t + n + g
-        }(this.steps))), this.promise = new l((e, t) => {
+        }(this.steps))),  this.promise = new l((e, t) => {
             this._resolve = e, this._reject = t
         })
     };
     f.build = function(e, t) {
         try {
-            CP6Functions(0)("Function 306").verbose("build");
+            CP6Functions(LogThis)("Function 306").verbose("build");
             return new f(e, t)
-        } catch (r) {CP6Functions(0)("Function 306").verbose("build FAILED",r);
+        } catch (r) {CP6Functions(LogThis)("Function 306").verbose("build FAILED",r);
             return d.error("JOB_BUILD_FAILED", {
                 msg: r.message,
                 action: e,
@@ -14772,7 +14774,7 @@ return this._syncFileList();
         t.buildFromDevices(), t.configureScenarios()
     }
 }, function(e, t, r) {// Function 333 projectValidator
-    //CP6Functions(0)("Function 333").verbose("projectValidator e:",e )
+    //CP6Functions(LogThis)("Function 333").verbose("projectValidator e:",e )
     "use strict";
     const n = r(0)("projectValidator"),
         o = r(3),
@@ -15035,17 +15037,17 @@ return this._syncFileList();
             threshold: .7
         }), n.debug("channel search initialized. channel count:", e.length)
     }, a.prototype.reloadChannelFile = function() {
-        CP6Functions(0)("Function 343").verbose("ChannelService reloadChannelFile")
+        CP6Functions(LogThis)("Function 343").verbose("ChannelService reloadChannelFile")
         return s.getChannelFileContent().then(e => {
             const t = JSON.parse(e);
             this._init(t)
-        }).catch(e => {CP6Functions(0)("Function 343").verbose("Catch reloadchannelfile:",e);
+        }).catch(e => {CP6Functions(LogThis)("Function 343").verbose("Catch reloadchannelfile:",e);
             n.error("CHANNELS_LOAD_INDEX_FAILED", e.message)
         })
     }, a.prototype.search = function(e) {
-        CP6Functions(0)("Function 343").verbose("ChannelService search ")
+        CP6Functions(LogThis)("Function 343").verbose("ChannelService search ")
         if (this.channelIndex == undefined)
-            {CP6Functions(0)("Function 343").verbose("Loading channels as this is not done yet")
+            {CP6Functions(LogThis)("Function 343").verbose("Loading channels as this is not done yet")
             return this.reloadChannelFile().then( () => {return this.channelIndex.search(e).map(e => e.item)})
         }   
         else 
@@ -15199,7 +15201,7 @@ return this._syncFileList();
         };
     d.prototype.notificationProjectReload = function(e) {
         let t = c;
-        CP6Functions(0)("Function 347").verbose("Project (re)load");
+        CP6Functions(LogThis)("Function 347").verbose("Project (re)load");
         e.projectLabel && e.projectLabel !== c ? t = e.projectLabel : e.controllerRoom && (t = `NEEO ${e.controllerRoom.name}`), this.writeConfig(t).catch(e => {
             i.error("WRITE_AVAHI_CFG", e.message)
         })
@@ -15207,14 +15209,14 @@ return this._syncFileList();
         const o = (new Date).toLocaleDateString();
         return '<?xml version="1.0" standalone="no"?><!DOCTYPE service-group SYSTEM "avahi-service.dtd"><service-group><name>' + e + "</name><service><type>_neeo._tcp</type><port>" + this.cp6Port + "</port><txt-record>upd=" + o + "</txt-record><txt-record>rel=" + t + "</txt-record><txt-record>reg=" + r + "</txt-record><txt-record>hon=" + n + "</txt-record></service></service-group>"
     }, d.prototype.writeConfig = function(e) {
-        CP6Functions(0)("Function 347").verbose("check need for writeConfig")
+        CP6Functions(LogThis)("Function 347").verbose("check need for writeConfig")
         const t = s.firmwareVersion(),
             r = s.getRegionCode();
         if (this._region === r && this._firmwareVersion === t && this._projectLabel === e) return i.debug("omit avahi update, nothing changed"), o.resolve();
         this._region = r, this._firmwareVersion = t, this._projectLabel = e, i.debug("update avahi file, project label", e);
         const n = this.__generateXmlSettings(e, t, r, s.hostname());
-        CP6Functions(0)("Function 347").verbose("writeConfig",n)
-        CP6Functions(0)("Function 347").verbose("writeConfig",{cmd:this.restartcmd,param:this.restartparam})
+        CP6Functions(LogThis)("Function 347").verbose("writeConfig",n)
+        CP6Functions(LogThis)("Function 347").verbose("writeConfig",{cmd:this.restartcmd,param:this.restartparam})
         return u(this.configPath, n).then(() =>  (i.debug("restart avahi daemon now"), a(this.restartcmd, this.restartparam)))
     }, d.prototype.reloadAvahi = function() {
         return i.debug("restart avahi daemon now"), a(this.restartcmd, this.restartparam)
@@ -15444,17 +15446,17 @@ return this._syncFileList();
             o.debug("init", e), this.timerId = void 0, this.wifiAPModeActive = !1, this.systemctl = e.systemctl, this.parameterStart = e.parameterStart, this.parameterStop = e.parameterStop, this.disableAccessPointModeAfterMs = e.disableAccessPointModeAfterMs
         };
     c.prototype.shortpressHandler = function() {
-        CP6Functions(0)("Function 354").verbose("shortpressHandler") // $$$
+        CP6Functions(LogThis)("Function 354").verbose("shortpressHandler") // $$$
         return o.debug("touchbutton pressed, enable jn discovery mode"), i.increaseCounter("touchbutton-pressed"), o.event("NEEO Pairing mode enabled"), s.enableDiscoveryMode()
     }, c.prototype.disableAccesspointMode = function() {
-        CP6Functions(0)("Function 354").verbose("disableAccesspointMode") // $$$
+        CP6Functions(LogThis)("Function 354").verbose("disableAccesspointMode") // $$$
         return a(this.systemctl, this.parameterStop).then(() => (this.wifiAPModeActive = !1, o.event("NEEO Access Point disabled"), s._ledOn())).catch(e => {
             o.error("AP_MODE_DISABLE", {
                 msg: e.message
             })
         })
     }, c.prototype._enableAccesspointMode = function() {
-        CP6Functions(0)("Function 355").verbose("_enableAccesspointMode",this.parameterStart) // $$$
+        CP6Functions(LogThis)("Function 355").verbose("_enableAccesspointMode",this.parameterStart) // $$$
         return a(this.systemctl, this.parameterStart).then(() => (this.wifiAPModeActive = !0, this.timerId = setTimeout(() => {
             o.debug("disable AP mode timer activated"), this.disableAccesspointMode()
         }, this.disableAccessPointModeAfterMs), o.event("NEEO Access Point enabled"), s.ledWifiAPMode())).catch(e => {
@@ -15463,7 +15465,7 @@ return this._syncFileList();
             })
         })
     }, c.prototype.longpressHandler = function() { // This functionality is not necessary anymore
-        CP6Functions(0)("Function 354").verbose("longpressHandler") // $$$
+        CP6Functions(LogThis)("Function 354").verbose("longpressHandler") // $$$
         return o.debug("long touchbutton pressed, toggle wifi ap mode"), i.increaseCounter("long-touchbutton-pressed"), clearTimeout(this.timerId), this.wifiAPModeActive ? this.disableAccesspointMode() : this._enableAccesspointMode()
     }, c.prototype.userBlink = function() {
         return this.wifiAPModeActive ? n.resolve() : s.ledIdentBrain()
@@ -16071,7 +16073,7 @@ return this._syncFileList();
             }
         };
     h.prototype._downloadImages = function(url, width, height, compressiontype) {
-        //CP6Functions(0)("Function 371").verbose("Downloading image,url,width,height,compressiontype",url,width,height,compressiontype)
+        //CP6Functions(LogThis)("Function 371").verbose("Downloading image,url,width,height,compressiontype",url,width,height,compressiontype)
         if (!url) return void s.debug("invalid url, ignored");
         const i = l.getBaseUrl(); 
         d.increaseCounter("image-prefetch-started"), this.promiseQueue = this.promiseQueue.then(() => {
@@ -16099,10 +16101,10 @@ return this._syncFileList();
             })
         }).catch(url => {
             const width = a.extractInfo(url);
-            s.debug("failed to prefetch image", width.message), d.increaseCounter("image-prefetch-error"),  CP6Functions(0)("Function 371").verbose("this URL:",url.options.url)
+            s.debug("failed to prefetch image", width.message), d.increaseCounter("image-prefetch-error"),  CP6Functions(LogThis)("Function 371").verbose("this URL:",url.options.url)
         })
     }, h.prototype._fetchFavoritesImages = function(e) {
-        CP6Functions(0)("Function 371").verbose("getchfavoritesimages")
+        CP6Functions(LogThis)("Function 371").verbose("getchfavoritesimages")
         e.getAllFavorites().forEach(e => {
             const t = e.getLogoURL(); /// 
             return u.isUrlCached(t, this.FAVORITE_IMAGE_OPTIONS) ? void s.debug("_fetchFavoritesImages: already cached url", t) : (u.addUrlToCache(t, this.FAVORITE_IMAGE_OPTIONS), void this._downloadImages(t, this.favoriteImage.width, this.favoriteImage.height))
@@ -16118,7 +16120,7 @@ return this._syncFileList();
             url: e
         })
     }, h.prototype.flushImageCache = function() {
-        CP6Functions(0)("Function 371").verbose("flushImagecash... only calling clear")
+        CP6Functions(LogThis)("Function 371").verbose("flushImagecash... only calling clear")
         return u.clear()
     }
 }, function(url, t, r) { // Function 372 Main imagecache (lookup) handler
@@ -16140,7 +16142,7 @@ return this._syncFileList();
             const cacheName = createCacheName(url, imageOptions);
             return imageCache.includes(cacheName)
         },
-        clear: function() {CP6Functions(0)("Function 372").verbose("Clearing image cache");
+        clear: function() {CP6Functions(LogThis)("Function 372").verbose("Clearing image cache");
             imageCache.length = 0, CachePtr = 0
         }
     }
@@ -16290,7 +16292,7 @@ return this._syncFileList();
         getDeviceByadapterDeviceId: function(e) {
             return n("FIND_DEVICE_BY_NAME", e), o.activeProject()
                                                     .then(t => t.getDeviceByadapterDeviceId(e))
-//                                                    .then(xx => {CP6Functions(0)("Function 376").verbose("getdevicebyadapterdeviceid:",xx);return xx})
+//                                                    .then(xx => {CP6Functions(LogThis)("Function 376").verbose("getdevicebyadapterdeviceid:",xx);return xx})
         },
         getDevices: function(e) {
             return n("GET_DEVICES", e), o.activeProject().then(t => t.getDevices())
@@ -16320,7 +16322,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 377 TR2 Service, Startsysnc function
     "use strict";
-    CP6Functions(0)("Function 377").verbose("")
+    CP6Functions(LogThis)("Function 377").verbose("")
 
     function n(e) {
         o.debug("init", e), this.routingTableRefreshTimeMs = e.routingTableRefreshTimeMs, this.buildZeroConf = r(387), this.buildGui = r(389), this.buildGuiData = r(430), this.watchGuiData = this.buildGuiData.watch, this.listeners = [], this.pushActions = u.build(d), this.tempBrainHostOverride = void 0
@@ -16382,7 +16384,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 378 TR2_PUSHUPDATE, main handler for sync/pushing an update to TR2
     "use strict";
-    CP6Functions(0)("Function 378").verbose("")
+    CP6Functions(LogThis)("Function 378").verbose("")
 
     function n(e) {
         u.updateTr2Addresses(e)
@@ -16405,33 +16407,33 @@ return this._syncFileList();
     let d, l = "";
     e.exports = {
         isTr2Registered: function() {
-             CP6Functions(0)("Function 378").verbose("isTr2Registered");
+             CP6Functions(LogThis)("Function 378").verbose("isTr2Registered");
             return u.isTr2Registered()
         },
         updateTr2Addresses: n,
         addSingleAddress: function(e) {
-             CP6Functions(0)("Function 378").verbose("addSingleAddress");
+             CP6Functions(LogThis)("Function 378").verbose("addSingleAddress");
             u.addSingleAddress(e)
         },
         startSync: function(e) {
-             CP6Functions(0)("Function 378").verbose("startSync");
+             CP6Functions(LogThis)("Function 378").verbose("startSync");
             return d ? void i.warn("INTERVAL_ALREADY_RUNNING") : !e || 5e3 > e ? void i.warn("INVALID_INTERVAL_TIME", e) : (i.debug("Start routing table sync, intervalMs", e), d = setInterval(o, e), void o())
         },
         stopSync: function() {
-             CP6Functions(0)("Function 378").verbose("stopSync");
+             CP6Functions(LogThis)("Function 378").verbose("stopSync");
             clearInterval(d), d = void 0
         },
         sendPushMessage: function(e) {
-             CP6Functions(0)("Function 378").verbose("sendPushMessage");
+             CP6Functions(LogThis)("Function 378").verbose("sendPushMessage");
             if (!u.isTr2Registered())
-                 CP6Functions(0)("Function 378").verbose("Push update to TR2, but no TR2 connected");
+                 CP6Functions(LogThis)("Function 378").verbose("Push update to TR2, but no TR2 connected");
 
             if (!u.isTr2Registered()) return 60 > parseInt(process.uptime()) && o(), i.debug("TR2_NO_REGISTERED_DEVICES_FOUND"), !1;
             if (!e) return i.warn("TR2_NO_PAYLOAD_DEFINED"), !1;
             if (l === e) return i.debug("DUPLICATE_PUSHMSG_DETECTED"), !1;
             l = e, i.debug("send pushmsg", e.length);
             const t = u.getAllActiveIPV6AdressesAsArray();
-            CP6Functions(0)("Function 378").verbose("Push update to these IPV6-addresses:",t)
+            CP6Functions(LogThis)("Function 378").verbose("Push update to these IPV6-addresses:",t)
             a.pushUpdateToTr2(e, t, s.coapPort, s.maxPayloadSize).catch(e => {
                 i.warn("FAILED_DELIVER_ALL_TR2_PUSH_MESSAGES", e.message || "")
             })
@@ -16439,7 +16441,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 379 TR2_COAP_PUSHUPDATE PUSH to tr2 a POST /update 
     "use strict";
-    CP6Functions(0)("Function 379").verbose("")
+    CP6Functions(LogThis)("Function 379").verbose("")
     const n = r(0)("TR2_COAP_PUSHUPDATE"),
         o = r(162),
         i = r(1),
@@ -16475,7 +16477,7 @@ return this._syncFileList();
     e.exports = require("unidecode")
 }, function(e, t, r) {// Function 381 TR2 Tracker; manage (plus register) TR2-addresses
     "use strict";
-    CP6Functions(0)("Function 381").verbose("")
+    CP6Functions(LogThis)("Function 381").verbose("")
     const n = r(382),
         o = r(0)("TR2 Tracker"),
         i = r(141).Address6;
@@ -16510,7 +16512,7 @@ return this._syncFileList();
     e.exports = require("net")
 }, function(e, t, r) {// Function 383 TR2:pushactionhandler /ChangeScreen; handleActivescenario, addPushaction, changescreen
     "use strict";
-    CP6Functions(0)("Function 383").verbose("")
+    CP6Functions(LogThis)("Function 383").verbose("")
     const n = r(0)("TR2:pushactionhandler"),
         o = [/ChangeScreen\('\d+-?\d*',-?1\)/];
     e.exports = class e {
@@ -16947,7 +16949,7 @@ return this._syncFileList();
             visibleRootScreenId: g.visibleRootScreenId
         };
     e.exports = function(e) {
-        CP6Functions(0)("Function 402").verbose("Screenbuilder TR2, checking isFirmwareUpdateAvailable")
+        CP6Functions(LogThis)("Function 402").verbose("Screenbuilder TR2, checking isFirmwareUpdateAvailable")
         const t = e.isFirmwareUpdateAvailable() ? `badgeColor="${g.badgeColorImportant}" badgeRadius="14"` : "",
         // optional flash exclamation: const t  = `badgeColor="${g.badgeColorImportant}" badgeRadius="14"`,
             r = e.getVisibleRooms(),
@@ -16992,7 +16994,7 @@ return this._syncFileList();
     e.exports.getRecipeModel = function(e, t) {
         const r = e.getName(),
             s = function(e, t) {
-                //CP6Functions(0)("Function 405").verbose("isvisibleinguiasunconfigured",e.isVisibleInGuiAsUnconfigured())
+                //CP6Functions(LogThis)("Function 405").verbose("isvisibleinguiasunconfigured",e.isVisibleInGuiAsUnconfigured())
                 if (e.isVisibleInGuiAsUnconfigured()) return `ShowPopup('message','${c}')`;
                 if (o(e)) return "PlaySnake()";
                 const r = a.getRecipeExecuteUrl(e),
@@ -17916,7 +17918,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 428 get and render Directories (getAllDirectories)
     "use strict";
-    CP6Functions(0)("Function 428").verbose(" get and render Directories")
+    CP6Functions(LogThis)("Function 428").verbose(" get and render Directories")
 
     const n = r(429);
     e.exports = function(e) {
@@ -17926,7 +17928,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 429 Render directoryscreen
     "use strict";
-    CP6Functions(0)("Function 429").verbose("Render directoryscreen")
+    CP6Functions(LogThis)("Function 429").verbose("Render directoryscreen")
 
     function n(e) {
         return new Buffer(JSON.stringify(e)).toString("base64")
@@ -17951,7 +17953,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 430 TR2-GUIDATA; 
     "use strict";
-    CP6Functions(0)("Function 430").verbose("TR2-GUIDATA")
+    CP6Functions(LogThis)("Function 430").verbose("TR2-GUIDATA")
     const n = r(1),
         o = r(0)("TR2-GUIDATA"),
         i = r(4)("gui.tpl.data.xml"),
@@ -17975,7 +17977,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 431 TR2-GUIDATA; getRenderedData and watch
     "use strict";
-    CP6Functions(0)("Function 431").verbose("TR2-GUIDATA; getRenderedData and watch")
+    CP6Functions(LogThis)("Function 431").verbose("TR2-GUIDATA; getRenderedData and watch")
 
     function n(e, t, r) {
         const n = f[e.getType()];
@@ -18402,7 +18404,7 @@ return this._syncFileList();
     }, i.prototype.hasImageContent = function(e) {
         return !(!e || !e.length || /%2F$/.test(e))
     }, i.prototype.flushImageCache = function(e) {
-        CP6Functions(0)("Function 437").verbose("flushImageCache, calling r(372).clear") 
+        CP6Functions(LogThis)("Function 437").verbose("flushImageCache, calling r(372).clear") 
             r(372).clear();
     }    
 }, function(e, t, r) {// Function 438 Route: gui_data/sonos.tpl.data.xml
@@ -18585,7 +18587,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 441 TR2-GUIDATA-PUSHACTION
     "use strict";
-    CP6Functions(0)("Function 441").verbose("TR2-GUIDATA-PUSHACTION")
+    CP6Functions(LogThis)("Function 441").verbose("TR2-GUIDATA-PUSHACTION")
 
     function n(e) {
         return i({
@@ -18621,13 +18623,13 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 443 TR2_REQUESTHANDLER; setForwardingHosts, handleCoAPRequest, handleWifiRequest
     "use strict";
-    CP6Functions(0)("Function 443").verbose("TR2_REQUESTHANDLER; setForwardingHosts, handleCoAPRequest, handleWifiRequest")
+    CP6Functions(LogThis)("Function 443").verbose("TR2_REQUESTHANDLER; setForwardingHosts, handleCoAPRequest, handleWifiRequest")
 
     function n(e, t, r, n) {
         const o = d.resolve(e, t),
             i = m.urlMatchInfraredTrigger(o, r);
         return i ? function(e, t, r) {
-            CP6Functions(0)("Function 443").verbose("TR2_REQUESTHANDLER; simple infraredgtrigger deteced");
+            CP6Functions(LogThis)("Function 443").verbose("TR2_REQUESTHANDLER; simple infraredgtrigger deteced");
             s.debug("simple trigger detected", {
                 query: r
             });
@@ -18636,12 +18638,12 @@ return this._syncFileList();
                 generic: /true/.test(r.generic)
             };
             return f.getRepository().then(e => {
-                CP6Functions(0)("Function 443").verbose("TR2_REQUESTHANDLER; triggerAction");
-//                CP6Functions(0)("Function 443 TR2_REQUESTHANDLER; e",e);
-                CP6Functions(0)("Function 443").verbose(" TR2_REQUESTHANDLER; n",n);
-                CP6Functions(0)("Function 443").verbose(" TR2_REQUESTHANDLER; o",o);
-                CP6Functions(0)("Function 443").verbose(" TR2_REQUESTHANDLER; i",i);
-                CP6Functions(0)("Function 443").verbose(" TR2_REQUESTHANDLER; a",a);
+                CP6Functions(LogThis)("Function 443").verbose("TR2_REQUESTHANDLER; triggerAction");
+//                CP6Functions(LogThis)("Function 443 TR2_REQUESTHANDLER; e",e);
+                CP6Functions(LogThis)("Function 443").verbose(" TR2_REQUESTHANDLER; n",n);
+                CP6Functions(LogThis)("Function 443").verbose(" TR2_REQUESTHANDLER; o",o);
+                CP6Functions(LogThis)("Function 443").verbose(" TR2_REQUESTHANDLER; i",i);
+                CP6Functions(LogThis)("Function 443").verbose(" TR2_REQUESTHANDLER; a",a);
 
                 e.triggerAction(n, o, i, a)
             })
@@ -18659,7 +18661,7 @@ return this._syncFileList();
             if (!e || n) return;
             let t = p.answerForTr2(o, e);
             return t = p.transliterationToAscii(t), s.debug("payload response:", t), t
-        }));CP6Functions(0)("Function 443").verbose("TR2_REQUESTHANDLER; request ");
+        }));CP6Functions(LogThis)("Function 443").verbose("TR2_REQUESTHANDLER; request ");
     }
 
     function o(e) {
@@ -18698,11 +18700,11 @@ return this._syncFileList();
             _ = e
         },
         handleCoAPRequest: function(e, t) {
-            CP6Functions(0)("Function 443").verbose("handleCoAPRequest")
+            CP6Functions(LogThis)("Function 443").verbose("handleCoAPRequest")
             return function(e) {
                 return e._packet && e._packet.messageId ? v !== e._packet.messageId && (v = e._packet.messageId, !0) : (s.debug("COAP_NO_MESSAGEID_IN_PACKET"), !1)
             }(e) ? new c((r, a) => {
-                try {CP6Functions(0)("Function 443").verbose(" handleCoAPRequest goOn")
+                try {CP6Functions(LogThis)("Function 443").verbose(" handleCoAPRequest goOn")
                     s.debug("handle coap request:", {
                         shortUrl: t
                     }), e.on("timeout", e => {
@@ -18710,7 +18712,7 @@ return this._syncFileList();
                     }).on("error", e => {
                         i("COAP_SERVER_ERROR", e.message, a)
                     });
-                    CP6Functions(0)("Function 443").verbose(" expandRequestUrl t",t)
+                    CP6Functions(LogThis)("Function 443").verbose(" expandRequestUrl t",t)
                     const c = g.expandRequestUrl(t);
                     n(o(c.longUrl), c.longUrl, c.query, c.sendNoResponse).then(t => {
                         const n = t ? t.length : 0;
@@ -18731,7 +18733,7 @@ return this._syncFileList();
             }) : (s.debug("COAP_DUPLICATE_MESSAGE"), h.updateDuplicateCoapMessages(), e.end(), c.reject(new Error("COAP_DUPLICATE_MESSAGE")))
         },
         handleWifiRequest: function(e) {
-            CP6Functions(0)("Function 443").verbose(" handleWifiRequest")
+            CP6Functions(LogThis)("Function 443").verbose(" handleWifiRequest")
             return new c((t, r) => {
                 s.debug("handle wifi request:", {
                     url: e
@@ -18805,7 +18807,7 @@ return this._syncFileList();
     const n = r(27),
         o = r(171);
     e.exports.getRepository = function() {
-        CP6Functions(0)("Function 448").verbose("Loading projectfile")
+        CP6Functions(LogThis)("Function 448").verbose("Loading projectfile")
         return n.get().then(e => {
             const t = o.convert(e);
             if (!t || 0 === Object.keys(t).length) throw new Error("CONVERTED_REPO_INVALID");
@@ -18814,7 +18816,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 449 cp6:lib:tr2:coap:server
     "use strict";
-    CP6Functions(0)("Function 449").verbose("")
+    CP6Functions(LogThis)("Function 449").verbose("")
 
     const n = r(162),
         o = r(69),
@@ -18835,15 +18837,15 @@ return this._syncFileList();
                 sendAcksForNonConfirmablePackets: !0 === e.coapSendAcksForNonConfirmablePackets
             }, n.updateTiming(r), s("CoAP max RTT in seconds:", n.parameters.maxRTT), s("CoAP max time in seconds from the first transmission (CON) to its last retransmission:", n.parameters.maxTransmitSpan), s("CoAP max waiting time (CON) in seconds until sender gives up:", n.parameters.maxTransmitWait)
         };
-    i.inherits(a, o.EventEmitter), a.prototype.bind = function() {CP6Functions(0)("Function 449 i.inherits 1"),
+    i.inherits(a, o.EventEmitter), a.prototype.bind = function() {CP6Functions(LogThis)("Function 449 i.inherits 1"),
         s("start coap server %o", this.coapOptions), this.coapServer = n.createServer(this.coapOptions), this.coapServer.on("request", (e, t) => {
-            CP6Functions(0)("Function 449").verbose("i.request")
+            CP6Functions(LogThis)("Function 449").verbose("i.request")
             this._handleCoAPMessage(e, t)
         }), this.coapServer.on("error", e => {
-            CP6Functions(0)("Function 449").verbose(" i.error")
+            CP6Functions(LogThis)("Function 449").verbose(" i.error")
             this.emit("error", e)
         }), this.coapServer.listen(this.listeningPort, this.listeningHost, () => {
-            CP6Functions(0)("Function 449").verbose(" listen")
+            CP6Functions(LogThis)("Function 449").verbose(" listen")
             s("TR2_COAPSERVER_STARTED %o", {
                 host: this.listeningHost,
                 port: this.listeningPort
@@ -18854,26 +18856,26 @@ return this._syncFileList();
             this.coapServer.close()
         } catch (e) {}
     }, a.prototype._handleCoAPMessage = function(e, t) {
-        CP6Functions(0)("Function 449").verbose(" Got message e",e.body,e.url)
-        //CP6Functions(0)("Function 449").verbose("Got message t",t)
+        CP6Functions(LogThis)("Function 449").verbose(" Got message e",e.body,e.url)
+        //CP6Functions(LogThis)("Function 449").verbose("Got message t",t)
         if (!e || !t) return void this.emit("invalidrequest", e);
         if (!e.rsinfo || !e.rsinfo.address || "IPv6" !== e.rsinfo.family) return s("request from a non IPv6 Address, ignored"), void this.emit("invalidsender", e);
         this.ipv6AddrOfLastMessage !== e.rsinfo.address && (s("new IPv6 Address:", e.rsinfo.address), this.emit("ipv6coapaddress", e.rsinfo.address), this.ipv6AddrOfLastMessage = e.rsinfo.address);
         const r = e.url;
-        CP6Functions(0)("Function 449").verbose("Passing message to requesthandler.handleCoAPRequest ")
-        //CP6Functions(0)("Function 449").verbose("Got message t",t)
+        CP6Functions(LogThis)("Function 449").verbose("Passing message to requesthandler.handleCoAPRequest ")
+        //CP6Functions(LogThis)("Function 449").verbose("Got message t",t)
 
         this.requesthandler.handleCoAPRequest(t, r).catch(() => {})
     }
 }, function(e, t, r) {// Function 450 r(451))(r(2).tr2udpserver)
     "use strict";
-    CP6Functions(0)("Function 450").verbose("")
+    CP6Functions(LogThis)("Function 450").verbose("")
     const n = r(2),
         o = new(r(451))(n.tr2udpserver);
     e.exports = o
 }, function(e, t, r) {// Function 451 tr2udpserver
     "use strict";
-    CP6Functions(0)("Function 451").verbose("create udp4-socketserver (for tr2)")
+    CP6Functions(LogThis)("Function 451").verbose("create udp4-socketserver (for tr2)")
 
     const n = r(452).createSocket("udp4"),
         o = r(69),
@@ -18887,12 +18889,12 @@ return this._syncFileList();
             this.emit("serverstarted", n.address())
         }), 
         n.on("message", (e, t) => {
-            CP6Functions(0)("Function 451").verbose("receive udp-message (e,t)",e,t)
+            CP6Functions(LogThis)("Function 451").verbose("receive udp-message (e,t)",e,t)
  // Function 451 udp-message (e,t) <Buffer 31 30> { address: '192.168.0.52', family: 'IPv4', port: 64269, size: 2 }
             this.emit("udprequest", e, t)
         }),
 //        n.on("emit", () => {
-//            CP6Functions(0)("Function 451").verbose("emitting message")
+//            CP6Functions(LogThis)("Function 451").verbose("emitting message")
 //        }), 
         n.on("error", e => {
             this.emit("error", e)
@@ -18990,10 +18992,10 @@ return this._syncFileList();
         g = r(0)("TR2:DirectoryHandler");
     e.exports = {
         browseDirectory: function(e, t, r) {
-            CP6Functions(0)("Function 453").verbose("browseDirectory")
-    CP6Functions(0)("Function 453").verbose(" e",e)
-    CP6Functions(0)("Function 453").verbose(" t",t)
-    CP6Functions(0)("Function 453").verbose(" r",r)
+            CP6Functions(LogThis)("Function 453").verbose("browseDirectory")
+    CP6Functions(LogThis)("Function 453").verbose(" e",e)
+    CP6Functions(LogThis)("Function 453").verbose(" t",t)
+    CP6Functions(LogThis)("Function 453").verbose(" r",r)
 
             if (!r) return a.resolve(p.error("Sorry, this list cannot be loaded."));
             const o = e.getScenarioByDirectoryKey(t),
@@ -19033,7 +19035,7 @@ return this._syncFileList();
             })
         },
         callAction: function(e, t, r = {}) {
-            CP6Functions(0)("Function 453").verbose("callAction")
+            CP6Functions(LogThis)("Function 453").verbose("callAction")
             const n = e.getDirectoryByKey(t);
             if (!n) return g.warn("TR2_LIST_INVALID_DIRECTORY", {
                 directoryKey: t
@@ -19050,7 +19052,7 @@ return this._syncFileList();
             })
         },
         getDeviceRootItems: function(e, t = {}) {
-            CP6Functions(0)("Function 453").verbose("getDeviceRootItems")
+            CP6Functions(LogThis)("Function 453").verbose("getDeviceRootItems")
 
 
             const r = t.deviceKey,
@@ -19080,7 +19082,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 454 cp6:lib:tr2:xmlgenerate:listFactory
     "use strict";
-    CP6Functions(0)("Function 454").verbose("")
+    CP6Functions(LogThis)("Function 454").verbose("")
 
     function n(e) {
         return e && e.items && e.items.length ? e.items.reduce((t, r) => {
@@ -19115,8 +19117,8 @@ return this._syncFileList();
         p = 7;
     e.exports = {
         prepareViewData: function(e, t) {
-//CP6Functions(0)("Function 454").verbose("prepareViewData: function(e, t) {");
-//CP6Functions(0)("Function 454").verbose("e:",e);
+//CP6Functions(LogThis)("Function 454").verbose("prepareViewData: function(e, t) {");
+//CP6Functions(LogThis)("Function 454").verbose("e:",e);
             if (!e || !Array.isArray(e.items)) return a("invalid browsedata", e),
                 function(e) {
                     return {
@@ -19172,7 +19174,7 @@ return this._syncFileList();
         };
     e.exports = {
         getViewData: function(e, t) {
-            CP6Functions(0)("Function 455").verbose("getViewData: e",e)
+            CP6Functions(LogThis)("Function 455").verbose("getViewData: e",e)
             return e ? e.isHeader ? function(e) {
                 return {
                     isHeader: !0,
@@ -19196,7 +19198,7 @@ return this._syncFileList();
                     return e.title && (n.title = a.getTr2VisibleText(e.title)), e.iconName && (n.iconName = o(e.iconName)), e.inverse ? (n.textColor = i.fastListScreen.textColor, n.activeTextColor = i.fastListScreen.buttonActiveBackgroundColor, n.backgroundColor = i.fastListScreen.backgroundColor, n.activeBackgroundColor = i.fastListScreen.buttonActiveBackgroundColor) : (n.textColor = i.fullScreenDarkPopup.textColor, n.activeTextColor = i.fullScreenDarkPopup.backgroundColor, n.backgroundColor = i.fullScreenDarkPopup.buttonColor, n.activeBackgroundColor = i.fullScreenDarkPopup.activeBackgroundColor), n
                 })
             }(e, t) : e.isInfoItem ? function(e, t) {
-                CP6Functions(0)("Function 455").verbose("We have an infoitem:, this is title,text,triggeraction",e.title,e.text,s.getTriggerAction(e, t))
+                CP6Functions(LogThis)("Function 455").verbose("We have an infoitem:, this is title,text,triggeraction",e.title,e.text,s.getTriggerAction(e, t))
                 return {
                     isInfoItem: !0,
                     title: a.getTr2VisibleText(e.title),
@@ -19214,7 +19216,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 456 prepareviewdata cp6:lib:tr2:xmlgenerate:listcontent
     "use strict";
-    CP6Functions(0)("Function 456").verbose("")
+    CP6Functions(LogThis)("Function 456").verbose("")
 
     function n(e) {
         const t = Object.assign(s, e),
@@ -19260,7 +19262,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 457 getviewdata cp6:lib:tr2:xmlgenerate:listFactory browse
     "use strict";
-    CP6Functions(0)("Function 457").verbose("")
+    CP6Functions(LogThis)("Function 457").verbose("")
     function n(e, t) {
         return e.length ? e.map(e => l.getViewData(e, t)) : [{
             isEmpty: !0,
@@ -19294,7 +19296,7 @@ return this._syncFileList();
         m = 7;
     e.exports = {
         prepareViewData: function(e) {
-            CP6Functions(0)("In function 457").verbose("")
+            CP6Functions(LogThis)("In function 457").verbose("")
 
             if (!e || !Array.isArray(e.items)) return u("invalid browsedata", e),
                 function(e) {
@@ -19330,7 +19332,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 458 getviewdata
     "use strict";
-    CP6Functions(0)("Function 458").verbose("")
+    CP6Functions(LogThis)("Function 458").verbose("")
     function n(e, t, r = "") {
         return {
             isElement: !0,
@@ -19349,7 +19351,7 @@ return this._syncFileList();
         c = 215;
     e.exports = {
         getViewData: function(e, t) {
-            CP6Functions(0)("Function 458").verbose("getViewData")
+            CP6Functions(LogThis)("Function 458").verbose("getViewData")
             return e ? e.isHeader ? function(e) {
                 return {
                     isHeader: !0,
@@ -19362,7 +19364,7 @@ return this._syncFileList();
                     onClick: i.getTriggerAction(e),
                     defaultImage: a
                 }
-            }(e) : e.isInfoItem ? function(e) {CP6Functions(0)("Function 458").verbose("isInfoitem ",e)
+            }(e) : e.isInfoItem ? function(e) {CP6Functions(LogThis)("Function 458").verbose("isInfoitem ",e)
                 return n(e, i.getInfoAction(e), o.getWithoutActiveTouchColor("Information"))
             }(e) : e.isActionNode ? function(e) {
                 const t = e.icon ? o.getWithoutActiveTouchColor(e.icon) : "";
@@ -19374,7 +19376,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 459 TR2_LIST_PARAMETER
     "use strict";
-    CP6Functions(0)("Function 459").verbose("")
+    CP6Functions(LogThis)("Function 459").verbose("")
     var n = Number.isInteger;
     const o = r(0)("TR2_LIST_PARAMETER"),
         i = r(2).tr2.listPageSize;
@@ -19403,7 +19405,7 @@ return this._syncFileList();
         }
     }
 }, function(e, t, r) {// Function 460 Looks like main route
-    CP6Functions(0)("Function 460").verbose("")
+    CP6Functions(LogThis)("Function 460").verbose("")
     "use strict";
     const n = r(5), // exports = require("express")
         o = r(177),
@@ -19417,7 +19419,7 @@ return this._syncFileList();
     const l = r(142);                                           // Locale-definitions
     u.use(l.init), u.use(function(e, t, r) {
 
-        CP6Functions(0)("Function 460").verbose("express.use init",e.method,e.url)
+        CP6Functions(LogThis)("Function 460").verbose("express.use init",e.method,e.url)
 
         "OPTIONS" === e.method ? t.send() : r()
     }), u.use(o.json({
@@ -19467,11 +19469,11 @@ return this._syncFileList();
     p.use("/api", h.api), p.use("/systeminfo", h.systeminfo), p.use("/firmware", h.firmware), p.use("/notifications",  h.notification), p.use("/account", h.account), p.use("/wifi", h.wifi), p.use("/projects", h.project), p.use("/devicespecs", h.devicespec), p.use("/deviceadapter", h.deviceadapter), p.use("/devicetest", h.devicetest), p.use("/directoryadapter", h.directoryadapter), p.use("/channels", h.channel), p.use("/irblaster", h.irblaster), p.use("/statistics", h.statistics), p.use("/shorturl", h.shorturl), p.use("/curl", h.curl), p.use("/forwardactions", h.forwardactions), p.use("/guilogger", h.guilogger), p.use("/secure", h.crypto), p.use("/neeoremote", h.neeoremote), p.use("/events", h.events), p.use("/homekit", h.homekit), p.use("/fst", h.fst), d && 
         p.use("/dui", h.dui), p.post("/cp6/metaMessageHandler", (req,res) => {res.json(metaMessageHandler(req,res,a))}),
         u.use(function(e, t, r) 
-        {CP6Functions(0)("Function 460").verbose("last resort u.use, d:",d )
+        {CP6Functions(LogThis)("Function 460").verbose("last resort u.use, d:",d )
         const n = new Error("Not Found");
         n.status = 404, r(n)
     }), d  ? (u.use(function(e, t, r, n) { // changed this to test debug functionality
-        CP6Functions(0)("Function 460").verbose("u,.use EXPREESS NEEDS NEXT PARAMETER",n)
+        CP6Functions(LogThis)("Function 460").verbose("u,.use EXPREESS NEEDS NEXT PARAMETER",n)
         n || a.debug("EXPRESS_NEEDS_NEXT_PARAMETER_WEBPACK_TOO"), a.error("SERVER_ERROR", {
             url: t.url,
             method: t.method,
@@ -19484,7 +19486,7 @@ return this._syncFileList();
             stack: e.stack
         })
     }), a.debug("mount TOUCHBUTTON DEVELOPMENT route"), p.get("/touchbutton", function(e, t) {
-        CP6Functions(0)("Function 460").verbose("mount TOUCHBUTTON DEVELOPMENT route")
+        CP6Functions(LogThis)("Function 460").verbose("mount TOUCHBUTTON DEVELOPMENT route")
         r(10).send({
             type: "touchbuttonpressed",
             date: new Date
@@ -19493,14 +19495,14 @@ return this._syncFileList();
         })
     }),      
     a.debug("mount LED IDENT route"), p.get("/ledupdatefw", function(e, t) {
-        CP6Functions(0)("Function 460").verbose("mount LED IDENT route")
+        CP6Functions(LogThis)("Function 460").verbose("mount LED IDENT route")
         r(31).ledFirmwareUpdate(), t.json({
             msg: "firmware update led..."
         })
     })) : u.use(function(e, t, r, n) {
-        CP6Functions(0)("Function 460").verbose("generic u.use t.url",t.url )
-        //CP6Functions(0)("Function 460").verbose(" generic u.use n",n)
-        CP6Functions(0)("Function 460").verbose(" generic u.use e",e)
+        CP6Functions(LogThis)("Function 460").verbose("generic u.use t.url",t.url )
+        //CP6Functions(LogThis)("Function 460").verbose(" generic u.use n",n)
+        CP6Functions(LogThis)("Function 460").verbose(" generic u.use e",e)
         const o = !e.alreadyLogged && e.message && -1 === e.message.indexOf("Internal Server Error");
         n || a.debug("EXPRESS_NEEDS_NEXT_PARAMETER_WEBPACK_TOO"), o && a.error("INVALID_ROUTE", {
             url: t.url,
@@ -19524,7 +19526,7 @@ return this._syncFileList();
     }
 }, function(e, t, r) {// Function 463 Router: API 
     "use strict";
-    CP6Functions(0)("Express router for API calls").verbose("");    
+    CP6Functions(LogThis)("Express router for API calls").verbose("");    
     const n = r(1),
         o = r(5).Router(),
         i = r(90),
@@ -19540,7 +19542,7 @@ return this._syncFileList();
         r376 = r(376),
         q = r(27);
     o.get("/recipes", (e, t) => {
-        CP6Functions(0)("API-recipes").verbose("");
+        CP6Functions(LogThis)("API-recipes").verbose("");
         const r = s.getBaseUrl();
         i.getAllRecipes(r).then(e => {
             t.json(e)
@@ -19613,35 +19615,35 @@ return this._syncFileList();
                                                     channelInfo.channel == thisFavo.channelNr ? 
                                                     (myName = thisFavo.channel.name,myResult = true):{}
                                                 }),
-                                                CP6Functions(0)("Function 463").verbose("Is this favorite result:",{Result:myResult,name:myName}),
+                                                CP6Functions(LogThis)("Function 463").verbose("Is this favorite result:",{Result:myResult,name:myName}),
                                                 t.json({Result:myResult,name:myName})}
                                 )
-                            ).catch(err => {CP6Functions(0)("Function 463").verbose("Failed isthisfavorite:",{Result:myResult,name:myName},err),
+                            ).catch(err => {CP6Functions(LogThis)("Function 463").verbose("Failed isthisfavorite:",{Result:myResult,name:myName},err),
                             t.json({Result:myResult,name:myName})})
                         
                     
     }), o.get("/flushImageCache", (e, t) => {
-        CP6Functions(0)("Function 463").verbose("request to flush imagecache");
+        CP6Functions(LogThis)("Function 463").verbose("request to flush imagecache");
         p.flushImageCache(); // ### clear local array first (Function 372) ; seems to be an extra "cache" only storing the keys of cache content.
         const agnt = new h.Agent({
               keepAlive: !0, 
               keepAliveMsecs: 8e3
         });
-        CP6Functions(0)("Function 463").verbose("invoking express router (17) for flushimage")
+        CP6Functions(LogThis)("Function 463").verbose("invoking express router (17) for flushimage")
          g({             // send http://brainurl:3004/v1/imagecache/flushImagecache/; this will be routed to imageservice.js
             url: s.getBaseUrl()+"v1/imagecache/flushImagecache/",
             agent: agnt,
             encoding: null,
             timeout: 4e3
-        }).then(() => CP6Functions(0)("Function 463").verbose("Returned from request 463"),t.json({"Result":"Cache cleared!!"}))
+        }).then(() => CP6Functions(LogThis)("Function 463").verbose("Returned from request 463"),t.json({"Result":"Cache cleared!!"}))
 
     }), o.get("/GetLogLevels", (e, t) => { 
-        CP6Functions(0)("Function 463").verbose("GetLogLevels received");
+        CP6Functions(LogThis)("Function 463").verbose("GetLogLevels received");
         let promiseT = []; let theResult = []; let theUrl = ''; 
         logModules.forEach((Component) =>
             {if (Component.logComponent.toUpperCase()!="GLOBAL")
                 {theUrl="http://127.0.0.1:300"+(Component.Enum)+"/"+Component.logComponent+"/metaMessageHandler/?doFunc=GetLogLevel";
-                CP6Functions(0)("Function 463").verbose("Getting loglevel by",theUrl)
+                CP6Functions(LogThis)("Function 463").verbose("Getting loglevel by",theUrl)
                 let tBody= ''  // post message to the relevant port for this module; uri is all we need, no body required.
                 promiseT.push (r(17)({
                     uri: theUrl,
@@ -19653,44 +19655,42 @@ return this._syncFileList();
                         "Content-Length": tBody.length
                     },
                     body: tBody
-                }).then( (thisResult) => {(CP6Functions(0)("Function 463").debug("Returned from single post request",thisResult),theResult.push(JSON.parse(thisResult)[0]))})
-                .catch ( (err) => {(CP6Functions(0)("Function 463").error("Error calling getloglevel "+theUrl,err))})            
+                }).then( (thisResult) => {(CP6Functions(LogThis)("Function 463").debug("Returned from single post request",thisResult),theResult.push(JSON.parse(thisResult)[0]))})
+                .catch ( (err) => {(CP6Functions(LogThis)("Function 463").error("Error calling getloglevel "+theUrl,err))})            
                 )
             }
         })
-        Promise.all(promiseT).then((values) => {
-            return (CP6Functions(0)("Function 463").verbose("Returned from all post requests"),
-                    CP6Functions(0)("Function 463").debug("returned:",theResult),
+        Promise.all(promiseT).then((AllResults) => {
+            return (CP6Functions(LogThis)("Function 463").verbose("Returned from all post requests"),
+                    CP6Functions(LogThis)("Function 463").debug("returned:",theResult),
                     t.json({"result":theResult}))
         })
 
 
     }), o.get("/OverrideLogLevel", (e, t) => {
-        CP6Functions(0)("Function 463").verbose("OverrideLogLevel received");
+        CP6Functions(LogThis)("Function 463").debug("OverrideLogLevel received");
         var theModule = e.query.Module;
         if (theModule == undefined)
             return t.json({msg: "Missing modulename"})
         else
-            theModule = theModule.toLowerCase()
-        
+            theModule = theModule.toLowerCase()        
         let thelogLevel = e.query.logLevel;
+        CP6Functions(LogThis)("Function 463").verbose("Requesting loglevel for module "+theModule+" to be set to "+thelogLevel)
         let doFunc="?doFunc=OverrideLogLevel&logLevel="+thelogLevel
         let theUrl = ''
         let i;
-try {
-
-        logModules.forEach((Component) =>
-            {if (Component.logComponent === theModule) 
-                theUrl="http://127.0.0.1:300"+((Component.Enum))+"/"+theModule+"/metaMessageHandler/"+doFunc;
-        })
-
-}
-catch (err) {console.log("Loglevel override in cp6:",err)}
-        if (theUrl == '')
-        {   CP6Functions(0)("Function 463").error("Unrecognised module for loglevel override "+theModule)
-            return t.json({"error":"Unrecognised module for loglevel override "+theModule})
+        try {
+            logModules.forEach((Component) =>
+                {if (Component.logComponent === theModule) 
+                    theUrl="http://127.0.0.1:300"+((Component.Enum))+"/"+theModule+"/metaMessageHandler/"+doFunc;
+            })
         }
-        CP6Functions(0)("Function 463").verbose("Loglevel change; invoking",theUrl)
+        catch (err) {console.log("Loglevel override in cp6:",err)}
+        if (theUrl == '')
+            {   CP6Functions(LogThis)("Function 463").error("Unrecognised module for loglevel override "+theModule)
+                return t.json({"error":"Unrecognised module for loglevel override "+theModule})
+            }
+        CP6Functions(LogThis)("Function 463").verbose("Loglevel change; invoking",theUrl)
 
         let tBody= ''  // post message to the relevant port for this module; uri is all we need, no body required.
         return r(17)({
@@ -19704,7 +19704,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
                 "Content-Length": tBody.length
             },
             body: tBody
-        }).then((theResult) => (CP6Functions(0)("Function 463").verbose("Returned from post request"),t.json(theResult)))
+        }).then((theResult) => (CP6Functions(LogThis)("Function 463").verbose("Returned from post request"),t.json(theResult)))
 
     }), o.get("/PowerState", (e,t) => {
         r(27).get().then(r => r.getDevices()).then( // get all devices so we can extract it;s power state and find the opposite of ppower state (toggle power)
@@ -19722,7 +19722,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             t.json(bb)})
         
     }), o.get("/TouchButton", (e, t) => {
-        CP6Functions(0)("Function 463").verbose("TOUCHBUTTON simulated"),
+        CP6Functions(LogThis)("Function 463").verbose("TOUCHBUTTON simulated"),
         r(10).send({
             type: "touchbuttonpressed",
             date: new Date
@@ -19732,7 +19732,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         })
 
     }), o.get("/longTouchButton", function(e, t) {
-        CP6Functions(0)("Function 463").verbose("longtouchbutton"),
+        CP6Functions(LogThis)("Function 463").verbose("longtouchbutton"),
         r(10).send({
             type: r(140).NOTIFICATION_LONG_TOUCHBUTTONPRESSED,
             date: new Date
@@ -19771,10 +19771,10 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         l = r(155),
         p = r(27);
     i.post("/login", function(e, t, r) {
-        CP6Functions(0)("Function 464").verbose("login")        
-        CP6Functions(0)("Function 464").verbose("login;e.body",e.body)        
+        CP6Functions(LogThis)("Function 464").verbose("login")        
+        CP6Functions(LogThis)("Function 464").verbose("login;e.body",e.body)        
         const i = n(e.body);
-        CP6Functions(0)("Function 464").verbose("login;i",i)        
+        CP6Functions(LogThis)("Function 464").verbose("login;i",i)        
         c.canPerform(c.ACCOUNT_LOGIN).then(() => s.login(i.email, i.password)).then(() => t.json({
             success: !0
         })).catch(e => {
@@ -19905,29 +19905,29 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         a = r(44);
     let c;
     n.get("/scan", (e, t) => {
-        CP6Functions(0)("Function 467").verbose("router WIFI; get /scan")
+        CP6Functions(LogThis)("Function 467").verbose("router WIFI; get /scan")
 
         o.scan().then(e => {
             t.json(e)
         })
     }), n.get("/debug", (e, t) => {
-        CP6Functions(0)("Function 467").verbose("router WIFI; get /debug")
+        CP6Functions(LogThis)("Function 467").verbose("router WIFI; get /debug")
         o.scanRaw().then(e => {
             t.json(e)
         })
     }), n.get("/settings", (e, t) => {
-        CP6Functions(0)("Function 467").verbose("router WIFI; get /settings")
+        CP6Functions(LogThis)("Function 467").verbose("router WIFI; get /settings")
         t.json({
             ssid: o.getSsid(),
             encryption: o.getEncryption()
         })
     }), n.get("/disableopenap", function(e, t) {
-        CP6Functions(0)("Function 467").verbose("router WIFI; get /disableopenap")
+        CP6Functions(LogThis)("Function 467").verbose("router WIFI; get /disableopenap")
         s.debug("disable open wifi ap"), t.status(200).end(), clearTimeout(c), c = setTimeout(() => {
             a.disableAccesspointMode()
         }, 5e3)
     }), n.post("/connect", (e, t, r) => {
-        CP6Functions(0)("Function 467").verbose("router WIFI; post /connect")
+        CP6Functions(LogThis)("Function 467").verbose("router WIFI; post /connect")
 
         const n = e.body;
         o.connect(n.ssid, n.password, n.encryption, n.hiddenSSID).then(() => {
@@ -19942,7 +19942,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
     }), e.exports = n
 }, function(e, t, r) {// Function 468 Router: channel
     "use strict";
-    CP6Functions(0)("Function 468").verbose("")
+    CP6Functions(LogThis)("Function 468").verbose("")
     const n = r(5).Router(),
         o = r(158);
     n.get("/search", function(e, t, r) {
@@ -19953,15 +19953,15 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             r(e)
         } else t.json([])
     }), n.get("/:channelid", function(e, t) {
-//        CP6Functions(0)("Function 468").verbose("router Channel; get channelid e",e)
-//        CP6Functions(0)("Function 468").verbose("router Channel; get channelid e.params",e.params)
-//        CP6Functions(0)("Function 468").verbose("router Channel; get channelid e.params.channelid",e.params.channelid)
+//        CP6Functions(LogThis)("Function 468").verbose("router Channel; get channelid e",e)
+//        CP6Functions(LogThis)("Function 468").verbose("router Channel; get channelid e.params",e.params)
+//        CP6Functions(LogThis)("Function 468").verbose("router Channel; get channelid e.params.channelid",e.params.channelid)
         const r = e.params.channelid;
         t.json(o.get(r))
     }), e.exports = n
 }, function(e, t, r) {// Function 469 Router: devicespec
     "use strict";
-    CP6Functions(0)("Function 469").verbose("")
+    CP6Functions(LogThis)("Function 469").verbose("")
     const n = r(5).Router(),
         o = r(45),
         i = r(72),
@@ -19970,7 +19970,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         c = r(178).requireLoggedInAccountMiddleWare,
         u = r(0)("routes.devicespec");
     n.get("/search", function(e, t, r) {
-        CP6Functions(0)("Function 469").verbose("search ")
+        CP6Functions(LogThis)("Function 469").verbose("search ")
         const n = e.query.q;
         n && n.length ? o.search(n).then(e => {
             t.json(e)
@@ -19987,7 +19987,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             t.json({
                 success: !0
             })
-        }).catch(t => {CP6Functions(0)("Function 469").verbose("Catch refreshlist ",t)
+        }).catch(t => {CP6Functions(LogThis)("Function 469").verbose("Catch refreshlist ",t)
             u.error("ROUTE_DEVICESPEC_REFRESHFILELIST", {
                 url: e.url,
                 method: e.method,
@@ -19995,14 +19995,14 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             }), r(new Error(s(t, "devicespec_sync")))
         })
     }), n.get("/:spec_id", function(e, t, r) {
-        CP6Functions(0)("Function 469").verbose("spec_id ")
+        CP6Functions(LogThis)("Function 469").verbose("spec_id ")
         const n = a.getRequestParameter(e, "spec_id", {
             presence: !0
         });
         o.getSpec(n).then(e => {
             t.json(e)
         }).catch(t => {
-            CP6Functions(0)("Funcion 469").verbose("Error in use")
+            CP6Functions(LogThis)("Funcion 469").verbose("Error in use")
             u.error("ROUTE_DEVICESPEC_ID", {
                 url: e.url,
                 method: e.method,
@@ -20140,13 +20140,13 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         s = r(0)("routes.sensor"),
         a = r(3);
     o.use("/:device_key/sensors", n), n.param("sensor_key", function(e, t, r, n) {
-        CP6Functions(0)("Function 475").verbose("/:device_key/sensors",n)
+        CP6Functions(LogThis)("Function 475").verbose("/:device_key/sensors",n)
         e.sensor = e.device.getSensorByKey(n), e.sensor ? r() : r(new Error(i(null, "notfound", "sensor", n).message))
     }), n.get("/:sensor_key", function(e, t, r) {
             e.sensor.getValue().then(e => {
                 a.increaseCounter("sensor-read-succeeded"), t.json({
                     value: e
-            }),CP6Functions(0)("Function 475").verbose("GetSensor-value",e)
+            }),CP6Functions(LogThis)("Function 475").verbose("GetSensor-value",e)
         }).catch(e => {
             s.debug("failed to get sensor value", e.message), a.increaseCounter("sensor-read-errors"), e.alreadyLogged = !0, r(e)
         })
@@ -20398,7 +20398,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             r(new Error(i(e, "directoryadapter_browse").message))
         })
     }), n.post("/:directory_key/action", function(e, t, r) {
-        CP6Functions(0)("Function 481").verbose("/:directory_key/action")
+        CP6Functions(LogThis)("Function 481").verbose("/:directory_key/action")
         s.callAction(e.directory, e.body).then(e => {
             t.json(e)
         }).catch(e => {
@@ -20426,11 +20426,11 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
     }), e.exports = n
 }, function(e, t, r) {// Function 483 Router: favorites
     "use strict";
-    CP6Functions(0)("Function 483").verbose("favorites")
+    CP6Functions(LogThis)("Function 483").verbose("favorites")
 
     function n(e, t) {
-        CP6Functions(0)("Function 483").verbose("favorites e")
-        //CP6Functions(0)("Function 483").verbose("favorites t",t)
+        CP6Functions(LogThis)("Function 483").verbose("favorites e")
+        //CP6Functions(LogThis)("Function 483").verbose("favorites t",t)
         return parseInt(s.getRequestParameter(e, t, {
             presence: !0,
             numericality: {
@@ -20492,7 +20492,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             t.json(s)
         }).catch(r)
     }), o.get("/triggerByChannel/:favChannelNr", function(e, t) {
-        CP6Functions(0)("Function 483").verbose("o.get(/triggerByChannel/:favChannelNr e,t",e,t)
+        CP6Functions(LogThis)("Function 483").verbose("o.get(/triggerByChannel/:favChannelNr e,t",e,t)
         const r = c.buildChannelSwitchAction(e.device, e.channelNr),
             n = u.trigger(r);
         h.debug("FAVORITE_TRIGGERD_BY_CHANNEL", {
@@ -20502,10 +20502,10 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         const r = e.device.getFavorites();
         r.splice(r.indexOf(e.favorite), 1), e.project.saveDebounced(), t.json(r)
     }), o.get("/:favIdx/trigger", function(e, t) {
-        CP6Functions(0)("Function 483").verbose("o.get(/:favIdx/trigger e.favorite",e.favorite);
-        CP6Functions(0)("Function 483").verbose("o.get(/:favIdx/trigger e.favorite.getChannelNr()",e.favorite.getChannelNr());
+        CP6Functions(LogThis)("Function 483").verbose("o.get(/:favIdx/trigger e.favorite",e.favorite);
+        CP6Functions(LogThis)("Function 483").verbose("o.get(/:favIdx/trigger e.favorite.getChannelNr()",e.favorite.getChannelNr());
         const r = c.buildChannelSwitchAction(e.device, e.favorite.getChannelNr());
-        CP6Functions(0)("Function 483").verbose("Back, before triggering this:",r)
+        CP6Functions(LogThis)("Function 483").verbose("Back, before triggering this:",r)
         const n = u.trigger(r);
         h.debug("USE_FAVORITE", {
             channel: e.favorite.getChannelName()
@@ -20515,7 +20515,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         "use strict";
         const j = r;
         function n(e, t) {
-            CP6Functions(0)("Function 484").verbose("here (in N) we have all the ingredients to store currrchannel:",e.key,t)
+            CP6Functions(LogThis)("Function 484").verbose("here (in N) we have all the ingredients to store currrchannel:",e.key,t)
             j(506).putCurrFavo(t, e.key) 
             const r = function(e) {
                     const t = e.getPresetSettings();
@@ -20561,7 +20561,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             };
         e.exports = {
             buildChannelSwitchAction: function(e, t) {
-                CP6Functions(0)("Function 484").verbose("buildChannelSwitchAction")
+                CP6Functions(LogThis)("Function 484").verbose("buildChannelSwitchAction")
                 return a.check(a.NEEO_FEATURE_FAVORITES_CUSTOM_HANDLER, e) ? function(e, t) {
                     const r = e.getFavoriteComponent();
                     return s.buildActionOfComponent("Favorite " + t, r, {
@@ -20572,7 +20572,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         }
 }, function(e, t, r) {// Function 485 Router: notification
     "use strict";
-    CP6Functions(0)("Function 485").verbose("router")
+    CP6Functions(LogThis)("Function 485").verbose("router")
 
     const n = r(5).Router(),
         o = r(0)("routes.notification"),
@@ -20581,10 +20581,10 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         a = r(9),
         c = r(14);
         n.get("/", function(e, t, r) {
-            CP6Functions(0)("Function 485").verbose("router - post notifications")
+            CP6Functions(LogThis)("Function 485").verbose("router - post notifications")
         })
         n.post("/", function(e, t, r) {
-        CP6Functions(0)("Function 485").verbose("router - post notifications",e.url,"body:",e.body)
+        CP6Functions(LogThis)("Function 485").verbose("router - post notifications",e.url,"body:",e.body)
         const n = e.body;
         c(n, {
             type: {
@@ -20596,7 +20596,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
                 }
             }
         });
-        CP6Functions(0)("Function 485").verbose("n.type",n.type)
+        CP6Functions(LogThis)("Function 485").verbose("n.type",n.type)
 /* an attempt to add linebreaks in textlabels; injects some text and CRLF ... did not work as TR2 doesn't honor crlf 
        if (n.type == 'DEVICE_SENSOR_UPDATE') {
                 n.data.sensorValue = "====>&#x0A;&#x0D;"+n.data.sensorValue
@@ -20604,7 +20604,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         }
 */ 
         try {
-            CP6Functions(0)("Function 485").verbose("send",n)
+            CP6Functions(LogThis)("Function 485").verbose("send",n)
 
             s.send(n) ? t.json({
                 success: !0
@@ -20613,7 +20613,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             o.debug("NOTIFICATION_SEND_ERROR", e), i.increaseCounter("notification-send-error"), e.alreadyLogged = !0, r(e)
         }
     }), n.get("/push-all", function(e, t) {
-        CP6Functions(0)("Function 485").verbose("push-all")
+        CP6Functions(LogThis)("Function 485").verbose("push-all")
         s.resendAll(), t.end()
     }), e.exports = n
 }, function(e, t, r) {// Function 486 Router: irblaster
@@ -20957,17 +20957,17 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
     }), e.exports = n
 }, function(e, t, r) {// Function 490-TR2 Router: tr2
     "use strict";
-    CP6Functions(0)("Function 490").verbose("handle TR2 GUI")
+    CP6Functions(LogThis)("Function 490").verbose("handle TR2 GUI")
 
-    function n(e) { CP6Functions(0)("Function 490").debug("TR2 convert")
+    function n(e) { CP6Functions(LogThis)("Function 490").debug("TR2 convert")
         return p.convert(e)
     }
 
-    function o(e) {CP6Functions(0)("Function 490").debug("TR2 return project",e.project)
+    function o(e) {CP6Functions(LogThis)("Function 490").debug("TR2 return project",e.project)
         return n(e.project)
     }
 
-    function i(e, t) {CP6Functions(0)("Function 490").debug("TR2 search for listlength")
+    function i(e, t) {CP6Functions(LogThis)("Function 490").debug("TR2 search for listlength")
         const r = t.match(/listLength="(\d+)"/);
         r && (e.totalLength = r[1]), y.endRequest(e)
     }
@@ -20986,13 +20986,13 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             success: !0
         },
         y = m.buildRequestTracker();
-        CP6Functions(0)("Function 490").verbose("TR2 use: e")
+        CP6Functions(LogThis)("Function 490").verbose("TR2 use: e")
 
     h.use("/:project_key/tr2", s), s.get("/gui_xml", function(e, t) {
-        CP6Functions(0)("Function 490").verbose("TR2 use /:project_key/tr2/s.get(/gui_xml ")
+        CP6Functions(LogThis)("Function 490").verbose("TR2 use /:project_key/tr2/s.get(/gui_xml ")
         const r = Date.now();
         d.guiXml(n(e.project)).then(n => {
-            CP6Functions(0)("Function 490").verbose("TR2 d.guiXml(");
+            CP6Functions(LogThis)("Function 490").verbose("TR2 d.guiXml(");
             const o = Date.now() - r;
             n && o > 2500 && g.info("TR2_GUIXML_GENERATE", {
                     durationMs: o,
@@ -21009,22 +21009,22 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
                 }(e)
         })
     }), s.get("/guidata_xml", function(e, t, r) {
-        CP6Functions(0)("Function 490").verbose("TR2 get guidata_xml")
-        //CP6Functions(0)("Function 490").debug("TR2 get guidata_xml  e.project:",e.project)
+        CP6Functions(LogThis)("Function 490").verbose("TR2 get guidata_xml")
+        //CP6Functions(LogThis)("Function 490").debug("TR2 get guidata_xml  e.project:",e.project)
         const o = Date.now();
         d.guiDataXml(n(e.project)).then(e => {
-            CP6Functions(0)("Function 490").debug("TR2 guiDataXml")
+            CP6Functions(LogThis)("Function 490").debug("TR2 guiDataXml")
             const r = Date.now() - o;
             e && r > 2500 && m.increaseCounter("tr2-guidataxml-long-generate"), t.set("Content-Type", f), t.send(l.transliterationToAscii(e))
         }).catch(r)
-        CP6Functions(0)("Function 490").debug("TR2 get guidata_xml done")
+        CP6Functions(LogThis)("Function 490").debug("TR2 get guidata_xml done")
 
     }), s.get("/overrideBrainHost/:host", function(e, t) {
-        CP6Functions(0)("Function 490").verbose("TR2 get /overrideBrainHost/:host")
+        CP6Functions(LogThis)("Function 490").verbose("TR2 get /overrideBrainHost/:host")
         const r = e.params.host;
         g.debug("overrideBrainHost", r), d.overrideBrainHost(r), t.send("WITH_GREAT_POWER_COMES_GREAT_RESPONSIBILITY")
     }), s.get("/zero_conf_xml", function(e, t, r) {
-        CP6Functions(0)("Function 490").verbose("TR2 get /zero_conf_xml (connection request by TR2)")
+        CP6Functions(LogThis)("Function 490").verbose("TR2 get /zero_conf_xml (connection request by TR2)")
         g.debug("server zeroconf.xml");
         try {
             const n = d.zeroConfXml();
@@ -21035,10 +21035,10 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             }), r(e)
         }
     }), s.get("/directory/stats", function(e, t) {
-        CP6Functions(0)("Function 490").verbose("TR2 get /directory/stats")
+        CP6Functions(LogThis)("Function 490").verbose("TR2 get /directory/stats")
         t.json(y.getStats())
     }), s.get("/directory/:directory_key/action", function(e, t, r) {
-        CP6Functions(0)("Function 490").verbose("TR2 get directory/:directory_key/action")
+        CP6Functions(LogThis)("Function 490").verbose("TR2 get directory/:directory_key/action")
 
         const o = a.getRequestParameter(e, "directory_key", {
                 presence: !0
@@ -21047,17 +21047,17 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
                 actionIdentifier: e.query.actionIdentifier || ""
             },
             s = n(e.project);
-            CP6Functions(0)("Function 490").verbose("TR2 get /directory/:directory_key/action actiopnIdentifier:",i,"getRequestParameter",o)
+            CP6Functions(LogThis)("Function 490").verbose("TR2 get /directory/:directory_key/action actiopnIdentifier:",i,"getRequestParameter",o)
         c.directoryAction(s, o, i).then(() => t.send()).catch(r)
     }), s.post("/directory/:directory_key/browse", function(e, t, r) {
-        CP6Functions(0)("Function 490").verbose("TR2 post /directory/:directory_key/browse")
+        CP6Functions(LogThis)("Function 490").verbose("TR2 post /directory/:directory_key/browse")
 
         let n = "";
         e.on("data", e => {
             n += e
         }), e.on("end", () => {
             e.browseParams = c.parseEncodedListParameter(n), r()
-            CP6Functions(0)("Function 490").verbose("TR2 post - browseParams: ",e.browseParams)
+            CP6Functions(LogThis)("Function 490").verbose("TR2 post - browseParams: ",e.browseParams)
         })
     }, function(e, t, r) {
         const o = a.getRequestParameter(e, "directory_key", {
@@ -21074,7 +21074,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             y.failRequest(u), r(e)
         })
     }), s.post("/device/:device_key/rootitems", function(e, t, r) {
-        CP6Functions(0)("Function 490").verbose("TR2 post /device/:device_key/rootitems")
+        CP6Functions(LogThis)("Function 490").verbose("TR2 post /device/:device_key/rootitems")
         const o = a.getRequestParameter(e, "device_key", {
                 presence: !0
             }),
@@ -21093,20 +21093,20 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
 
         o(e).disableTr2Log(), t.json(E)
     }), s.get("/enableUartLog", function(e, t) {
-        CP6Functions(0)("Function 490").verbose("TR2 get enableUartlog")
+        CP6Functions(LogThis)("Function 490").verbose("TR2 get enableUartlog")
         o(e).enableTr2UartLog(), t.json(E)
     }), s.get("/enableUserActionLog", function(e, t) {
-        CP6Functions(0)("Function 490").verbose("TR2 get enableUserActionLog")
+        CP6Functions(LogThis)("Function 490").verbose("TR2 get enableUserActionLog")
         o(e).enableTr2UserActionLog(), t.json(E)
     }), s.get("/testpushaction", function(e, t) {
-        CP6Functions(0)("Function 490").verbose("TR2 get testpushaction")
+        CP6Functions(LogThis)("Function 490").verbose("TR2 get testpushaction")
 
         const r = e.query.callback;
         d.pushActions.addPushAction(r), t.json(E)
     }), e.exports = s
 }, function(e, t, r) {// Function 491 Router: TR2 guilogger tr2logparser
     "use strict";
-    CP6Functions(0)("Function 491").verbose("TR2 guilogger tr2logparser")
+    CP6Functions(LogThis)("Function 491").verbose("TR2 guilogger tr2logparser")
     function n(e) {
         return e.reduce((e, t) => (! function(e) {
             return e.message === a
@@ -21161,7 +21161,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         u = /\n*.+\n*$/
 }, function(e, t, r) {// Function 492 Router: TR2 guilogger 
     "use strict";
-    CP6Functions(0)("Function 491").verbose("TR2 guilogger")
+    CP6Functions(LogThis)("Function 491").verbose("TR2 guilogger")
     const n = r(6)("cp6:lib:guilogger:tr2logusage"),
         o = r(3);
     e.exports = {
@@ -21173,7 +21173,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
     }
 }, function(e, t, r) {// Function 493 Router: 
     "use strict";
-    CP6Functions(0)("Function 493").verbose("router")
+    CP6Functions(LogThis)("Function 493").verbose("router")
     function n() {
         c.refreshClients()
     }
@@ -21183,54 +21183,54 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         a = r(15),
         c = r(83);
     o.get("/", function(e, t) {
-        CP6Functions(0)("Function 493").verbose("router get(/")
+        CP6Functions(LogThis)("Function 493").verbose("router get(/")
         t.json(i.summary())
     }), o.get("/useProUI", function(e, t) {
-        CP6Functions(0)("Function 493").verbose("router useProUI")
+        CP6Functions(LogThis)("Function 493").verbose("router useProUI")
         t.json(i.useProUI())
     }), o.get("/setClassicUI", function(e, t, r) {
-        CP6Functions(0)("Function 493").verbose("router: get /setClassicUI")
+        CP6Functions(LogThis)("Function 493").verbose("router: get /setClassicUI")
         const o = a.getBooleanParam(e, "useClassicUI");
         i.setClassicUI(o).then(n).then(t.json({
             success: !0
         })).catch(r)
     }), o.get("/cloudInfo", function(e, t, r) {
-        CP6Functions(0)("Function 493").verbose("router: get /cloudInfo")
+        CP6Functions(LogThis)("Function 493").verbose("router: get /cloudInfo")
         i.cloudInfo().then(e => t.json(e)).catch(r)
     }), o.get("/lan-address", function(e, t) {
-        CP6Functions(0)("Function 493").verbose("router: get /setClaslan-addresssicUI")
+        CP6Functions(LogThis)("Function 493").verbose("router: get /setClaslan-addresssicUI")
         t.json(i.getLanAddress())
     }), o.get("/identbrain", function(e, t) {
-        CP6Functions(0)("Function 493").verbose("router: get /identbrain")
+        CP6Functions(LogThis)("Function 493").verbose("router: get /identbrain")
         s.userBlink(), t.json({
             success: !0
         })
     }), e.exports = o
 }, function(e, t, r) {// Function 494 Router: 
     "use strict";
-    CP6Functions(0)("Function 494").verbose("Router")
+    CP6Functions(LogThis)("Function 494").verbose("Router")
     const n = r(5).Router(),
         o = r(3),
         i = r(31);
     n.get("/", function(e, t) {
-        CP6Functions(0)("Function 494").verbose("Router - /")
+        CP6Functions(LogThis)("Function 494").verbose("Router - /")
         t.json({
             statistics: o.getStatistic()
         })
     }), n.get("/tr2", function(e, t) {
-        CP6Functions(0)("Function 494").verbose("Router - /tr2")
+        CP6Functions(LogThis)("Function 494").verbose("Router - /tr2")
         t.json({
             statistics: o.tr2.getStatistic()
         })
     }), n.get("/errors", function(e, t) {
-        CP6Functions(0)("Function 494").verbose("Router - /errors")
+        CP6Functions(LogThis)("Function 494").verbose("Router - /errors")
         t.json({
             statistics: o.getLastErrors()
         })
     }), n.get("/nbr", function(e, t) {
-        CP6Functions(0)("Function 494").verbose("Router - /nbr")
+        CP6Functions(LogThis)("Function 494").verbose("Router - /nbr")
         i.updateStatistics().then(() => {
-            CP6Functions(0)("Function 494").verbose("Router - /updateStatistics")
+            CP6Functions(LogThis)("Function 494").verbose("Router - /updateStatistics")
             t.json({
                 statistics: o.getStatistic()
             })
@@ -21238,23 +21238,23 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
     }), e.exports = n
 }, function(e, t, r) {// Function 495 Router: shorturl
     "use strict";
-    CP6Functions(0)("Function 495").verbose("")
+    CP6Functions(LogThis)("Function 495").verbose("")
     const n = r(5).Router(),
         o = r(84),
         i = /\/shorturl/;
     n.get("/:uri", function(e, t) {
-        CP6Functions(0)("Function 495").verbose("Router - get /:uri")
+        CP6Functions(LogThis)("Function 495").verbose("Router - get /:uri")
         const r = e.originalUrl.replace(i, "");
-        CP6Functions(0)("Function 495").verbose("Router - get /:uri-done")
+        CP6Functions(LogThis)("Function 495").verbose("Router - get /:uri-done")
 
         o.handleTr2WifiRequest(r).then(e => {
-            CP6Functions(0)("Function 495").verbose("handleTr2WifiRequest",e)
+            CP6Functions(LogThis)("Function 495").verbose("handleTr2WifiRequest",e)
             e ? (t.set("Content-Type", "text/xml"), t.send(e)) : t.send()
         })
     }), e.exports = n
 }, function(e, t, r) {// Function 496 Router: SYSTEMINFO, STATISTICS, "ERROR LOG"
     "use strict";
-    CP6Functions(0)("Function 496").verbose("")
+    CP6Functions(LogThis)("Function 496").verbose("")
 
     function n(e) {
         return d + e + u
@@ -21282,25 +21282,25 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             }(e)), i(t, "", 0), r.join("\n")
         };
     i.get("/", function(e, t) {
-        CP6Functions(0)("Function 496").verbose("Router: get /")
+        CP6Functions(LogThis)("Function 496").verbose("Router: get /")
         const r = h("# SYSTEMINFO", s.summary()),
             n = h("# STATISTICS", a.getStatistic()),
             o = h("# ERROR LOG", a.getLastErrors());
         t.send(r + c + n + c + o + c)
     }), i.get("/raw", function(e, t) {
-        CP6Functions(0)("Function 496").verbose("Router: get /raw")
+        CP6Functions(LogThis)("Function 496").verbose("Router: get /raw")
         t.send(a.getLastErrors())
     }), e.exports = i
 }, function(e, t, r) {// Function 497 Router: forwardactions
     "use strict";
-    CP6Functions(0)("Function 497").verbose("")
+    CP6Functions(LogThis)("Function 497").verbose("")
     const n = r(5).Router(),
         o = r(59),
         i = r(21),
         s = r(14),
         a = "28071979";
     n.post("/viewbuilder", function(e, t) {
-        CP6Functions(0)("Function 497").verbose("Router: post /viewbuilder")
+        CP6Functions(LogThis)("Function 497").verbose("Router: post /viewbuilder")
         const r = function(e) {
                 s(e, {
                     macroNames: {
@@ -21328,12 +21328,12 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
     }), e.exports = n
 }, function(e, t, r) {// Function 498 Router: routes.feedback
     "use strict";
-    CP6Functions(0)("Function 498").verbose("")
+    CP6Functions(LogThis)("Function 498").verbose("")
     const n = r(5).Router(),
         o = r(0)("routes.feedback"),
         i = r(101);
     n.post("/delete", function(e, t, r) {
-        CP6Functions(0)("Function 498").verbose("Route post /delete")
+        CP6Functions(LogThis)("Function 498").verbose("Route post /delete")
         i.clear().then(() => {
             t.json({
                 success: !0
@@ -21342,7 +21342,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             o.debug("FORWARDACTION_CLEAR", e.message), r(e)
         })
     }), n.post("/", function(e, t, r) {
-        CP6Functions(0)("Function 498").verbose("Route post /")
+        CP6Functions(LogThis)("Function 498").verbose("Route post /")
         const n = e.body;
         i.setRemotehost(n).then(() => {
             t.json({
@@ -21352,7 +21352,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             o.debug("FORWARDACTION_SET", e.message), r(e)
         })
     }), n.get("/", function(e, t, r) {
-        CP6Functions(0)("Function 498").verbose("Route get /")
+        CP6Functions(LogThis)("Function 498").verbose("Route get /")
         i.load().then(e => {
             e && e.forwarding ? t.json(e.forwarding) : t.json({})
         }).catch(e => {
@@ -21361,42 +21361,42 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
     }), e.exports = n
 }, function(e, t, r) {// Function 499 Router: routes.tr2 eror and exception detection
     "use strict";
-    CP6Functions(0)("Function 499").verbose("")
+    CP6Functions(LogThis)("Function 499").verbose("")
     const n = r(5),
         o = r(177),
         i = n.Router(),
         s = r(180);
     i.post("/exceptions", (e, t) => {
-        CP6Functions(0)("Function 499").verbose("Route post /exceptions")
+        CP6Functions(LogThis)("Function 499").verbose("Route post /exceptions")
         s.log(e.body), t.status(200), t.end()
     });
     const a = o.text({
         type: "text/plain"
     });
     i.post("/tr2/error", a, (e, t) => {
-        CP6Functions(0)("Function 499").verbose("Route post /tr2/error")
+        CP6Functions(LogThis)("Function 499").verbose("Route post /tr2/error")
         s.tr2.error(e.body), t.status(200), t.end()
     }), i.post("/tr2/exception", a, (e, t) => {
-        CP6Functions(0)("Function 499").verbose("Route post /tr2/execption")
+        CP6Functions(LogThis)("Function 499").verbose("Route post /tr2/execption")
         s.tr2.exception(e.body), t.status(200), t.end()
     }), i.post("/tr2/info", a, (e, t) => {
-        CP6Functions(0)("Function 499").verbose("Route post /tr2/info")
+        CP6Functions(LogThis)("Function 499").verbose("Route post /tr2/info")
         s.tr2.info(e.body), t.status(200), t.end()
     }), e.exports = i
 }, function(e, t, r) {// Function 500 Router: crypto
     "use strict";
-    CP6Functions(0)("Function 500").verbose("")
+    CP6Functions(LogThis)("Function 500").verbose("")
     const n = r(5).Router(),
         o = r(71);
     n.get("/pubkey", (e, t) => {
-        CP6Functions(0)("Function 500").verbose("Route get /pubkey")
+        CP6Functions(LogThis)("Function 500").verbose("Route get /pubkey")
         t.json({
             publickey: o.getPublicKey()
         })
     }), e.exports = n
 }, function(e, t, r) {// Function 501 Router: neeolink
     "use strict";
-    CP6Functions(0)("Function 501").verbose("")
+    CP6Functions(LogThis)("Function 501").verbose("")
 
     function n(e) {
         return {
@@ -21411,12 +21411,12 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         s = r(42),
         a = r(83);
     i.get("/neeolink", function(e, t, r) {
-        CP6Functions(0)("Function 499").verbose("Route get /neeolink")
+        CP6Functions(LogThis)("Function 499").verbose("Route get /neeolink")
         s.loadTR2CommunicationVia6lowpan().then(e => {
             t.json(e)
         }).catch(r)
     }), i.post("/enableneeolink", function(e, t, r) {
-        CP6Functions(0)("Function 499").verbose("Route post /enableneeolink")
+        CP6Functions(LogThis)("Function 499").verbose("Route post /enableneeolink")
         s.saveTR2CommunicationVia6lowpan(n(!0)).then(() => {
             o(), t.json({
                 success: !0
@@ -21424,7 +21424,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         }).catch(r)
     }), i.post("/disableneeolink", function(e, t, r) {
         s.saveTR2CommunicationVia6lowpan(n(!1)).then(() => {
-            CP6Functions(0)("Function 499").verbose("Route post /disableneeolink")
+            CP6Functions(LogThis)("Function 499").verbose("Route post /disableneeolink")
             o(), t.json({
                 success: !0
             })
@@ -21432,7 +21432,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
     }), e.exports = i
 }, function(e, t, r) {// Function 502 Router: homekit?
     "use strict";
-    CP6Functions(0)("Function 502").verbose("Router homekit?")
+    CP6Functions(LogThis)("Function 502").verbose("Router homekit?")
     const n = r(5).Router(),
         o = r(109);
     n.get("/", function(e, t) {
@@ -21440,7 +21440,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
     }), e.exports = n
 }, function(e, t, r) {// Function 503").verbose("Router: homekit
     "use strict";
-    CP6Functions(0)("Function 503").verbose("Router homekit?")
+    CP6Functions(LogThis)("Function 503").verbose("Router homekit?")
     const n = r(5).Router(),
         o = r(159);
     n.post("/reset", function(e, t) {
@@ -21448,7 +21448,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
     }), e.exports = n
 }, function(e, t, r) {// Function 504 Router: fst
     "use strict";
-    CP6Functions(0)("Function 504").verbose("Final systemtest (FST)")
+    CP6Functions(LogThis)("Function 504").verbose("Final systemtest (FST)")
     const n = r(5).Router(),
         o = r(31),
         i = r(44),
@@ -21504,7 +21504,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
 
     e.exports = {    
         copy : function(e, t) {
-            CP6Functions(0)("Function 505").verbose("noCloud - copy",e,t)
+            CP6Functions(LogThis)("Function 505").verbose("noCloud - copy",e,t)
 
                 if ( e === t) return u.resolve();
                     const r = o.createReadStream(e),
@@ -21514,7 +21514,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
                 
         checkSum : 
             function(e) {
-                CP6Functions(0)("Function 505").verbose("noCloud - downcheckSumload",e)
+                CP6Functions(LogThis)("Function 505").verbose("noCloud - downcheckSumload",e)
 
                 return new u(t => {
                     const r = a.createHash("sha1"),
@@ -21525,7 +21525,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
                         const n = r.digest("hex");
                         t(n)
                     }), n.on("error", e => {
-                        CP6Functions(0)("Function 505").verbose("checksum error", e), t()
+                        CP6Functions(LogThis)("Function 505").verbose("checksum error", e), t()
                     })
                 })
             },
@@ -21533,49 +21533,49 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             
         downloadJSONContent : 
             function(e) {
-                CP6Functions(0)("Function 505").verbose("downloadJSONContent")
-                return this.downloadContent(e).then(mycontent => (typeof mycontent == "string" ? JSON.parse(mycontent)  : (mycontent))).catch(err => (CP6Functions(0)("Function 505").verbose("Error converting json",err)))
+                CP6Functions(LogThis)("Function 505").verbose("downloadJSONContent")
+                return this.downloadContent(e).then(mycontent => (typeof mycontent == "string" ? JSON.parse(mycontent)  : (mycontent))).catch(err => (CP6Functions(LogThis)("Function 505").verbose("Error converting json",err)))
             },    
 
         JSONContent : 
             function(e) {
-                CP6Functions(0)("Function 505").verbose("noCloud - JSONContent")
-                return JSON.parse(e).catch(err => CP6Functions(0)("Function 505").verbose("File e.name not found",err,e.name))
+                CP6Functions(LogThis)("Function 505").verbose("noCloud - JSONContent")
+                return JSON.parse(e).catch(err => CP6Functions(LogThis)("Function 505").verbose("File e.name not found",err,e.name))
             },    
             
         downloadContent : 
             function(e) {
-                CP6Functions(0)("Function 505").verbose("noCloud - downloadContent")
+                CP6Functions(LogThis)("Function 505").verbose("noCloud - downloadContent")
                 var dest = e.targetDir+"/"+e.name;
-                return this.download(e).then( () => this.loadContent(dest)).then(content => (content)).catch(err => CP6Functions(0)("Function 505").verbose("File e.name not found",err,e.name))
+                return this.download(e).then( () => this.loadContent(dest)).then(content => (content)).catch(err => CP6Functions(LogThis)("Function 505").verbose("File e.name not found",err,e.name))
             },    
     
         loadContent : 
             function(e) {
-                CP6Functions(0)("Function 505").verbose("noCloud - download",e)
+                CP6Functions(LogThis)("Function 505").verbose("noCloud - download",e)
                 try {
                     return o.readFileSync(e, {
                         encoding: "utf-8"
                     })
                 }
-                catch (err) {CP6Functions(0)("Function 505").verbose("Catch",err)}
+                catch (err) {CP6Functions(LogThis)("Function 505").verbose("Catch",err)}
             },    
 
         moveTempFileToDest:
             function(e,t) {
-                CP6Functions(0)("Function 505 noCloud").verbose("moveTempFileToDest",e,t)
+                CP6Functions(LogThis)("Function 505 noCloud").verbose("moveTempFileToDest",e,t)
                 var src = e.targetDir+"/"+e.name;
                 var dest = t.targetDir+"/"+t.name;
                 return this.copy(src,dest)
                 .catch(err => {
-                    CP6Functions(0)("Function 505").verbose("Catch foutje:",err)
+                    CP6Functions(LogThis)("Function 505").verbose("Catch foutje:",err)
                 })
 
             },
 
         tmpdownload: 
             function(e) {
-                CP6Functions(0)("Function 505").verbose("noCloud - download",e)
+                CP6Functions(LogThis)("Function 505").verbose("noCloud - download",e)
                 const t = c.fileSync({
                     dir: "/tmp"//,
                     //mode: 0o666
@@ -21587,7 +21587,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             }, 
         download: 
             function(e) {
-                CP6Functions(0)("Function 505").verbose("noCloud - download",e)
+                CP6Functions(LogThis)("Function 505").verbose("noCloud - download",e)
                 const t = c.fileSync({
                     dir: "/tmp"//,
                     //mode: 0o666
@@ -21595,11 +21595,11 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
                 r = o.createWriteStream(t.name);
                 var url = CloudReplacementUrl  +"?type="+e.type+"&name="+e.name;
                 var dest = e.targetDir+"/"+e.name;
-                CP6Functions(0)("Function 505").verbose("getting file:",e,url,dest,t.name)
+                CP6Functions(LogThis)("Function 505").verbose("getting file:",e,url,dest,t.name)
                 return  s(i(url), r) //.then(x => this._checkSum(t.name))
                 .then(r => this.copy(t.name, dest))
                 .catch(err => {
-                    CP6Functions(0)("Function 505").verbose("Catch foutje:",err)
+                    CP6Functions(LogThis)("Function 505").verbose("Catch foutje:",err)
                 })
                 .finally(() => {
                     t.removeCallback()
@@ -21608,20 +21608,20 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         }
 },  function(e, t)  { // Function 506 Custom functionality - added without NEEO development
         "use strict";
-        CP6Functions(0)("Function 506").verbose("CurrentChannel")
+        CP6Functions(LogThis)("Function 506").verbose("CurrentChannel")
         
         e.exports = {
             storeChannelInfo: function(currChannel, deviceId,command) {
                 let thisMoment = moment()
                 currChannelArray[deviceId] = {"channel":currChannel,"command":command,"atMoment":thisMoment};
 
-                CP6Functions(0)("Function 506").verbose("storeChannelInfo - currChannelArray:")
+                CP6Functions(LogThis)("Function 506").verbose("storeChannelInfo - currChannelArray:")
                 return 1
             },   
         getCurrChannel: function(deviceId) {
-            CP6Functions(0)("Function 506").verbose("getCurrChannel")
+            CP6Functions(LogThis)("Function 506").verbose("getCurrChannel")
             if (!deviceId) 
-                {CP6Functions(0)("Function 506").verbose("addCurrentChannel - MISSING channel or deviceId")
+                {CP6Functions(LogThis)("Function 506").verbose("addCurrentChannel - MISSING channel or deviceId")
                 return Promise.reject({result: false});
                 }
             let currChannelForDevice;
@@ -21629,18 +21629,18 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
                 currChannelForDevice= currChannelArray[deviceId].channel;
                 }
             catch  (err)
-                {CP6Functions(0)("Function 506").verbose("Channel not found for",deviceId,"; channel -1 substituted")
+                {CP6Functions(LogThis)("Function 506").verbose("Channel not found for",deviceId,"; channel -1 substituted")
                 return Promise.reject({result: false,reason:"Channel not found","channel": "Channel not defined yet"});
                 }
-            CP6Functions(0)("Function 506").verbose("getCurrChannel Channel is",currChannelForDevice)
+            CP6Functions(LogThis)("Function 506").verbose("getCurrChannel Channel is",currChannelForDevice)
             let thisMoment = moment()
             let waitTime = 0;
             if (currChannelArray[deviceId].command != "DIGIT")
-            {  CP6Functions(0)("Function 506").verbose("Sending digit, check if we can send already")
+            {  CP6Functions(LogThis)("Function 506").verbose("Sending digit, check if we can send already")
                 //console.log(thisMoment - currChannelArray[deviceId].atMoment)
                 if ((thisMoment - currChannelArray[deviceId].atMoment) <1200)
                 {   waitTime = 1200 - (thisMoment - currChannelArray[deviceId].atMoment);
-                    CP6Functions(0)("Function 506").verbose("Pausing before sending IR-digit, to prevent clogging up channelinfo",waitTime)
+                    CP6Functions(LogThis)("Function 506").verbose("Pausing before sending IR-digit, to prevent clogging up channelinfo",waitTime)
                 }
             }
             return this.delay(waitTime).then(function() {
@@ -21658,10 +21658,10 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         putChannelUpDown: function(command,deviceId,e,r) {
             const c = r(484),
             u = r(52);
-            CP6Functions(0)("Function 506").verbose("putChannelUpDown")
+            CP6Functions(LogThis)("Function 506").verbose("putChannelUpDown")
             let FinalChannel=0;
             this.getCurrChannel(deviceId).then(newChannel => {
-                CP6Functions(0)("Function 506").verbose("putchannelupdown result getcurrentchannel",newChannel)
+                CP6Functions(LogThis)("Function 506").verbose("putchannelupdown result getcurrentchannel",newChannel)
                 if (newChannel.channel != undefined)
                     {FinalChannel=newChannel.channel;
                     let splitParts = command.split(' ');
@@ -21673,7 +21673,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
                         FinalChannel--;
                     }
                 else {
-                    CP6Functions(0)("Function  506").verbose("putchannelupdown result getcurrentchannel undefined:",newChannel)
+                    CP6Functions(LogThis)("Function  506").verbose("putchannelupdown result getcurrentchannel undefined:",newChannel)
                     FinalChannel = 1;
                 }
                 this.storeChannelInfo(FinalChannel, deviceId,command);
@@ -21682,7 +21682,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
                 return n;
                 }
             )
-            .catch(err => {CP6Functions(0)("Function 506").verbose("putChannelUpDown. Failed to execute promise",err);
+            .catch(err => {CP6Functions(LogThis)("Function 506").verbose("putChannelUpDown. Failed to execute promise",err);
                             this.storeChannelInfo(FinalChannel, deviceId,command)
                             const x = c.buildChannelSwitchAction(e.component.device, FinalChannel)
                             const n = u.trigger(x);
@@ -21691,9 +21691,9 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
 
                         },  
         putCurrDigit: function(currChannel, deviceId) {
-            CP6Functions(0)("Function 506").verbose("putCurrDigit",currChannel, deviceId)
+            CP6Functions(LogThis)("Function 506").verbose("putCurrDigit",currChannel, deviceId)
             if (!currChannel || !deviceId) 
-                {CP6Functions(0)("Function 506").verbose("addCurrentChannel - MISSING channel or deviceId")
+                {CP6Functions(LogThis)("Function 506").verbose("addCurrentChannel - MISSING channel or deviceId")
                 return -1;
                 }
             let digitParts = currChannel.split(' ')
@@ -21707,13 +21707,13 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             return 1
         },        
         putCurrFavo: function(fullCurrChannel, deviceId) {
-            CP6Functions(0)("Function 506").verbose("fullCurrChannel",fullCurrChannel, deviceId)
+            CP6Functions(LogThis)("Function 506").verbose("fullCurrChannel",fullCurrChannel, deviceId)
             if (!fullCurrChannel || !deviceId) 
-                {CP6Functions(0)("Function 506").verbose("fullCurrChannel - MISSING channel or deviceId");
+                {CP6Functions(LogThis)("Function 506").verbose("fullCurrChannel - MISSING channel or deviceId");
                 return -1;
                 }
             let thisMoment = moment();
-            CP6Functions(0)("Function  506").verbose("Storing",fullCurrChannel);
+            CP6Functions(LogThis)("Function  506").verbose("Storing",fullCurrChannel);
             this.storeChannelInfo(fullCurrChannel, deviceId,"FAVO") ;
             return 1;
         },           
@@ -21752,7 +21752,7 @@ function ReplaceSettingsFile(newURL)
                     reject(err);
                 }
                 else  
-                    {CP6Functions(0)("Replace "+CP6SettingsFile+" file").verbose("Succesfully replaced "+SettingsFile);
+                    {CP6Functions(LogThis)("Replace "+CP6SettingsFile+" file").verbose("Succesfully replaced "+SettingsFile);
                     resolve();
                 }
             });

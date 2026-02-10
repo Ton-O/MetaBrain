@@ -9712,7 +9712,8 @@ module.exports = function(t) {
         N = o(60),
         A = o(191),
         C = 'event.device.class',
-        D = t.exports = function(R) {
+        D = t.exports = function(R) { o(0)("Function 157").verbose("Zwave handler",R);
+
             this.api = R.api, this.capabilities = {}
         };
     D.prototype.getAllDevices = function() {
@@ -9934,7 +9935,7 @@ module.exports = function(t) {
         m = o(159),
         E = o(0)('ZWave:Device'),
         g = o(6).getInstance(),
-        I = t.exports = function(O, T) {
+        I = t.exports = function(O, T) { o(0)("Function 158").verbose("Prosyst handler");
             this.api = O, this.adapter = new p({
                 api: O
             }), this.initMaxRetries = T.initializationMaxRetries, this.initRetryDelayMs = T.initializationRetryDelayMs, this.eventhandler = new m({
