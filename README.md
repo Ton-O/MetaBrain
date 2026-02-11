@@ -17,7 +17,7 @@ I run my 3 containers in parallel on an Ubuntu server with docker on it, so to m
 # Note: this is work done because the provider of these devices have abandoned the Neeo-device completely thereby forcing you to make an even bigger electronic landfill with these precious NEEO-devices.   
 
 ## Update 2026-02-10
-I'm very happy with this update, as it helps tremendously in uncomplicated updates to drivers and way less disturbance when restarting Meta-Plus.
+I'm very happy to announce this update, as it helps tremendously in uncomplicated updates to drivers and way less disturbance when restarting Meta-Plus.
 ### I added support for updates on SDK-adapters (like Meta-Plus on so-called dynamic devices, devices that are discovered automatically).
 The original firmware only updates the version numer and some arbitrary fields, but if you added for example a button, slider, label or whatever significant, that change will not be incorporated.
 This version of the replacement firmware does exactly that: it takes the complete new driver and creates an entry in the Brains internal project-file for each device that uses that driver. That means: no longer deleting the discoverable device in the GUI, discovering it again and the hassle of setting all other things right (name device, recipe-steps, shortcuts etc.etc.etc. This means an ENORMOUS save of time.
