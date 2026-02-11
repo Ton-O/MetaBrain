@@ -4317,7 +4317,6 @@ const currChannelArray = [];
     }
 
     function i(e) {
-        console.log("90 e:",e)
         return new u((t, r) => {
             if (E.register(e)) {
                 c(e) && l.event(`Registered SDK Adapter ${e.name}`);
@@ -19686,16 +19685,13 @@ return this._syncFileList();
         let thelogLevel = e.query.logLevel;
         let doFunc="?doFunc=OverrideLogLevel&logLevel="+thelogLevel
         let theUrl = ''
-        let i;
-try {
-
-        logModules.forEach((Component) =>
-            {if (Component.logComponent === theModule) 
-                theUrl="http://127.0.0.1:300"+((Component.Enum))+"/"+theModule+"/metaMessageHandler/"+doFunc;
-        })
-
-}
-catch (err) {console.log("Loglevel override in cp6:",err)}
+        try {
+            logModules.forEach((Component) =>
+                {if (Component.logComponent === theModule) 
+                    theUrl="http://127.0.0.1:300"+((Component.Enum))+"/"+theModule+"/metaMessageHandler/"+doFunc;
+            })
+        }
+        catch (err) {console.log("Loglevel override in cp6:",err)}
         if (theUrl == '')
         {   CP6Functions(LogThis)("Function 463").error("Unrecognised module for loglevel override "+theModule)
             return t.json({"error":"Unrecognised module for loglevel override "+theModule})
@@ -21709,7 +21705,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             let curContent = currChannelArray[deviceId];
             let thisMoment = moment()
             if (curContent != undefined)
-                if ( thisMoment.diff(curContent.atMoment,"seconds") <= 3  )
+                if ( thisMoment.diff(curContent.atMoment,"seconds") <= 3  ) // if last digit pressed <3 sec, save every digit (means digit 10+)
                         channelNumber = curContent.channel + channelNumber;
             this.storeChannelInfo(channelNumber, deviceId,"DIGIT") 
             return 1
@@ -21720,7 +21716,6 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
                 {CP6Functions(LogThis)("Function 506").verbose("fullCurrChannel - MISSING channel or deviceId");
                 return -1;
                 }
-            let thisMoment = moment();
             CP6Functions(LogThis)("Function  506").verbose("Storing",fullCurrChannel);
             this.storeChannelInfo(fullCurrChannel, deviceId,"FAVO") ;
             return 1;
