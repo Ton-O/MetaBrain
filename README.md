@@ -13,7 +13,7 @@ That allows us to re-initialize the device (after a restart of META) with things
 ## Raspberry pi or Docker?
 Definitely Docker on a decent machine!
 Running this on a proper piece of hardware speedds up things tremendously....... the original/physical brain takes a couple of minutes to be usable when started.... the docker container is done within 5 to 10 seconds......
-I run my 3 containers in parallel on a Ubuntu server with docker on it, so to me, Docker containers on a Linux is mainstream for me. 
+I run my 3 containers in parallel on an Ubuntu server with docker on it, so to me, Docker containers on a Linux is mainstream for me. 
 # Note: this is work done because the provider of these devices have abandoned the Neeo-device completely thereby forcing you to make an even bigger electronic landfill with these precious NEEO-devices.   
 
 ## Update 2026-02-10

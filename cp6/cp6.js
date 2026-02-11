@@ -7,7 +7,7 @@ if (StartupPath != "/opt/meta")
 
 const path = require('path');
 const {logModules,GlobalLogLevel} = require(path.join(StartupPath,'logComponents'));
-const LogThis=0;
+
 const { metaMessage, LOG_TYPE, LOG_LEVEL,initialiseLogComponents, initialiseLogSeverity,OverrideLoglevel, getLoglevels } = require("/opt/meta/metaMessage");
 function metaLog(message) {
     let initMessage = { component:logModule, ORIGIN:logModule,type:LOG_TYPE.ERROR, content:'', deviceId: "" };
@@ -21,6 +21,8 @@ initialiseLogSeverity(logModule);
 const moment = require('moment');
 const fs = require("fs");
 const { forEachRight } = require('lodash');
+const METAREINIT="__METAREINIT";
+const LogThis=0;
 var CP6Functions;
 var CloudReplacement;
 var CloudReplacementUrl = '';
@@ -886,7 +888,7 @@ const currChannelArray = [];
     CP6Functions(LogThis)("Function 14").verbose("")
     const n = r(111),
         o = e.exports = function() {
-            //CP6Functions(0)("Function 14").verbose("export")
+            //CP6Functions(LogThis)("Function 14").verbose("export")
             const e = n.apply(this, arguments);
             if (e) throw new Error("Validation failed: " + JSON.stringify(e))
         };
@@ -2557,17 +2559,17 @@ const currChannelArray = [];
             room: o.roomName
         }), n.deleteDevice(o).then(() => m(l, o)).then(() => n.save()).then(() => t.json(_))
     }), i.post("/", function(e, t, r) {
-        CP6Functions(0)("Function 39").verbose("post /");
+        CP6Functions(LogThis)("Function 39").verbose("post /");
         const n = a.getRequestParameter(e, "name", y),
             o = a.getRequestParameter(e, "specId", y),
             i = e.body.fallbackAdapterName,
             s = e.body.adapterDeviceId,
             c = e.body.device;
-        CP6Functions(0)("Function 39").verbose("getRequestParameter done n:",n);
-        CP6Functions(0)("Function 39").verbose("getRequestParameter done o",o);
-        CP6Functions(0)("Function 39").verbose("getRequestParameter done i",i);
-        CP6Functions(0)("Function 39").verbose("getRequestParameter done s:",s);
-        CP6Functions(0)("Function 39").verbose("getRequestParameter done c:",c);
+        CP6Functions(LogThis)("Function 39").verbose("getRequestParameter done n:",n);
+        CP6Functions(LogThis)("Function 39").verbose("getRequestParameter done o",o);
+        CP6Functions(LogThis)("Function 39").verbose("getRequestParameter done i",i);
+        CP6Functions(LogThis)("Function 39").verbose("getRequestParameter done s:",s);
+        CP6Functions(LogThis)("Function 39").verbose("getRequestParameter done c:",c);
         
         return c ? (f.debug("Adding device with included devicespec", {
             name: n,
@@ -3454,11 +3456,11 @@ const currChannelArray = [];
                 privateKey: u,
                 message: t
             }).then(e => (    
-                CP6Functions(0)("Function 71").verbose("Encrypt this",e),
+                CP6Functions(LogThis)("Function 71").verbose("Encrypt this",e),
                 e.data))
         },
         encrypt: function(e, t) {
-    CP6Functions(0)("Function 71").verbose("Encrypt this",e);            
+    CP6Functions(LogThis)("Function 71").verbose("Encrypt this",e);            
             if (!e) return i.reject(new Error("EMPTY_PLAINTEXT"));
             const r = t ? n.key.readArmored(t).keys : d;
             return n.encrypt({
@@ -4136,7 +4138,7 @@ const currChannelArray = [];
     }), i.get("/", function(e, t) {    
         CP6Functions(LogThis)("Function 85").verbose("/")        
         let r = e.project.getRooms();
-        CP6Functions(0)("Function 85").verbose("getRooms done") 
+        CP6Functions(LogThis)("Function 85").verbose("getRooms done") 
         !1 === s.getBooleanParam(e, "details") && (r = r.map(e => e.getSummary())), t.json(r)
     }), i.get("/reorder", function(e, t, r) {
         const n = e.project.getRooms(),
@@ -4258,7 +4260,7 @@ const currChannelArray = [];
             adapterName: d
         })
     }, l.prototype._validate = function() {
-         //CP6Functions(0)("Function 89").verbose(" _validate");
+         //CP6Functions(LogThis)("Function 89").verbose(" _validate");
         try {
             o(this, {
                 adapterType: {
@@ -4275,7 +4277,7 @@ const currChannelArray = [];
         CP6Functions(LogThis)("Function 89").debug(" getSourceName");
         return this.sourceName
     }, l.prototype.getId = function() {
-         //CP6Functions(0)("Function 89").debug(" getId");
+         //CP6Functions(LogThis)("Function 89").debug(" getId");
         return this.sourceName + this.data.id
     }, l.prototype.getName = function() {
          CP6Functions(LogThis)("Function 89").debug(" getName");
@@ -4284,7 +4286,7 @@ const currChannelArray = [];
          CP6Functions(LogThis)("Function 89").debug(" getData");
         return this.data
     }, l.prototype.getScore = function() {
-         //CP6Functions(0)("Function 89").debug(" getScore");
+         //CP6Functions(LogThis)("Function 89").debug(" getScore");
         return this.score
     }, l.prototype.toJSON = function() {
         return {
@@ -4315,6 +4317,7 @@ const currChannelArray = [];
     }
 
     function i(e) {
+        console.log("90 e:",e)
         return new u((t, r) => {
             if (E.register(e)) {
                 c(e) && l.event(`Registered SDK Adapter ${e.name}`);
@@ -5333,24 +5336,26 @@ const currChannelArray = [];
             return Array.isArray(e) ? this.getRegisteredAdapters().filter(t => !e.includes(t.name)) : (o.debug("invalid input ignored"), [])
         }
         METAREINIT (e,t,r) {
-            CP6Functions(0)("Function 119").debug("Processing SDKAdapter; checking devices for METAREINIT button",e.name)
+            CP6Functions(LogThis)("Function 119").debug("Processing SDKAdapter; checking devices for "+METAREINIT+" button",e.name)
+            console.log("baseurl:",e.baseUrl)
             let promiseT = []; let theResult = []; let theUrl = '';
             let tBody= ''  // post message to the relevant port for this module; uri is all we need, no body required. 
             r(27).get()
             .then(e => e.rooms.store)
             .then(room => 
                 {Object.keys(room).forEach(roomstore => 
-                    {const thisroom = room[roomstore];
+                    {const thisroom = room[roomstore];//console.log("1:",thisroom)
                     const devices = room[roomstore].devices.store;                
                     Object.values(devices).forEach(device => 
                         {if (device.macros && device.macros.store && device.hypotheticalPowerState == "on") 
                             {Object.entries(device.macros.store).forEach(([key, data]) => 
                                 {if (device.details.sourceName === e.name)    // are we processing the newly added SDKAdapter? 
-                                    {if (data.name == "METAREINIT")             // did we define a METAREINIT button in this device?
+                                    {if (data.name == METAREINIT)             // did we define a METAREINIT button in this device?
                                         {
                                         // Prepare url to trigger the push of the METAREINIT button
                                         theUrl="http://127.0.0.1:3000/v1/projects/home/rooms/"+thisroom.key+"/devices/"+device.key+"/macros/"+key+"/trigger"
-                                        CP6Functions(0)("Function 119").verbose("Send METAREINIT-button for " + device.name+" "+theUrl )
+                                        console.log(`Url: ${theUrl} Room: ${thisroom.name} (${thisroom.key}), Device: ${device.name} (${device.key}) - Macro Name: ${data.name} - Key: ${key}`);
+                                        CP6Functions(LogThis)("Function 119").verbose("Send "+METAREINIT+"-button for " + device.name+" "+theUrl )
                                         promiseT.push (r(17)({ // prepare http-GET to ourselves with the URL just built
                                             uri: theUrl,
                                             method: "GET",
@@ -5361,8 +5366,8 @@ const currChannelArray = [];
                                                 "Content-Length": tBody.length
                                             },
                                             body: tBody
-                                        }).then( (thisResult) => {(CP6Functions(0)("Function 119").debug("Returned from single post request to "+theUrl,thisResult),theResult.push(JSON.parse(thisResult)[0]))})
-                                        .catch ( (err) => {(CP6Functions(0)("Function 119").error("Error calling METAREINIT ",err))})            
+                                        }).then( (thisResult) => {(CP6Functions(LogThis)("Function 119").debug("Returned from single post request to "+theUrl,thisResult),theResult.push(JSON.parse(thisResult)[0]))})
+                                        .catch ( (err) => {(CP6Functions(LogThis)("Function 119").error("Error calling METAREINIT ",err))})            
                                         )
                                         }
                                     }
@@ -6309,17 +6314,17 @@ const currChannelArray = [];
             t.addRecipe(E.buildRecipe(e, t))
         }), t
     }, y.prototype.buildScenarios = function() {
-        CP6Functions(0)("Function 149").verbose("buildScenarios")
+        CP6Functions(LogThis)("Function 149").verbose("buildScenarios")
         h.buildAll({
             deviceStore: this.devices,
             scenarioStore: this.scenarios,
             room: this
         })
     }, y.prototype.getName = function() {
-//        CP6Functions(0)("Function 149").verbose("getName") // we see this a lot, suppress it...
+//        CP6Functions(LogThis)("Function 149").verbose("getName") // we see this a lot, suppress it...
         return this.name
     }, y.prototype.setName = function(e) {
-        CP6Functions(0)("Function 149").verbose("setName")
+        CP6Functions(LogThis)("Function 149").verbose("setName")
         this.name = e, this.getDevices().forEach(e => e.setRoom(this))
     }, y.prototype.getIcon = function() {
         return this.icon
@@ -6333,45 +6338,45 @@ const currChannelArray = [];
         this.devices.put(e), 
         e.setRoom(this)        
     }, y.prototype.getDeviceByName = function(e) {
-        CP6Functions(0)("Function 149").verbose("getDeviceByName",e)
+        CP6Functions(LogThis)("Function 149").verbose("getDeviceByName",e)
         return this.devices.get(e)
     }, y.prototype.getDeviceByKey = function(e) {
-        CP6Functions(0)("Function 149").verbose("getDeviceByKey",e)
+        CP6Functions(LogThis)("Function 149").verbose("getDeviceByKey",e)
         return this.devices.getByKey(e)
     }, y.prototype.getDeviceNames = function() {
-        CP6Functions(0)("Function 149").verbose("getDeviceNames")
+        CP6Functions(LogThis)("Function 149").verbose("getDeviceNames")
         return this.devices.map(e => e.getName())
     }, y.prototype.getDevices = function(e) {
-        //CP6Functions(0)("Function 149").verbose("getDevices")
+        //CP6Functions(LogThis)("Function 149").verbose("getDevices")
         return this.devices.filter(e)
     }, y.prototype.getDevicesWithCapability = function(e) {
-        CP6Functions(0)("Function 149").verbose("getDevicesWithCapability")
+        CP6Functions(LogThis)("Function 149").verbose("getDevicesWithCapability")
         return this.getDevices(t => t.hasCapability(e))
     }, y.prototype.getNumberOfDevices = function() {
-        CP6Functions(0)("Function 149").verbose("getNumberOfDevices")
+        CP6Functions(LogThis)("Function 149").verbose("getNumberOfDevices")
         return this.devices.length
     }, y.prototype.addScenario = function(e, t) {
-        CP6Functions(0)("Function 149").verbose("addScenario")
+        CP6Functions(LogThis)("Function 149").verbose("addScenario")
         if (m.increaseCounter("room-scenario-add"), t) {
             const t = e.getName();
             for (let r = 2; r < 100 && this.getScenarioByName(e.getName());) e.setName(t + " (" + r++ + ")")
         }
         return this.scenarios.put(e), e
     }, y.prototype.getScenarioByName = function(e) {
-        CP6Functions(0)("Function 149").verbose("getScenarioByName")
+        CP6Functions(LogThis)("Function 149").verbose("getScenarioByName")
         return this.scenarios.get(e)
     }, y.prototype.getScenarioByKey = function(e) {
-        CP6Functions(0)("Function 149").verbose("getScenarioByKey")
+        CP6Functions(LogThis)("Function 149").verbose("getScenarioByKey")
         return this.scenarios.getByKey(e)
     }, y.prototype.getScenariosByMainDeviceKey = function(e) {
         return this.scenarios.get(e, "mainDeviceKey", !0)
     }, y.prototype.getScenarios = function(e) {
-        CP6Functions(0)("Function 149").verbose("getScenarios")
+        CP6Functions(LogThis)("Function 149").verbose("getScenarios")
         return this.scenarios.filter(e)
     }, y.prototype.removeScenario = function(e) {
         m.increaseCounter("room-scenario-delete"), this.scenarios.remove(e), this.getRecipesForScenario(e).forEach(e => this.removeRecipe(e))
     }, y.prototype.removeDevice = function(e) {
-        CP6Functions(0)("Function 149").verbose("removeDevice")
+        CP6Functions(LogThis)("Function 149").verbose("removeDevice")
         this.devices.remove(e)
     }, y.prototype.renameDevice = function(e, t) {
         if (!t) throw new Error(c(null, "parameter_missing", "newDeviceName").message);
@@ -6398,7 +6403,7 @@ const currChannelArray = [];
             a("reset scenario ", e.getName()), e.resetWiring()
         }), this.rebuildScenarioRecipes(), s.resolve()
     }, y.prototype.deleteDeviceHelper = function(e) {
-        CP6Functions(0)("Function 149").verbose("deleteDeviceHelper")
+        CP6Functions(LogThis)("Function 149").verbose("deleteDeviceHelper")
         return new s((t, r) => {
             if (this._isInvalid(e)) return r(new Error(c(null, "parameter_missing", "device").message));
             const n = this.getScenarios(t => t.mainDeviceKey === e.key),
@@ -6406,7 +6411,7 @@ const currChannelArray = [];
             this._deleteMainScenariosFor(e), this._resetScenariosUsing(e), this._deleteEmptyScenarios(), this.rebuildScenarioRecipes(), this._deleteRecipesTriggeredBy(e), this._cleanRecipesUsing(e, o), this.deleteEmptyCustomRecipes(), this.devices.remove(e), t()
         })
     }, y.prototype._deleteMainScenariosFor = function(e) {
-        CP6Functions(0)("Function 149").verbose("_deleteMainScenariosFor")
+        CP6Functions(LogThis)("Function 149").verbose("_deleteMainScenariosFor")
         const t = t => t.getMainDevice().getKey() === e.getKey();
         this._forScenarios(e => t(e) && (e => !f.RECIPE_GROUPED_DEVICE_TYPES.includes(e.getMainDevice().getType()))(e), e => {
             a("remove main scenario", e.name), this.resetWiring(e.getMainDevice()), this.removeScenario(e)
@@ -6435,7 +6440,7 @@ const currChannelArray = [];
     }, y.prototype.getRecipesForScenario = function(e) {
         return this.recipes.get(e.getKey(), "scenarioKey", !0)
     }, y.prototype.addRecipe = function(e, t) {
-        CP6Functions(0)("Function 149").verbose("addRecipe")
+        CP6Functions(LogThis)("Function 149").verbose("addRecipe")
         if (m.increaseCounter("room-recipe-add"), t) {
             const t = e.getName();
             for (let r = 2; r < 100 && this.getRecipeByName(e.getName());) e.setName(t + " (" + r++ + ")")
@@ -6448,7 +6453,7 @@ const currChannelArray = [];
     }, y.prototype.getRecipeByKey = function(e) {
         return this.recipes.getByKey(e)
     }, y.prototype.getRecipes = function(e) {
-        CP6Functions(0)("Function 149").verbose("")
+        CP6Functions(LogThis)("Function 149").verbose("")
         return this.recipes.filter(e)
     }, y.prototype.removeRecipe = function(e) {
         return m.increaseCounter("room-recipe-delete"), this.recipes.remove(e), e
@@ -6463,7 +6468,7 @@ const currChannelArray = [];
             }, []).filter(e => e.isDirty).map(e => e.markAsClean())
         }
     }, y.prototype.rebuildScenarioRecipes = function() {
-        CP6Functions(0)("Function 149").verbose("rebuildScenarioRecipes")
+        CP6Functions(LogThis)("Function 149").verbose("rebuildScenarioRecipes")
         const e = E.getRecipeCookBook(),
             t = e => {
                 const t = e.getSteps().findIndex(e => e.type === E.STEP_TYPE_CONTROLS);
@@ -6488,7 +6493,7 @@ const currChannelArray = [];
             r(E.TYPE_LAUNCH, e), r(E.TYPE_POWEROFF, e)
         })
     }, y.prototype.getSummary = function() {
-        CP6Functions(0)("Function 149").verbose("getSummary")
+        CP6Functions(LogThis)("Function 149").verbose("getSummary")
         return {
             name: this.getName(),
             icon: this.getIcon(),
@@ -6500,10 +6505,10 @@ const currChannelArray = [];
     }, y.prototype._isInvalid = function(e) {
         return o(e) || !i(e.getKey)
     }, y.prototype._forScenarios = function(e, t) {
-        CP6Functions(0)("Function 149").verbose("_forScenarios")
+        CP6Functions(LogThis)("Function 149").verbose("_forScenarios")
         this.getScenarios(e).forEach(t)
     }, y.prototype._forRecipes = function(e, t) {
-        CP6Functions(0)("Function 149").verbose("_forRecipes")
+        CP6Functions(LogThis)("Function 149").verbose("_forRecipes")
         this.getRecipes(e).forEach(t)
     }
 }, function(e) {// Function 150 exports = require("lodash/isFunction")
@@ -6806,7 +6811,7 @@ const currChannelArray = [];
     }, F.prototype.setUseTuner = function(e) {
         p.TYPE_TV !== this.getType() || (this.details.useTuner = !0 === e, this.updateRoles(), this.reloadCapabilities())
     }, F.prototype.setSpec = function(e) {    // ##########
-        CP6Functions(0)("Function 151").verbose("prototype.setSpec",e)
+        CP6Functions(LogThis)("Function 151").verbose("prototype.setSpec",e)
         const t = e.getData();
         O(t, {
             type: {
@@ -7399,8 +7404,8 @@ const currChannelArray = [];
                 n = o(r),
                 i = e[3],
                 s = n !== i;
-            CP6Functions(0)("Function 155").verbose(s ? "Project needs saving":"No need to save project")
-            // Uncomment below line and comment the nxt one, top prevent updatin g the project-file... Handy when debugging. 
+            CP6Functions(LogThis)("Function 155").verbose(s ? "Project needs saving":"No need to save project")
+
             //console.log("155 saveproject, save is forcibly skipped",JSON.stringify(e));return 0 ? d.save(t, !0, r).then(() => (function(e) {
                 return s ? d.save(t, !0, r).then(() => (function(e) {
                     u.debug("SAVED_HASH_UPDATING", {
@@ -7433,11 +7438,12 @@ const currChannelArray = [];
         a = r(338);
     e.exports = {
         addDeviceToRoom: function(e, t, r, n, i) {
-            CP6Functions(0)("Function 156").verbose("addDeviceToRoom");
+            CP6Functions(LogThis)("Function 156").verbose("addDeviceToRoom");
+            //o.getFullSpec(r, i).then(e => console.log(e)) //##############
             return o.getFullSpec(r, i).then(e => c(e, t, r, n)).then(t => u(t, e)).then(e => d(e, n))
         },
         addDeviceToRoomWithSpecdata: function(e, t, r, n) {
-            CP6Functions(0)("Function 156").verbose("addDeviceToRoomWithSpecdata")
+            CP6Functions(LogThis)("Function 156").verbose("addDeviceToRoomWithSpecdata")
             const o = Object.assign({
                     id: r,
                     name: t
@@ -7446,12 +7452,12 @@ const currChannelArray = [];
                     sourceName: n.sourceName,
                     sourceData: o
                 }),
-                c = a.build(s, t, r);
+                c = a.build(s, t, r);console.log("In 156 addDeviceToRoomWithSpecdata ; done. Calling t.adddevice (149)")
             return Promise.resolve().then(() => u(c, e)).then(e => d(e, r))
         }
     };
     const c = (e, t, r, i) => ! function(e) {
-         CP6Functions(0)("Function 156").verbose("156 c-function");
+         CP6Functions(LogThis)("Function 156").verbose("156 c-function");
             const t = e.getData().capabilities || [];
             return n.debug("capabilities:", t), 0 < t.length
         }(e) ? (n.debug("FETCH_CAPABILITIES", {
@@ -8451,7 +8457,7 @@ CP6Functions(LogThis)("Function 174").verbose("checking uiAction e.uiAction",e);
     e.exports = require("valid-url")
 }, function(e, t, r) {// Function 176 directory-related functions
     "use strict";
-    CP6Functions(0)("Function 176").verbose("")
+    CP6Functions(LogThis)("Function 176").verbose("")
     function n(e) {
         const t = o(e);
         return `BrowseDirectory('${e.directoryUrl}', '${t}')`
@@ -9811,7 +9817,7 @@ CP6Functions(LogThis)("Function 174").verbose("checking uiAction e.uiAction",e);
 }, function(e, t, r) {// Function 215 DeviceAdapter //##
     "use strict";
 
-    CP6Functions(0)("Function 215").verbose("DeviceAdapter")
+    CP6Functions(LogThis)("Function 215").verbose("DeviceAdapter")
 
     function n(e) {
         return l.parseJSONError(e, v)
@@ -9929,7 +9935,7 @@ CP6Functions(LogThis)("Function 174").verbose("checking uiAction e.uiAction",e);
         }), this.urlfactory.buildDeviceUrl(t, e, "/discover").then(r => this._get({
             uri: r,
             timeout: 3e4
-        }).then(r => (this.validateDiscoveredDevices(r), r.map(r => {
+        }).then(r => (this.validateDiscoveredDevices(r), r.map(r => {//console.log("Discovery gave us r.device",JSON.stringify(r));
             return r.device && "zwave" !== e ? function(e, t) {
                 const r = Object.assign({
                         id: e.id,
@@ -10758,10 +10764,10 @@ return this._syncFileList();
     "use strict";
 
     function n(e, t = c) {
-        CP6Functions(0)("Function 228").verbose("AdapterSpecsSource: get:",e) 
+        CP6Functions(LogThis)("Function 228").verbose("AdapterSpecsSource: get:",e) 
         return o.get(e, {
             timeout: t
-        }).then(e => (JSON.parse(e)))
+        }).then(e => (/*console.log("228 get done:",JSON.parse(e)),*/JSON.parse(e)))
     }
     const o = r(17),
         i = r(11),
@@ -10775,7 +10781,7 @@ return this._syncFileList();
         const t = this.baseUrl + "/db/search?q=" + e;
         return s.debug("search adapter:", t), n(t)
     }, u.prototype._getFullSpec = function(e) {
-        CP6Functions(0)("Function 228").debug("AdapterSpecsSource: getfullspec (get ful spec from source:)",e)        
+        CP6Functions(LogThis)("Function 228").verbose("AdapterSpecsSource: getfullspec (get ful spec from source:)",e)        
         return n(this.baseUrl + "/db/" + e)
     }, u.prototype._getAdapterSpec = function(e, t) {
         return n(this.baseUrl + "/db/adapterdefinition/" + e, t)
@@ -11978,6 +11984,7 @@ return this._syncFileList();
                     if (!r || "object" != typeof r) return !1;
                     const n = r.driverVersion,
                         o = t.driverVersion;
+                        //console.log("264 version compare o:",o,"n:",n);
                     return !!o && (!n && 0 < o || n < o)
                 }(e, t) && u.tryAdapterDeviceUpdate(e, t)
             })(e, t)) : (console.log("Not an  SDK-adapter...."),o.resolve(!1))
@@ -12002,6 +12009,7 @@ return this._syncFileList();
         let adapterName=e.details.adapterName
         let discoveredData = t;
         let isDiscoveringDriver=false
+        console.log("265 cachedDiscovery: ",JSON.stringify(cachedDiscovery))
 
         if (e.details.setup != undefined) {
             if (e.details.setup.discovery != undefined  && e.details.setup.discovery === true) 
@@ -12012,17 +12020,17 @@ return this._syncFileList();
                 if (e.details.deviceCapabilities[0] === "dynamicDevice") 
                     isDiscoveringDriver=true
         if (isDiscoveringDriver == true) 
-        {   CP6Functions(0)("Function 265").verbose("Activating discovery for updated discoverable driver ",e.name,"Original brain just ignores most of the changes");
+        {   console.log("Activating discovery for updated discoverable driver ",e.name,"Original brain just ignores most of the changes" );
             deviceExistsNow=false;
             if (adapterName == cachedDiscovery.discoveredSDKadapterName)    // did we discover devices for ths adapter already
             {    discoveredData=cachedDiscovery.discoveredItems;
-                CP6Functions(0)("Function 265").verbose("re-using cached discovery values: ",cachedDiscovery.discoveredSDKadapterName)
+                console.log("re-using cached discovery values: ",cachedDiscovery.discoveredSDKadapterName)
             }
             else
             {   cachedDiscovery.discoveredSDKadapterName = adapterName;
                 const options = {
                     method: 'GET',
-                    uri: "http://192.168.73.110:3000/v1/deviceadapter/discover/"+sourceName+"/"+adapterName,
+                    uri: "http://127.0.0.1:3000/v1/deviceadapter/discover/"+sourceName+"/"+adapterName,
                     json: true, // Wait for complete response
                     headers: {
                         'Content-Type': 'application/json'
@@ -12030,7 +12038,7 @@ return this._syncFileList();
                     timeout: 10000 // Optional: 10 seconds timeout for a slow SDK's
                 };
                 // execute get and wait for result
-                CP6Functions(0)("Function 265").verbose("Executing discovery for ",adapterName)
+                console.log("Executing discovery for ",adapterName)
                 discoveredData = await requestpromise(options);
                 cachedDiscovery.discoveredItems = discoveredData;           // save discovery result for later
             }
@@ -12043,9 +12051,9 @@ return this._syncFileList();
                     }
                 
             if (deviceExistsNow==false)
-                CP6Functions(0)("Function 265").warn("Device "+e.name+" is not discovered so cannot be updated");
+                CP6Functions(LogThis)("Function 265").warn("Device "+e.name+" is not discovered so cannot be updated");
             else    
-                CP6Functions(0)("Function 265").info("Success!! We are using discovered device:"+ t.name);
+                CP6Functions(LogThis)("Function 265").info("Success!! We are using discovered device:"+ t.name);
         }           // end: if (isDiscoveringDriver == true) 
         r = t.capabilities || [];    
         r.forEach(e => {
@@ -12109,7 +12117,7 @@ return this._syncFileList();
             }(e, t);
             let result;
             if (!deviceExistsNow)
-                {CP6Functions(0)("Function 265").verbose("Instructing brain to not update this device")
+                {console.log("Instructing brain to not update this device")
                 result=0
                 }
             else
@@ -12363,7 +12371,7 @@ return this._syncFileList();
             })
         },
         getAdapterDevicesBySource: function(e) {
-            return d.get().then(t => {
+            return d.get().then(t => {//console.log("276 getAdapterDevicesBySource, after d get()");console.log(JSON.stringify(t));
                 return t.getDevices().filter(t => t.details && t.details.sourceName === e)
             })
         },
@@ -13633,8 +13641,6 @@ return this._syncFileList();
         };
     h.prototype.trigger = function(e, t = {}) {
         const r = i.build(e, t);
-        CP6Functions(LogThis)("Function 305").verbose("Execute recipe ",r.name);
-        r.steps.forEach(xx => {xx.action!=null ? CP6Functions(LogThis)("Function 305").debug("Exec step",xx.action.name+" "+xx.action.component.device.name) : {} })
         return r.promise.catch(e => {
             s.debug("JOB_FAILED", {
                 error: e.message,
@@ -13786,7 +13792,7 @@ return this._syncFileList();
 
             const n = Object.keys(r).reduce((e, t) => s(e, r[t]), 0);
             return t + n + g
-        }(this.steps))),  this.promise = new l((e, t) => {
+        }(this.steps))), this.promise = new l((e, t) => {
             this._resolve = e, this._reject = t
         })
     };
@@ -14900,7 +14906,8 @@ return this._syncFileList();
     }
 
     function o(e, t) {
-        h.parse(e, t).forEach(e => {
+        console.log("338 Doing something with the macros")
+        h.parse(e, t).forEach(e => {console.log("338 macro:",e.isGeneric ? t.genericMacros.put(e.macro) : t.macros.put(e.macro))
             e.isGeneric ? t.genericMacros.put(e.macro) : t.macros.put(e.macro)
         })
     }
@@ -14912,7 +14919,7 @@ return this._syncFileList();
             i.sort(n).forEach(e => {
                 l.parseDeviceComponent(e, t)
             })
-        } catch (e) {
+        } catch (e) {console.log("338 catch parsedevicecom[ponent. err:",e)
             throw s.error("COMPONENTS_FAILED_TO_PARSE", {
                 components: i,
                 msg: e.message
@@ -14928,14 +14935,15 @@ return this._syncFileList();
         h = r(131);
     e.exports = {
         build: function(e, t, r, n) {
-            CP6Functions(0)("Function 338").verbose("DeviceFactory e:",e )
+            CP6Functions(LogThis)("Function 338").verbose("DeviceFactory e:",e )
             if (!e) throw new Error("missing devicespec");
             const c = new p({
                 name: t,
                 spec: e,
                 adapterDeviceId: r
             });
-            return e.getSourceName() === a.SOURCE_DUIRO ? (s.debug("BUILD_DUIRO_DEVICE"), o(e, c)) : (s.debug("BUILD_ADAPTER_DEVICE"), i(e, c, n)), d.check(d.MACRO_ONOFF_MISSING, c) && (c.powerMode = u.ASSUMPTION), c.reloadPowerMode(), c.reloadCapabilities(), c
+            //console.log("We should have c now:",c)
+            return e.getSourceName() === a.SOURCE_DUIRO ? (s.debug("BUILD_DUIRO_DEVICE"), o(e, c)) : (s.debug("BUILD_ADAPTER_DEVICE"), i(e, c, n)), d.check(d.MACRO_ONOFF_MISSING, c) && (c.powerMode = u.ASSUMPTION), console.log("338 doing c.reloadpowermode"),c.reloadPowerMode(), console.log("338 doing c.reloadcapabilities"),c.reloadCapabilities(), c
         }
     }
 }, function(e, t, r) {// Function 339 sdkadapter save and load functions
@@ -19660,7 +19668,7 @@ return this._syncFileList();
                 )
             }
         })
-        Promise.all(promiseT).then((AllResults) => {
+        Promise.all(promiseT).then((values) => {
             return (CP6Functions(LogThis)("Function 463").verbose("Returned from all post requests"),
                     CP6Functions(LogThis)("Function 463").debug("returned:",theResult),
                     t.json({"result":theResult}))
@@ -19668,28 +19676,30 @@ return this._syncFileList();
 
 
     }), o.get("/OverrideLogLevel", (e, t) => {
-        CP6Functions(LogThis)("Function 463").debug("OverrideLogLevel received");
+        CP6Functions(LogThis)("Function 463").verbose("OverrideLogLevel received");
         var theModule = e.query.Module;
         if (theModule == undefined)
             return t.json({msg: "Missing modulename"})
         else
-            theModule = theModule.toLowerCase()        
+            theModule = theModule.toLowerCase()
+        
         let thelogLevel = e.query.logLevel;
-        CP6Functions(LogThis)("Function 463").verbose("Requesting loglevel for module "+theModule+" to be set to "+thelogLevel)
         let doFunc="?doFunc=OverrideLogLevel&logLevel="+thelogLevel
         let theUrl = ''
         let i;
-        try {
-            logModules.forEach((Component) =>
-                {if (Component.logComponent === theModule) 
-                    theUrl="http://127.0.0.1:300"+((Component.Enum))+"/"+theModule+"/metaMessageHandler/"+doFunc;
-            })
-        }
-        catch (err) {console.log("Loglevel override in cp6:",err)}
+try {
+
+        logModules.forEach((Component) =>
+            {if (Component.logComponent === theModule) 
+                theUrl="http://127.0.0.1:300"+((Component.Enum))+"/"+theModule+"/metaMessageHandler/"+doFunc;
+        })
+
+}
+catch (err) {console.log("Loglevel override in cp6:",err)}
         if (theUrl == '')
-            {   CP6Functions(LogThis)("Function 463").error("Unrecognised module for loglevel override "+theModule)
-                return t.json({"error":"Unrecognised module for loglevel override "+theModule})
-            }
+        {   CP6Functions(LogThis)("Function 463").error("Unrecognised module for loglevel override "+theModule)
+            return t.json({"error":"Unrecognised module for loglevel override "+theModule})
+        }
         CP6Functions(LogThis)("Function 463").verbose("Loglevel change; invoking",theUrl)
 
         let tBody= ''  // post message to the relevant port for this module; uri is all we need, no body required.
@@ -19712,9 +19722,7 @@ return this._syncFileList();
                         {let qq = xx.macros.store;let SetPower = (xx.hypotheticalPowerState=="on") ? "POWER OFF" : "POWER ON";
                             Object.keys(qq).forEach(macro => 
                                 // above power state of device is negated (device = on, use "power off" and vice versa), now look which macro will be used to trigger this toggle
-                            {   if (qq[macro].name== "METAREINIT")
-                                    {xx.METAREINIT=true;}
-                                if (qq[macro].name==SetPower) 
+                            {   if (qq[macro].name==SetPower) 
                                     {xx.poweroff = "/v1/projects/home/rooms/"+xx.roomKey+"/devices/"+xx.key+"/macros/"+qq[macro].key+"/trigger"}
                             } 
                         )
@@ -21488,7 +21496,7 @@ return this._syncFileList();
 
 }, function(e, t, r) {// Function 505 added function past cloud
     "use strict";
-    CP6Functions(0)("Function 505").verbose("Functions to leave cloud behind",e)
+    CP6Functions(LogThis)("Function 505").verbose("Functions to leave cloud behind",e)
         //return xx._download({name:MyDevice,url:CloudReplacementUrl  +"?type=irdevices&name="+MyDevice,_downloadDir : "/tmp"})
 
     const c = r(227),
