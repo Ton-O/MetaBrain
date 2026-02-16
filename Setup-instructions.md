@@ -83,4 +83,7 @@ networks:
 
 If the NEEO-remote now tries to connect to the IP-address it previously knew as "Physical Brain", it will contact your docker image.
 The communication requires the "airkey" of your brain to be exactly the same as the physical one, but I disabled that requirement in this firmware as I do not see the need for such a requirement and never looked deeply into how the airkey is genrated. Perhaps I'll dive into that at some time, but for now, there is a mismatch between them, but the new Brain happily accepts connections from your NEEO-remote now. 
+
+## Future development
+### Dynamic connection/pairing of NEEO-remote and Virtualized Brain
  
