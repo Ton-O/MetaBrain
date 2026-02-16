@@ -7,6 +7,7 @@ if (StartupPath != "/opt/meta")
 
 const path = require('path');
 const {logModules,GlobalLogLevel} = require(path.join(StartupPath,'logComponents'));
+const LogThis=0;    // Use function 0 of CP6Functions to call log
 
 const { metaMessage, LOG_TYPE, LOG_LEVEL,initialiseLogComponents, initialiseLogSeverity,OverrideLoglevel, getLoglevels } = require("/opt/meta/metaMessage");
 function metaLog(message) {
@@ -22,7 +23,6 @@ const moment = require('moment');
 const fs = require("fs");
 const { forEachRight } = require('lodash');
 const METAREINIT="__METAREINIT";
-const LogThis=0;
 var CP6Functions;
 var CloudReplacement;
 var CloudReplacementUrl = '';
@@ -5336,7 +5336,6 @@ const currChannelArray = [];
         }
         METAREINIT (e,t,r) {
             CP6Functions(LogThis)("Function 119").debug("Processing SDKAdapter; checking devices for "+METAREINIT+" button",e.name)
-            console.log("baseurl:",e.baseUrl)
             let promiseT = []; let theResult = []; let theUrl = '';
             let tBody= ''  // post message to the relevant port for this module; uri is all we need, no body required. 
             r(27).get()
@@ -5346,14 +5345,15 @@ const currChannelArray = [];
                     {const thisroom = room[roomstore];//console.log("1:",thisroom)
                     const devices = room[roomstore].devices.store;                
                     Object.values(devices).forEach(device => 
-                        {if (device.macros && device.macros.store && device.hypotheticalPowerState == "on") 
+                        {CP6Functions(LogThis)("Function 119").debug("Processing SDKAdapter; checking device "+  device.name)
+                            if (device.macros && device.macros.store && device.hypotheticalPowerState == "on") 
                             {Object.entries(device.macros.store).forEach(([key, data]) => 
                                 {if (device.details.sourceName === e.name)    // are we processing the newly added SDKAdapter? 
-                                    {if (data.name == METAREINIT)             // did we define a METAREINIT button in this device?
-                                        {
+                                    {CP6Functions(LogThis)("Function 119").debug("Processing SDKAdapter button "+data.name)
+                                        if (data.name == METAREINIT)             // did we define a METAREINIT button in this device?
+                                        {CP6Functions(LogThis)("Function 119").debug("Processing SDKAdapter 5 ")
                                         // Prepare url to trigger the push of the METAREINIT button
                                         theUrl="http://127.0.0.1:3000/v1/projects/home/rooms/"+thisroom.key+"/devices/"+device.key+"/macros/"+key+"/trigger"
-                                        console.log(`Url: ${theUrl} Room: ${thisroom.name} (${thisroom.key}), Device: ${device.name} (${device.key}) - Macro Name: ${data.name} - Key: ${key}`);
                                         CP6Functions(LogThis)("Function 119").verbose("Send "+METAREINIT+"-button for " + device.name+" "+theUrl )
                                         promiseT.push (r(17)({ // prepare http-GET to ourselves with the URL just built
                                             uri: theUrl,
@@ -19685,13 +19685,16 @@ return this._syncFileList();
         let thelogLevel = e.query.logLevel;
         let doFunc="?doFunc=OverrideLogLevel&logLevel="+thelogLevel
         let theUrl = ''
-        try {
-            logModules.forEach((Component) =>
-                {if (Component.logComponent === theModule) 
-                    theUrl="http://127.0.0.1:300"+((Component.Enum))+"/"+theModule+"/metaMessageHandler/"+doFunc;
-            })
-        }
-        catch (err) {console.log("Loglevel override in cp6:",err)}
+        let i;
+try {
+
+        logModules.forEach((Component) =>
+            {if (Component.logComponent === theModule) 
+                theUrl="http://127.0.0.1:300"+((Component.Enum))+"/"+theModule+"/metaMessageHandler/"+doFunc;
+        })
+
+}
+catch (err) {console.log("Loglevel override in cp6:",err)}
         if (theUrl == '')
         {   CP6Functions(LogThis)("Function 463").error("Unrecognised module for loglevel override "+theModule)
             return t.json({"error":"Unrecognised module for loglevel override "+theModule})
@@ -21705,7 +21708,7 @@ return this._syncFileList();
             let curContent = currChannelArray[deviceId];
             let thisMoment = moment()
             if (curContent != undefined)
-                if ( thisMoment.diff(curContent.atMoment,"seconds") <= 3  ) // if last digit pressed <3 sec, save every digit (means digit 10+)
+                if ( thisMoment.diff(curContent.atMoment,"seconds") <= 3  )
                         channelNumber = curContent.channel + channelNumber;
             this.storeChannelInfo(channelNumber, deviceId,"DIGIT") 
             return 1
@@ -21716,6 +21719,7 @@ return this._syncFileList();
                 {CP6Functions(LogThis)("Function 506").verbose("fullCurrChannel - MISSING channel or deviceId");
                 return -1;
                 }
+            let thisMoment = moment();
             CP6Functions(LogThis)("Function  506").verbose("Storing",fullCurrChannel);
             this.storeChannelInfo(fullCurrChannel, deviceId,"FAVO") ;
             return 1;
