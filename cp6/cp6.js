@@ -12002,13 +12002,13 @@ return this._syncFileList();
     const requestpromise = CP6Functions(17);
     let cachedDiscovery = {"discoveredSDKadapterName": "", discoveredItems:""};
 
-    async function o(e, t) { // Function is made asynchronous as it will call for discovery by brain and sdk.... so we must wait fro completion
+    async function o(e, t) { // Function is made asynchronous as it will call for discovery by brain and sdk.... so we must wait for completion
         let deviceExistsNow=true;
         let sourceName=e.details.sourceName;
         let adapterName=e.details.adapterName
         let discoveredData = t;
         let isDiscoveringDriver=false
-        console.log("265 cachedDiscovery: ",JSON.stringify(cachedDiscovery))
+        CP6Functions(LogThis)("Function 265").verbose("cachedDiscovery",JSON.stringify(cachedDiscovery));
 
         if (e.details.setup != undefined) {
             if (e.details.setup.discovery != undefined  && e.details.setup.discovery === true) 
@@ -12019,14 +12019,15 @@ return this._syncFileList();
                 if (e.details.deviceCapabilities[0] === "dynamicDevice") 
                     isDiscoveringDriver=true
         if (isDiscoveringDriver == true) 
-        {   console.log("Activating discovery for updated discoverable driver ",e.name,"Original brain just ignores most of the changes" );
+        {   CP6Functions(LogThis)("Function 265").verbose("Activating discovery for updated discoverable driver",e.name);
             deviceExistsNow=false;
             if (adapterName == cachedDiscovery.discoveredSDKadapterName)    // did we discover devices for ths adapter already
             {    discoveredData=cachedDiscovery.discoveredItems;
-                console.log("re-using cached discovery values: ",cachedDiscovery.discoveredSDKadapterName)
+                CP6Functions(LogThis)("Function 265").verbose("Re-using cached discovery values:iscovery",cachedDiscovery.discoveredSDKadapterName);
             }
             else
             {   cachedDiscovery.discoveredSDKadapterName = adapterName;
+                CP6Functions(LogThis)("Function 265").verbose("Building discovery cache",cachedDiscovery.discoveredSDKadapterName);
                 const options = {
                     method: 'GET',
                     uri: "http://127.0.0.1:3000/v1/deviceadapter/discover/"+sourceName+"/"+adapterName,
@@ -12037,7 +12038,7 @@ return this._syncFileList();
                     timeout: 10000 // Optional: 10 seconds timeout for a slow SDK's
                 };
                 // execute get and wait for result
-                console.log("Executing discovery for ",adapterName)
+                CP6Functions(LogThis)("Function 265").verbose("Executing discovery for ",adapterName);
                 discoveredData = await requestpromise(options);
                 cachedDiscovery.discoveredItems = discoveredData;           // save discovery result for later
             }
