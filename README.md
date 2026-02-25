@@ -22,9 +22,16 @@ I'm very happy to announce this update, as it helps tremendously in uncomplicate
 The original firmware only updates the version numer and some arbitrary fields, but if you added for example a button, slider, label or whatever significant, that change will not be incorporated.
 This version of the replacement firmware does exactly that: it takes the complete new driver and creates an entry in the Brains internal project-file for each device that uses that driver. That means: no longer deleting the discoverable device in the GUI, discovering it again and the hassle of setting all other things right (name device, recipe-steps, shortcuts etc.etc.etc. This means an ENORMOUS save of time.
 It also adds the METAREINIT support.... I created that functionality here and in Meta Plus to reduce the disturbance of a restart of Meta-Plus. Without METAREINIT, a device that was powered on in the Brain, will become a zombie-device: Brain thinks it is still powered on, but Meta-Plus is frestarted and thinks it is still powered-off. In order to use that device again with you NEEO-remote (have I said that I adore the NEEO-remotea??), you need to "POWER OFF" the device, then "POWER ON" it again.
-To me, that as such an dissatisfying experience that I created METAREINIT.
+To me, that was such an dissatisfying experience that I created METAREINIT.
 ### METAREINIT
 The idea is rather simple: if Meta-Plus is restarted, it registers itself within the Brain. This firmware version detects that registration, it then finds all devices that are powered on and serviced by that SDK-adapter (Meta-Pplus); it then checks if that device contains a button named METAREINIT. If so, it simply generates a keypress for that METAREINIT button. 
 Meta-Plus now contains functionality to re-initialize that device, with things like connecting and starting listeners and others. In the Meta-Plus driverfile, you just need to have a single entry like this (similar to the __INITIALIZE button: "METAREINIT": {"label": "", "type":"static", "command":""},
 Of-course, you can do additional setup in the METAREINIT button if you like.
 Note, do not add METAREINIT button as a shortcut and press it, as bad things will hap[pen. Right now the name of the button is METAREINIT, but I'm planning to change that to ___METAREINIT in the future.
+
+## Version history
+
+### V3.7 Fix "Changes to driver for discoverable devices not picked up""
+This existing bug in NEEO Brain's original firmware that was hard to find and tougher to solve.
+The bug in essence, noticed an update to an SDK-driver (like Meta Plus) and applied that to it's internal project_home_xxx.json file. However, the only thing that it changed was actually the version number and some useless fields like name and discovery text. Any change in buttons, labels or whatever else was simply ignored.
+As of this version, dynamic devices (a.k.a. discoverable devices) are fully updated in yor repository.
