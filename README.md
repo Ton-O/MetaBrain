@@ -35,3 +35,6 @@ Note, do not add METAREINIT button as a shortcut and press it, as bad things wil
 This existing bug in NEEO Brain's original firmware that was hard to find and tougher to solve.
 The bug in essence, noticed an update to an SDK-driver (like Meta Plus) and applied that to it's internal project_home_xxx.json file. However, the only thing that it changed was actually the version number and some useless fields like name and discovery text. Any change in buttons, labels or whatever else was simply ignored.
 As of this version, dynamic devices (a.k.a. discoverable devices) are fully updated in yor repository.
+
+Adding support to allow a USB WIFI-stick to be usxed by NEEO. This allows changing of IP-addresses so that remote can connect via wifi with Brain. 
+It is working as prototype in my own lab, will publish more details at some time. Keep in mind that drivers for usb-wificard are included in the Linux kernal, so using "well known usb wifi sticks" is adviced.

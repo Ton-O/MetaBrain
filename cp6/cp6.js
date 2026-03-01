@@ -3425,6 +3425,8 @@ const currChannelArray = [];
     let u, d, l;
     e.exports = { 
         generateKey: function() {
+                CP6Functions(LogThis)("Function 71").verbose("generatekey");            
+
             n.config.show_version = !1, n.config.show_comment = !1;
             const e = Date.now(),
                 t = o.randomBytes(64);
@@ -3442,6 +3444,8 @@ const currChannelArray = [];
             return l
         },
         decrypt: function(e) {
+                CP6Functions(LogThis)("Function 71").debug("Decrypt this",e);            
+
             if (function(e) {
                     return !e || 0 === Object.keys(e).length
                 }(e)) return i.reject(new Error("EMPTY_CIPHER"));
@@ -3450,17 +3454,17 @@ const currChannelArray = [];
             try {
                 t = n.message.readArmored(e)
             } catch (e) {
+
                 return s.debug("READ_ARMORED_FAILED", e.message), i.reject(e)
             }
+
             return n.decrypt({
                 privateKey: u,
                 message: t
-            }).then(e => (    
-                CP6Functions(LogThis)("Function 71").verbose("Encrypt this",e),
+            }).then(e => (               
                 e.data))
         },
         encrypt: function(e, t) {
-    CP6Functions(LogThis)("Function 71").verbose("Encrypt this",e);            
             if (!e) return i.reject(new Error("EMPTY_PLAINTEXT"));
             const r = t ? n.key.readArmored(t).keys : d;
             return n.encrypt({
@@ -6370,7 +6374,7 @@ const currChannelArray = [];
     }, y.prototype.getScenariosByMainDeviceKey = function(e) {
         return this.scenarios.get(e, "mainDeviceKey", !0)
     }, y.prototype.getScenarios = function(e) {
-        CP6Functions(LogThis)("Function 149").verbose("getScenarios")
+        //CP6Functions(LogThis)("Function 149").verbose("getScenarios")
         return this.scenarios.filter(e)
     }, y.prototype.removeScenario = function(e) {
         m.increaseCounter("room-scenario-delete"), this.scenarios.remove(e), this.getRecipesForScenario(e).forEach(e => this.removeRecipe(e))
@@ -6452,7 +6456,7 @@ const currChannelArray = [];
     }, y.prototype.getRecipeByKey = function(e) {
         return this.recipes.getByKey(e)
     }, y.prototype.getRecipes = function(e) {
-        CP6Functions(LogThis)("Function 149").verbose("")
+        //CP6Functions(LogThis)("Function 149").verbose("")
         return this.recipes.filter(e)
     }, y.prototype.removeRecipe = function(e) {
         return m.increaseCounter("room-recipe-delete"), this.recipes.remove(e), e
@@ -7403,7 +7407,7 @@ const currChannelArray = [];
                 n = o(r),
                 i = e[3],
                 s = n !== i;
-            CP6Functions(LogThis)("Function 155").verbose(s ? "Project needs saving":"No need to save project")
+            CP6Functions(LogThis)("Function 155").verbose(s ? "Project needs saving":"No need to save project") // #####
 
             //console.log("155 saveproject, save is forcibly skipped",JSON.stringify(e));return 0 ? d.save(t, !0, r).then(() => (function(e) {
                 return s ? d.save(t, !0, r).then(() => (function(e) {
@@ -15247,6 +15251,7 @@ return this._syncFileList();
             o.debug("init", e), this._connectScriptPath = e.connectScriptPath, this.timeoutWifiScan = e.timeoutWifiScan || 1e4, this.timeoutWifiConnect = e.timeoutWifiConnect || 12e3, this.credentials = {}, this.wifiInterfaceName = t
         };
     l.prototype.scanWifi = function() {
+        CP6Functions(LogThis)("Function 348").verbose("scanWifi")
         return u(this.wifiInterfaceName).then(() => d(this.wifiInterfaceName)).catch(e => (o.error("WIFI_SCAN_FAILED", e.message), []))
     }, l.prototype.loadCredentials = function() {
         return s.load().then(e => {
@@ -15261,20 +15266,24 @@ return this._syncFileList();
     }, l.prototype.removeCredentials = function() {
         return o.debug("remove wifi credentials"), this.credentials = {}, s.deleteFile()
     }, l.prototype.scan = function() {
-        return o.debug("wifi scan"), this.scanWifi().then(e => a.filterWifiResult(e, this.credentials.ssid))
+        CP6Functions(LogThis)("Function 348").verbose("scan")
+        return o.debug("wifi scan"), this.scanWifi().then(e => (CP6Functions(LogThis)("Function 348").verbose("348 scan",e),a.filterWifiResult(e, this.credentials.ssid)))
     }, l.prototype.scanRaw = function() {
+        CP6Functions(LogThis)("Function 348").verbose("scanraw")
         return o.debug("wifi scan"), this.scanWifi()
     };
     const p = /^[\x20-\x7e]*$/;
     l.prototype._isPskValid = function(e) {
         return !(!e || e.length < 8 || e.length > 63 || !p.test(e))
     }, l.prototype.connect = function(e, t, r, s) {
+        CP6Functions(LogThis)("Function 348").verbose("connect using c",this._connectScriptPath)
         return "OPEN" === r || this._isPskValid(t) ? a.isSSIDValid(e) ? i(this._connectScriptPath, [e, r, t, s], this.timeoutWifiConnect).then(() => (o.info("WIFI_CONNECT_SUCCESSFUL"), this.saveCredentials({
             ssid: e,
             password: t,
             encryption: r
         }))) : n.reject(new Error("INVALID_SSID")) : n.reject(new Error("INVALID_PSK_PASSWORD"))
     }, l.prototype.getSsid = function() {
+        CP6Functions(LogThis)("Function 348").verbose("getSSID")
         return this.credentials.ssid
     }, l.prototype.getPassword = function() {
         return this.credentials.password
@@ -15364,7 +15373,8 @@ return this._syncFileList();
         a = e.exports = {
             exec: s.exec,
             scan: function(e, t) {
-                const r = ["wpa_cli -i", e, "scan"].join(" ");
+                const r = ["wpa_cli -p /var/run/wpa_supplicant -i", e, "scan"].join(" ");
+                CP6Functions(LogThis)("Function 351").verbose("wpa_cli -p /var/run/wpa_supplicant -i",r)
                 return a.exec(r, function(e) {
                     return function(t, r) {
                         if (t) e(t);
@@ -15376,7 +15386,7 @@ return this._syncFileList();
                 }(t))
             },
             scanResults: function(e, t) {
-                const r = ["wpa_cli -i", e, "scan_results"].join(" ");
+                const r = ["wpa_cli -p /var/run/wpa_supplicant -i", e, "scan_results"].join(" ");
                 return a.exec(r, function(e) {
                     return function(t, r) {
                         t ? e(t) : e(t, o(r))
@@ -19936,6 +19946,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         }, 5e3)
     }), n.post("/connect", (e, t, r) => {
         CP6Functions(LogThis)("Function 467").verbose("router WIFI; post /connect")
+        CP6Functions(LogThis)("Function 467").verbose("router WIFI; post /connect",e.body)
 
         const n = e.body;
         o.connect(n.ssid, n.password, n.encryption, n.hiddenSSID).then(() => {
@@ -19943,6 +19954,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
                 success: !0
             })
         }).catch(e => {
+            CP6Functions(LogThis)("Function 467").verbose("router WIFI; wifi connect failed".e)
             s.error("WIFI_CONNECT_FAILED", {
                 message: e.message
             }), o.removeCredentials(), "wrong password" === e.message ? r(new Error(i(e, "wifi_password").message)) : r(new Error(i(e, "wifi_connect").message))
@@ -21419,7 +21431,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         s = r(42),
         a = r(83);
     i.get("/neeolink", function(e, t, r) {
-        CP6Functions(LogThis)("Function 499").verbose("Route get /neeolink")
+        CP6Functions(LogThis)("Function 501").verbose("Route get /neeolink")
         s.loadTR2CommunicationVia6lowpan().then(e => {
             t.json(e)
         }).catch(r)
