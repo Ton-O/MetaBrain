@@ -38,3 +38,5 @@ As of this version, dynamic devices (a.k.a. discoverable devices) are fully upda
 
 Adding support to allow a USB WIFI-stick to be usxed by NEEO. This allows changing of IP-addresses so that remote can connect via wifi with Brain. 
 It is working as prototype in my own lab, will publish more details at some time. Keep in mind that drivers for usb-wificard are included in the Linux kernal, so using "well known usb wifi sticks" is adviced.
+
+### V3.8 adds suport for a wifi stick. See Documentation folder.
