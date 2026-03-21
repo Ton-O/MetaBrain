@@ -14910,12 +14910,11 @@ return this._syncFileList();
     }
 
     function o(e, t) {
-        console.log("338 Doing something with the macros")
-        h.parse(e, t).forEach(e => {console.log("338 macro:",e.isGeneric ? t.genericMacros.put(e.macro) : t.macros.put(e.macro))
+        h.parse(e, t).forEach(e => {
             e.isGeneric ? t.genericMacros.put(e.macro) : t.macros.put(e.macro)
         })
     }
-
+    
     function i(e, t, r = []) {
         const o = e.getData(),
             i = o.capabilities && 0 < o.capabilities.length ? o.capabilities : r;
@@ -15483,7 +15482,7 @@ return this._syncFileList();
             })
         })
     }, c.prototype.longpressHandler = function() { // This functionality is not necessary anymore
-        CP6Functions(LogThis)("Function 354").verbose("longpressHandler") // $$$
+        CP6Functions(LogThis)("Function 355").verbose("longpressHandler") // $$$
         return o.debug("long touchbutton pressed, toggle wifi ap mode"), i.increaseCounter("long-touchbutton-pressed"), clearTimeout(this.timerId), this.wifiAPModeActive ? this.disableAccesspointMode() : this._enableAccesspointMode()
     }, c.prototype.userBlink = function() {
         return this.wifiAPModeActive ? n.resolve() : s.ledIdentBrain()
@@ -18640,14 +18639,14 @@ return this._syncFileList();
         return n(o)
     }
 }, function(e, t, r) {// Function 443 TR2_REQUESTHANDLER; setForwardingHosts, handleCoAPRequest, handleWifiRequest
-    "use strict";
+    "use strict";  // ##### from here, we see a lot of TR2-related functions
     CP6Functions(LogThis)("Function 443").verbose("TR2_REQUESTHANDLER; setForwardingHosts, handleCoAPRequest, handleWifiRequest")
 
     function n(e, t, r, n) {
         const o = d.resolve(e, t),
             i = m.urlMatchInfraredTrigger(o, r);
         return i ? function(e, t, r) {
-            CP6Functions(LogThis)("Function 443").verbose("TR2_REQUESTHANDLER; simple infraredgtrigger deteced");
+            CP6Functions(LogThis)("Function 443").verbose("TR2_REQUESTHANDLER; simple infraredgtrigger detected");
             s.debug("simple trigger detected", {
                 query: r
             });
@@ -18855,9 +18854,9 @@ return this._syncFileList();
                 sendAcksForNonConfirmablePackets: !0 === e.coapSendAcksForNonConfirmablePackets
             }, n.updateTiming(r), s("CoAP max RTT in seconds:", n.parameters.maxRTT), s("CoAP max time in seconds from the first transmission (CON) to its last retransmission:", n.parameters.maxTransmitSpan), s("CoAP max waiting time (CON) in seconds until sender gives up:", n.parameters.maxTransmitWait)
         };
-    i.inherits(a, o.EventEmitter), a.prototype.bind = function() {CP6Functions(LogThis)("Function 449 i.inherits 1"),
+    i.inherits(a, o.EventEmitter), a.prototype.bind = function() {
         s("start coap server %o", this.coapOptions), this.coapServer = n.createServer(this.coapOptions), this.coapServer.on("request", (e, t) => {
-            CP6Functions(LogThis)("Function 449").verbose("i.request")
+            CP6Functions(LogThis)("Function 449").verbose("i.request",e)
             this._handleCoAPMessage(e, t)
         }), this.coapServer.on("error", e => {
             CP6Functions(LogThis)("Function 449").verbose(" i.error")
