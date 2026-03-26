@@ -8,6 +8,7 @@ if (StartupPath != "/opt/meta")
 const path = require('path');
 const {logModules,GlobalLogLevel} = require(path.join(StartupPath,'logComponents'));
 const LogThis=0;    // Use function 0 of CP6Functions to call log
+const mdns = require('multicast-dns')();
 
 const { metaMessage, LOG_TYPE, LOG_LEVEL,initialiseLogComponents, initialiseLogSeverity,OverrideLoglevel, getLoglevels } = require("/opt/meta/metaMessage");
 function metaLog(message) {
@@ -27,36 +28,15 @@ var CP6Functions;
 var CloudReplacement;
 var CloudReplacementUrl = '';
 var BrainBroadLink = {};
+var NeeoHostName;
 var Settings = {};
 var CP6SettingsFile = "CP6Settings.json";
-var SettingsFile = __dirname + "/"+CP6SettingsFile 
-fs.readFile(SettingsFile, (err, data) => {
-        if (err) {
-          metaLog({type:LOG_TYPE.ERROR, content:'No "+ CP6SettingsFile + " file, cannot send IR-DATA'});
-          }
-        else 
-          if (data && (data != '')) 
-            try {
-                metaLog({type:LOG_TYPE.DEBUG, content:'Parsing "+CP6SettingsFile+ " file'});
-                Settings = JSON.parse(data);
-                if (Settings.BrainBroadLink!=undefined&&!Settings.BrainBroadLink.broadlinkIp.includes("<"))
-                    {BrainBroadLink = Settings.BrainBroadLink;
-                    metaLog({type:LOG_TYPE.ALWAYS,content:"Brain uses broadlink! ",params:BrainBroadLink})
-                    }
-                else 
-                    metaLog({type:LOG_TYPE.ALWAYS,content:"Please add BrainBroadLink to "+CP6SettingsFile+"!!!; Without, no Infrared commands possible"})
-                if (Settings.CloudReplacementUrl!=undefined&&!Settings.CloudReplacementUrl.includes("<"))
-                    {CloudReplacementUrl = "http://"+Settings.CloudReplacementUrl+":6468/download";
-                     metaLog({type:LOG_TYPE.ALWAYS,content:"Cached CloudreplacementUrl used until init CP6 is complete! "+CloudReplacementUrl})
-                    }
-                else 
-                    metaLog({type:LOG_TYPE.ALWAYS,content:"No CloudReplacementUrl in Settings; expect failures in f.e. loading images"})
-            }
-            catch (err) 
-                    {metaLog({type:LOG_TYPE.ERROR, content:'Invalid "+CP6SettingsFile +" file '+err});
-                    BrainBroadLink = {}
-                    }
-        })
+
+var SettingsFile = "/steady/neeo/cp6/"+CP6SettingsFile 
+//var SettingsFile = __dirname + "/"+CP6SettingsFile 
+var UseJN516x;
+var IRUse=""
+
 const currChannelArray = [];        
 ! function(e) {
     function t(n) { 
@@ -103,7 +83,13 @@ const currChannelArray = [];
         return Object.prototype.hasOwnProperty.call(e, t)
     }, 
     // Okay, functions are all defined in array r....
-    CP6Functions = t,t.p = "", t(t.s = 181) // This is the hard-coded starting point of CP6: R[181] 
+    CP6Functions = t,t.p = "" 
+    CP6Functions(LogThis)("STARTUP CP6").verbose("getCP6Settings");
+    getCP6Settings(t).then(() => {
+        }).then(function() {
+            t(t.s = 181)
+//            CP6Functions = t,t.p = "" , t(t.s = 181) // This is the hard-coded starting point of CP6: R[181] 
+        })
 } 
 
 ([
@@ -385,7 +371,7 @@ const currChannelArray = [];
                 disableInternalIrBlasterScript: process.env.NEEO_FILE_DISABLEIRBLASTER || t + "/../../test/fixtures/irblasterDisable.sh"
             },
             jn5168: {
-                jn5168RestIpv6File: process.env.NEEO_NBR_FILE_REST_JN5168_IPV6 || "./nbr-rest.json",
+                jn5168RestIpFile: process.env.NEEO_NBR_FILE_REST_JN5168_IPV6 || "./nbr-rest.json",
                 jn5168RestIpv6FilePollingTimeMs: process.env.NEEO_NBR_FILE_REST_POLLING_TIME_MS || 6e4,
                 jn5168Port: process.env.NEEO_REST_JN5168_PORT || 8080,
                 irMaxRetries: process.env.JN5168_IR_MAX_RETRIES || 16,
@@ -1869,10 +1855,8 @@ const currChannelArray = [];
 
     function n(e) {
         return function(e) {
-            CP6Functions(LogThis)("Function 31").verbose("function n "+  c.port + " "+ c.jn5168Port,e);
-
             return e ? o.resolve("http://" + e.nbr_web_server + ":" + c.jn5168Port) : o.reject(new Error("INVALID_NBR_FILE_DETECTED"))
-        }(e).then(e => (d.baseUrl = e, a.debug("NBR_IPV6_ADDR_FOUND", d.baseUrl), d.sendAirkey())).then(() => {
+        }(e).then(e => (d.baseUrl = e,  a.debug("NBR_IPV6_ADDR_FOUND", d.baseUrl), d.sendAirkey())).then(() => {
             m = !0
         })
     }
@@ -1890,32 +1874,81 @@ const currChannelArray = [];
             timeWindowMs: c.jn5168restartNbrAfterMaxErrorCount * c.jn5168RestIpv6FilePollingTimeMs
         });
     let h, g, m = !1;
-    e.exports.bootstrapJn5168 = function() {
-        function e() {
-            return a.debug("try to read (updated) NBR file"), (e = t, s(e, "UTF8").then(e => JSON.parse(e)).catch(t => (a.debug(e, " not found, no ipv6 addr found yet", {
-                error: t.message
-            }), o.reject(new Error("NBR_FILE_NOT_FOUND_OR_VALID"))))).then(e => {
-                return function(e) {
-                    return !e || !(d.baseUrl === "http://" + e.nbr_web_server + ":" + c.jn5168Port && e && e.nbr_web_server)
-                }(e) || !m ? n(e).catch(e => (p.increaseError(), m = !1, a.info("NBR_ENABLE_DISCOVERY_FAILED", {
-                    error: e.message
-                }), o.reject(new Error("NBR_ENABLE_DISCOVERY_FAILED")))) : void 0
-            });
-            var e
-        }
-        a.debug("BOOTSTRAP_JN5168");
-        //CP6Functions(LogThis)("Function 31").verbose("bootstrapJn5168 II");
-        CP6Functions(LogThis)("Function 31 (Outdated)").verbose("bootstrapJn5168 e:",e);
+e.exports.bootstrapJn5168 = function() {
+    if (!UseJN516x) {
+        CP6Functions(LogThis)("Function 31").verbose("Skipping JN516x discovery as instructed in CP6Settings-file"),UseJN516x;
         return o.resolve();
-/*    const t = c.jn5168RestIpv6File;
-        return h = setInterval(() => {
-            e().catch(() => {})
-        }, c.jn5168RestIpv6FilePollingTimeMs), g = setInterval(() => {
-            d.updateStatistics()
-        }, c.nbrStatisticsIntervalInMs), e()*/
-    }, e.exports.stopPolling = function() {
-        h && clearInterval(h), g && clearInterval(g)
     }
+
+    a.debug("BOOTSTRAP_JN5168 - Starting with mDNS Discovery");
+    const t = c.jn5168RestIpFile;
+    CP6Functions(LogThis)("Function 31").verbose("getting hostname to find broder-router");
+    const bridgeHostname = r(12).hostname() + '-jn5168';
+    a.debug("BOOTSTRAP_JN5168 - Starting with mDNS Discovery",bridgeHostname);
+    /**
+     * Internal function to perform mDNS discovery AND process the file that contains the IP-address of the border-router
+     */
+     function performDiscoveryAndProcess() {
+        a.debug("Running scheduled mDNS discovery for:", bridgeHostname);
+        
+        // 1. Voer de mDNS query uit
+        return getBridgeIp(bridgeHostname)
+            .then(ip => {
+                if (ip) {
+                    a.debug("mDNS Discovery successful, updating file with:", ip);
+                    // 2. Schrijf het nieuwe IP naar het bestand
+                    return fs.promises.writeFile(t, "{ \"nbr_web_server\" : \"" + ip + "\"}", 'utf8');
+                }
+                a.debug("mDNS Discovery returned no IP, proceeding with existing file");
+            })
+            .catch(err => {
+                a.error("mDNS Discovery error during interval, attempting fallback", { error: err.message });
+            })
+            .then(() => {
+                // 3. execute the actual function  e() to fill file
+                return e();
+            });
+    }
+
+    /**
+     * Original internal function to read and process the NBR file
+     */
+    function e() {
+        a.debug("try to read (updated) NBR file");
+        return s(t, "UTF8")
+            .then(data => JSON.parse(data))
+            .catch(err => {
+                CP6Functions(LogThis)("Function 31").error("JN516x not found or invalid", { error: err.message });
+                return o.reject(new Error("NBR_FILE_NOT_FOUND_OR_VALID"));
+            })
+            .then(config => {
+                const shouldUpdate = (function(cfg) {
+                    return !cfg || !(d.baseUrl === "http://" + cfg.nbr_web_server + ":" + c.jn5168Port && cfg && cfg.nbr_web_server);
+                })(config);
+                if (shouldUpdate || !m) {
+                    return n(config).catch(err => {
+                        p.increaseError();
+                        m = !1;
+                        CP6Functions(LogThis)("Function 31").error("JN518x/NBR_ENABLE_DISCOVERY_FAILED", { error: err.message });
+                        return o.reject(new Error("NBR_ENABLE_DISCOVERY_FAILED"));
+                    });
+                }
+            });
+    }
+
+    // Set interval for refreshing discovery of border-router and then, to produce statistics
+    h = setInterval(() => {
+        performDiscoveryAndProcess().catch(() => {});
+    }, c.jn5168RestIpv6FilePollingTimeMs);
+
+    g = setInterval(() => {
+        d.updateStatistics();
+    }, c.nbrStatisticsIntervalInMs);
+
+    CP6Functions(LogThis)("Function 31").debug("JN516x performDiscoveryAndProcess ");
+    // Kick off first run
+    return performDiscoveryAndProcess();
+};
 }, function(e, t, r) {// Function 32 Analyse json structure for returncode
     "use strict";
     CP6Functions(LogThis)("Function 32").verbose("");
@@ -1941,7 +1974,7 @@ const currChannelArray = [];
                 statusCode: e.statusCode
             }
         },
-        parseJSONError: function(e, t = !1) {
+        parseJSONError: function(e, t = !1) {CP6Functions(LogThis)("Function 33").error("failed parsing of mdns")
             const r = e.response,
                 s = r && r.headers && i.test(r.headers["content-type"]);
             let a = !1;
@@ -4062,11 +4095,17 @@ const currChannelArray = [];
     "use strict";
     CP6Functions(LogThis)("Function 84").verbose("tr2coapserver");
 
-    function n(e) {
-        CP6Functions(LogThis)("Function 84").verbose("handleWifiRequest=>443");
+    // function n(e,) {
+    //     CP6Functions(LogThis)("Function 84").verbose("handleWifiRequest=>443");
 
-        return d.handleWifiRequest(e).catch(() => {})
-    }
+    //     return d.handleWifiRequest(e).catch(() => {})
+    // }
+function n(payload, remoteInfo, socket) {
+    CP6Functions(LogThis)("Function 84").verbose("handleWifiRequest=>443");
+    
+    // We pass remoteInfo and socket so the handler knows where to send the reply
+    return d.handleWifiRequest(payload, remoteInfo, socket).catch(() => {})
+}
     const o = r(2),
         i = r(0)("TR2SERVER"),
         s = r(10),
@@ -4117,8 +4156,8 @@ const currChannelArray = [];
     }), E.on("invalidrequest", e => {
         i.warn("COAP_INVALID_PARAMETER", e)
     }), p.on("udprequest", (e, t) => {
-        CP6Functions(LogThis)("Function 84").verbose("TR2 Send UDP-request, payload",e.toString("utf8"),"from IP@",t.address + ":" + t.port)
-        i.debug("udp request from", t.address + ":" + t.port), n(e.toString("utf8"))
+        CP6Functions(LogThis)("Function 84").verbose("TR2 Send us a UDP-request, payload",e.toString("utf8"),"from IP@",t.address + ":" + t.port)
+        i.debug("udp request from", t.address + ":" + t.port), n(e.toString("utf8"),t,E)
     }), p.on("serverstarted", e => {
         i.debug("TR2_UDPSERVER_STARTED", e)
     }), p.on("error", e => {
@@ -5346,7 +5385,7 @@ const currChannelArray = [];
             .then(e => e.rooms.store)
             .then(room => 
                 {Object.keys(room).forEach(roomstore => 
-                    {const thisroom = room[roomstore];//console.log("1:",thisroom)
+                    {const thisroom = room[roomstore];
                     const devices = room[roomstore].devices.store;                
                     Object.values(devices).forEach(device => 
                         {CP6Functions(LogThis)("Function 119").debug("Processing SDKAdapter; checking device "+  device.name)
@@ -7408,9 +7447,10 @@ const currChannelArray = [];
                 i = e[3],
                 s = n !== i;
             CP6Functions(LogThis)("Function 155").verbose(s ? "Project needs saving":"No need to save project") // #####
-
-            //console.log("155 saveproject, save is forcibly skipped",JSON.stringify(e));return 0 ? d.save(t, !0, r).then(() => (function(e) {
-                return s ? d.save(t, !0, r).then(() => (function(e) {
+            // If you want to debug saving project, or just skipping a save, uncomment one of these lines an dcomment out the "return s" line following them,
+            //console.log("155 saveproject, save is forcibly SAVED",JSON.stringify(e));return 1 ? d.save(t, !0, r).then(() => (function(e) {
+            //console.log("155 saveproject, save is forcibly SKIPPED",JSON.stringify(e));return 1 ? d.save(t, !0, r).then(() => (function(e) {
+            return s ? d.save(t, !0, r).then(() => (function(e) {
                     u.debug("SAVED_HASH_UPDATING", {
                         hash: e
                     }), g = a.resolve(e)
@@ -7441,8 +7481,6 @@ const currChannelArray = [];
         a = r(338);
     e.exports = {
         addDeviceToRoom: function(e, t, r, n, i) {
-            CP6Functions(LogThis)("Function 156").verbose("addDeviceToRoom");
-            //o.getFullSpec(r, i).then(e => console.log(e)) //##############
             return o.getFullSpec(r, i).then(e => c(e, t, r, n)).then(t => u(t, e)).then(e => d(e, n))
         },
         addDeviceToRoomWithSpecdata: function(e, t, r, n) {
@@ -7455,7 +7493,7 @@ const currChannelArray = [];
                     sourceName: n.sourceName,
                     sourceData: o
                 }),
-                c = a.build(s, t, r);console.log("In 156 addDeviceToRoomWithSpecdata ; done. Calling t.adddevice (149)")
+                c = a.build(s, t, r);
             return Promise.resolve().then(() => u(c, e)).then(e => d(e, r))
         }
     };
@@ -8718,54 +8756,61 @@ CP6Functions(LogThis)("Function 174").verbose("checking uiAction e.uiAction",e);
         h = r(84),
         g = r(104);
     let m;
+
     c.initializeServices().then(function() {
         CP6Functions(LogThis)("Function 181").verbose("initializeServices")
         return new Promise(e => {
-            o.debug("INITIALIZING SERVER"), m = i.createServer(u);
-            const t = a(m, s.socket);
-            t.on("connection", e => {
-                o.debug("socket.io connected"), d.increaseCounter("socketio-connect"), e.on("disconnect", () => {
-                    d.increaseCounter("socketio-disconnect"), o.debug("socket.io disconnect")
+            o.debug("INITIALIZING SERVER"), m = i.createServer(u);            
+            return new Promise(e => {
+                CP6Functions(LogThis)("Function 181").verbose("initializeServices")
+                return new Promise(e => {
+                    o.debug("INITIALIZING SERVER"), m = i.createServer(u);
+                    const t = a(m, s.socket);
+                    t.on("connection", e => {
+                        o.debug("socket.io connected"), d.increaseCounter("socketio-connect"), e.on("disconnect", () => {
+                            d.increaseCounter("socketio-disconnect"), o.debug("socket.io disconnect")
+                        })
+                    }), l.socketioinit(t), m.setTimeout(s.cp6RouteTimeoutMs), m.listen(s.port, s.ip, () => {
+                        h.startTask(), o.debug("CP6_PROJECT_STARTED", {
+                            hostIp: s.ip,
+                            hostPort: s.port
+                        });
+                        const t = Math.floor(1e3 * (process.uptime() - n));
+                        o.info("STARTUP_COMPLETE", {
+                            durationMs: t,
+                            date: (new Date).toISOString()
+                        }), o.event("Brain started"), setTimeout(() => {
+                            p._ledOn()
+                        }, 3e4), e()
+                    })
                 })
-            }), l.socketioinit(t), m.setTimeout(s.cp6RouteTimeoutMs), m.listen(s.port, s.ip, () => {
-                h.startTask(), o.debug("CP6_PROJECT_STARTED", {
-                    hostIp: s.ip,
-                    hostPort: s.port
-                });
-                const t = Math.floor(1e3 * (process.uptime() - n));
-                o.info("STARTUP_COMPLETE", {
-                    durationMs: t,
-                    date: (new Date).toISOString()
-                }), o.event("Brain started"), setTimeout(() => {
-                    p._ledOn()
-                }, 3e4), e()
+                }).then(g.fetchTr2XmlFiles).catch(e => {
+                    o.error("FATAL_BOOTSTRAP_FAILED", {
+                        error: e.message
+                    }), process.exit(1)
+                }), process.on("SIGTERM", () => {
+                    c.shutdownServices(), h.stopTask(), o.info("TERMINATE_EXPRESS_SERVER"), m && m.close(e => {
+                        o.debug("failed to terminate express server:", JSON.stringify(e))
+                    })
+                }), process.on("SIGHUP", () => {
+                    o.info("SIGHUP_SIGNALED")
+                }), process.once("SIGUSR2", () => {
+                    o.info("SIGHUP_SIGUSR2"), process.exit(1)
+                }), process.on("uncaughtException", e => {console.log("Uncaught exception!!"),
+                    console.log(e),
+                    o.error("UNCAUGHT_EXCEPTION", {
+                        error: e.message,
+                        stack: void 0
+                    }), process.exit(1)
+                }), process.on("unhandledRejection", e => {
+                    console.log("Unhandled rejection");
+                    console.log(e);
+                    o.error("UNHANDLED_REJECTION", {
+                        msg: e.message,
+                        stack: void 0
+                    })
+                })
             })
-        })
-    }).then(g.fetchTr2XmlFiles).catch(e => {
-        o.error("FATAL_BOOTSTRAP_FAILED", {
-            error: e.message
-        }), process.exit(1)
-    }), process.on("SIGTERM", () => {
-        c.shutdownServices(), h.stopTask(), o.info("TERMINATE_EXPRESS_SERVER"), m && m.close(e => {
-            o.debug("failed to terminate express server:", JSON.stringify(e))
-        })
-    }), process.on("SIGHUP", () => {
-        o.info("SIGHUP_SIGNALED")
-    }), process.once("SIGUSR2", () => {
-        o.info("SIGHUP_SIGUSR2"), process.exit(1)
-    }), process.on("uncaughtException", e => {console.log("Uncaught exception!!"),
-        console.log(e),
-        o.error("UNCAUGHT_EXCEPTION", {
-            error: e.message,
-            stack: void 0
-        }), process.exit(1)
-    }), process.on("unhandledRejection", e => {
-        console.log("Unhandled rejection");
-        console.log(e);
-        o.error("UNHANDLED_REJECTION", {
-            msg: e.message,
-            stack: void 0
-        })
     })
 }, function(e) {// Function 182 exports = require("loggly")
     e.exports = require("loggly")
@@ -9407,8 +9452,11 @@ CP6Functions(LogThis)("Function 174").verbose("checking uiAction e.uiAction",e);
             encoding: this.options.encoding
         })
     }, g.prototype.load = function(e, t, r) {
-        CP6Functions(LogThis)("Function 196").verbose("store functions - load e",e)
-        CP6Functions(LogThis)("Function 196").verbose("store functions - load t",t)
+        CP6Functions(LogThis)("Function 196").verbose("store functions - load e:",e)
+        if (typeof t !== "undefined" && t !== null)
+            CP6Functions(LogThis)("Function 196").debug("store functions - load t:",t)
+        if (typeof r !== "undefined" && r !== null)
+        CP6Functions(LogThis)("Function 196").debug("store functions - load r:",r)
         return s(r) || !this.cache[e] || t ? (d.debug("loading", {
             key: e,
             timeStamp: r
@@ -9938,7 +9986,7 @@ CP6Functions(LogThis)("Function 174").verbose("checking uiAction e.uiAction",e);
         }), this.urlfactory.buildDeviceUrl(t, e, "/discover").then(r => this._get({
             uri: r,
             timeout: 3e4
-        }).then(r => (this.validateDiscoveredDevices(r), r.map(r => {//console.log("Discovery gave us r.device",JSON.stringify(r));
+        }).then(r => (this.validateDiscoveredDevices(r), r.map(r => {
             return r.device && "zwave" !== e ? function(e, t) {
                 const r = Object.assign({
                         id: e.id,
@@ -10770,7 +10818,7 @@ return this._syncFileList();
         CP6Functions(LogThis)("Function 228").verbose("AdapterSpecsSource: get:",e) 
         return o.get(e, {
             timeout: t
-        }).then(e => (/*console.log("228 get done:",JSON.parse(e)),*/JSON.parse(e)))
+        }).then(e => (JSON.parse(e)))
     }
     const o = r(17),
         i = r(11),
@@ -11348,7 +11396,7 @@ return this._syncFileList();
             s.registerWidgetHandlers(e)
         },
         setNonAutomatableInfoGetter: function(e) {
-            metaLog({type:LOG_TYPE.DEBUG,content:"setNonAutomatableInfoGetter "+e});
+            //metaLog({type:LOG_TYPE.DEBUG,content:"setNonAutomatableInfoGetter "+e});
             return "function" == typeof e ? void(c = e) : void(c = a)
         }
     }
@@ -11987,10 +12035,9 @@ return this._syncFileList();
                     if (!r || "object" != typeof r) return !1;
                     const n = r.driverVersion,
                         o = t.driverVersion;
-                        //console.log("264 version compare o:",o,"n:",n);
                     return !!o && (!n && 0 < o || n < o)
                 }(e, t) && u.tryAdapterDeviceUpdate(e, t)
-            })(e, t)) : (console.log("Not an  SDK-adapter...."),o.resolve(!1))
+            })(e, t)) : (o.resolve(!1))
         }
     }
 }, function(e, t, r) {// Function 265 tryAdapterDeviceUpdate
@@ -12121,7 +12168,7 @@ return this._syncFileList();
             }(e, t);
             let result;
             if (!deviceExistsNow)
-                {console.log("Instructing brain to not update this device")
+                {CP6Functions(LogThis)("Function 265").verbose("Instructing brain to not update this device")
                 result=0
                 }
             else
@@ -12375,11 +12422,12 @@ return this._syncFileList();
             })
         },
         getAdapterDevicesBySource: function(e) {
-            return d.get().then(t => {//console.log("276 getAdapterDevicesBySource, after d get()");console.log(JSON.stringify(t));
+            return d.get().then(t => {
                 return t.getDevices().filter(t => t.details && t.details.sourceName === e)
             })
         },
         saveProject: function() {
+            d.get().then(e => CP6Functions(LogThis)("Function 276").info("Saveproject",e))
             return d.get().then(e => e.save())
         },
         transform: o
@@ -12648,8 +12696,8 @@ return this._syncFileList();
     }, v.prototype.summary = function() {
         const e = l.get("account", "userEmail") || "",
             t = o.loadavg();
-        CP6Functions(LogThis)("Function 286").verbose("summary");
-        return {
+        CP6Functions(LogThis)("Function 286").verbose("summary",this);
+        return {            
             hardwareRegion: this.getRegionCode(),
             touchButtonPressed: this.isTouchbuttonPressed(),
             hardwareRevision: this.getHardwareRevision(),
@@ -12812,10 +12860,7 @@ return this._syncFileList();
 
 
     }, v.prototype._downloadRequired = function(e) {
-        CP6Functions(LogThis)("Function 287").verbose("_downloadRequired e",e)
-        CP6Functions(LogThis)("Function 287").verbose("_downloadRequired ev",e.version)
-        CP6Functions(LogThis)("Function 287").verbose("_downloadRequired tv",this.version)
-        CP6Functions(LogThis)("Function 287").verbose("_downloadRequired tnv",this.newVersion)
+        CP6Functions(LogThis)("Function 287").verbose("Check if new firmware is available (local as NEEO-cloud is gone);current version",e.version)
         this.newVersion = e.version
 
         return e && e.version ? (s.debug("FIRMWARE_VERSION_COMPARE", {
@@ -12937,35 +12982,20 @@ return this._syncFileList();
                 maxSockets: 1
             }), a.debug("MAXIMAL_JN_SEND_DURATION_MS", this.irMaxRetries * this.irRetryDelay)
         };
-    p.prototype._retryPostAfterDelay = function(e, t, r) {
+    p.prototype._retryPostAfterDelay = function(e, t, r) { 
         return d.increaseCounter("jn5168-call-busy"), i.delay(r.retryDelay).then(() => this._postRequestHelper(e, t, r))
-    }, p.prototype._postRequest = function(e, t, r) {
-        // Okay, we've changed functionality of this function to comply with running CP6 as docker container.
-        // that means we do not have a JN5168-chip. This chip is used by mens of it;s GPIO for IR, blink and for 6LowPan (wit remote).
-        // For now, we're just signaling what needs to happen here, then return.
-        // First / next step will be to send IR over a broadlink device.   
-        CP6Functions(LogThis)("Function 288").verbose("_postrequest");
-        if (BrainBroadLink.broadlinkIp == undefined) 
-            {CP6Functions(LogThis)("Function 288").verbose("We need to post a request to Brain's Broadlink, but no BrainBroadLink.js found");
-            return  i.reject();
+    }, p.prototype._postRequest = function(e, t, r) {   // this is the post Request handler for JN518x 
+        if (e == "/sendir" && IRUse == "BROADLINK") // We only do IR with broadlink.
+            return this._BroadlinkpostRequestHelper(e,t,r);
+        if (!UseJN516x)    // No JN516x requested in settings, so leave
+            {CP6Functions(LogThis)("Function 288").verbose("_postrequest, but no JN516x defined",UseJN516x);
+            return i.reject(new Error("No JN516x defined"));
             }
-        if (e == "/sendir")
-            {} // we'll handle IR-send later in this function
-        else
-        if (e == "/blink")
-            {CP6Functions(LogThis)("Function 288").verbose("Request to blink... if it was an IR-request, Broadlink will blink, otherwise: no blinky-blink for now")
-            return  i.resolve();
-            }
-        else            
-        if (e == "/discovery")
-            {CP6Functions(LogThis)("Function 288").verbose("Short touchbutton press detected, discovery started via JN5168")
-            return  i.resolve();
-            }
-        else
-            CP6Functions(LogThis)("Function 288").verbose("Unknown request")
-            //}
-        //if (!this.baseUrl) return d.increaseCounter("jn5168-missing-baseurl"), i.reject(new Error("JN5168 baseUrl not set yet"));
+        // this is the post Request handler for JN518x
+        CP6Functions(LogThis)("Function 288").verbose("Will post request to JN518x",e);
+        if (!this.baseUrl) return d.increaseCounter("jn5168-missing-baseurl"), i.reject(new Error("JN5168 baseUrl not set yet"));
         r = function(e, t) {
+            CP6Functions(LogThis)("Function 288").verbose("JN5168 request",e)
             return s(e || {}, {
                 maxRetries: 0,
                 retryCount: 0,
@@ -12976,10 +13006,14 @@ return this._syncFileList();
         }(r, this.irRetryDelay);
         const nx = this.queuePromise.then(() => this._postRequestHelper(e, t, r));
         return this.queuePromise = nx.catch(() => {}), nx
-    }, p.prototype._postRequestHelper = function(e, t, r) {
-        a.debug("send Payload to NBR (Now broadlink)", {
+    }, 
+    p.prototype._BroadlinkpostRequestHelper = function(e, t, r) {
+        a.debug("send Payload to Broadlink (no JN516x available ))", {
             path: e
         });
+        if (e != "/sendir") // We only do IR with broadlink.
+            return
+
         {CP6Functions(LogThis)("Function 288").verbose("Need to send IR-data via Brain; kicking of a broadlink device in-stead")
         // For example NEEO-IR (power on in driver): "sendir,1:1,1,38000,4,1,343,172,21,21,21,21,21,64,21,21,21,21,21,21,21,21,21,21,21,64,21,64,21,21,21,64,21,64,21,64,21,64,21,64,21,21,21,21,
         // var t contains: i=0&f=38000&c=4&o=1&s=343.172.21.21.21.21.21.64.21.21.21.21.21.21.21.21.21.21.21.64.21.64.21.21.2
@@ -12994,7 +13028,7 @@ return this._syncFileList();
 
         // create Uri to call Broadlink-device. Address is obrtained from BrainBroadLink.json file, content is delivered by driver.
         // get Url and Bradlink-type (+mac) from json file first
-        var BrainBroadLinkUri=CloudReplacement+":5384/xmitGC?host="+BrainBroadLink.broadlinkIp+"&&type="+BrainBroadLink.broadlinktype+"&&mac="+BrainBroadLink.broadlinkMac+"&stream=sendir,1:1,1,"
+        var BrainBroadLinkUri=CloudReplacement+":5384/xmitGC?host="+BrainBroadLink.broadlinkIp+"&stream=sendir,1:1,1,"
         // Driver-part
         params.forEach((element) => 
             {let theVar=element.split("=")
@@ -13043,8 +13077,53 @@ return this._syncFileList();
                 path: e
             }), i.reject(n))
         })
+    }, p.prototype._postRequestHelper = function(e, t, r) {
+        a.debug("send Payload to NBR JN5168", {
+            path: e,
+            uri: this.baseUrl + e,
+            method: "POST"
+        });
+        const o = n({
+            uri: this.baseUrl + e,
+            method: "POST",
+            pool: this._httpAgent,
+            timeout: 4e3,
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Content-Length": t.length
+            },
+            body: t
+        });
+        CP6Functions(LogThis)("Function 288").verbose("Going to call border-router",o.host)
+        return i.resolve(o).delay(r.payloadDurationMs).then(() => {
+            d.increaseCounter("jn5168-call-succeeded"), a.debug("JN5168_CALL_SUCCEEDED", {
+                retryCount: r.retryCount,
+                path: e,
+                promiseSleepMs: r.payloadDurationMs
+            })
+        }).catch(n => {
+            const o = c.extractInfo(n);
+            //CP6Functions(LogThis)("Function 288").error("Error from border-router n:",n)
+            CP6Functions(LogThis)("Function 288").error("Error from border-router o:",o)
+            return o.statusCode === r.retryStatusCode ? r.retryCount < r.maxRetries ? (r.retryCount++, a.debug("JN5168_BUSY, retry", {
+                waitUntilResend: r.retryDelay,
+                path: e
+            }), this._retryPostAfterDelay(e, t, r)) : (d.increaseCounter("jn5168-call-failed"), a.error("JN5168_CALL_FAILED", {
+                retryCount: r.retryCount,
+                path: e,
+                err: o.message,
+                payload: t
+            }), i.reject(n)) : (d.increaseCounter("jn5168-error"), a.error("JN5168_UNEXPECTED_ANSWER", {
+                statusCode: o.statusCode,
+                path: e
+            }), i.reject(n))
+        })
     }, p.prototype._failsafePostRequest = function(e, t) {
         CP6Functions(LogThis)("Function 288").verbose("_failsafePostRequest",e,t)
+        if (!UseJN516x)    // No JN516x requested in settings, so leave
+            {CP6Functions(LogThis)("Function 288").verbose("_failsafePostRequest, but no JN516x defined",UseJN516x);
+            return i.resolve();
+            }
         return this._postRequest(e, t).catch(t => {
             const r = c.extractInfo(t);
             a.error("JN5168_FAILSAFE_CALL_FAILED", {
@@ -13053,9 +13132,13 @@ return this._syncFileList();
             })
         })
     }, p.prototype._nbrGetRequest = function(e) {
-        CP6Functions(LogThis)("Function 288").verbose("Skipping _nbrGetRequest as no Six LowPan is available",e)
-        return i.resolve('')
-/*        return this.baseUrl ? (this.queuePromise = this.queuePromise.then(() => n({
+        if (!UseJN516x)    // No JN516x requested in settings, so leave
+            {CP6Functions(LogThis)("Function 288").verbose("_nbrGetRequest, but no JN516x defined",UseJN516x);
+            return i.reject();
+            }
+        //return i.resolve('')
+        CP6Functions(LogThis)("Function 288").verbose("_nbrGetRequest; baseurl:",this.baseUrl)
+        return this.baseUrl ? (this.queuePromise = this.queuePromise.then(() => n({
             method: "GET",
             pool: this._httpAgent,
             timeout: 4e3,
@@ -13066,7 +13149,7 @@ return this._syncFileList();
                 path: e,
                 err: r.message
             })
-        }), this.queuePromise) : (d.increaseCounter("jn5168-missing-baseurl"), i.reject(new Error("JN5168 baseUrl not set yet")))*/
+        }), this.queuePromise) : (d.increaseCounter("jn5168-missing-baseurl"), i.reject(new Error("JN5168 baseUrl not set yet")))
     }, p.prototype._ledOff = function() {
         return this._failsafePostRequest("/blink", "mode=off")
     }, p.prototype._ledOn = function() {
@@ -13129,6 +13212,7 @@ return this._syncFileList();
         })
     }, p.prototype.getRoutingTable = function() {
         CP6Functions(LogThis)("Function 288").verbose("getRoutingTable")
+        
         return a.debug("fetch NBR neighbors"), this._nbrGetRequest("/neighbors").then(e => e ? (d.setValue("neighbors", e), e.split("\n").map(e => e.trim()).filter(e => e)) : [])
     }
 }, function(e) {// Function 289 Some functons for handling project/home
@@ -13470,6 +13554,8 @@ return this._syncFileList();
         i.warn("GPIO_INIT_FAILED")
     }
     const a = e.exports = function(e, t) {
+        if (!UseJN516x)  // if we do not have a jn516x that handles a "press lid of brain", we can return directly 
+            return;
         const r = e => {
             new s(e, "in", "both").unexport(), new s(e, "in", "both", {
                 debounceTimeout: 20
@@ -14914,7 +15000,7 @@ return this._syncFileList();
             e.isGeneric ? t.genericMacros.put(e.macro) : t.macros.put(e.macro)
         })
     }
-    
+
     function i(e, t, r = []) {
         const o = e.getData(),
             i = o.capabilities && 0 < o.capabilities.length ? o.capabilities : r;
@@ -14922,7 +15008,7 @@ return this._syncFileList();
             i.sort(n).forEach(e => {
                 l.parseDeviceComponent(e, t)
             })
-        } catch (e) {console.log("338 catch parsedevicecom[ponent. err:",e)
+        } catch (e) {
             throw s.error("COMPONENTS_FAILED_TO_PARSE", {
                 components: i,
                 msg: e.message
@@ -14945,8 +15031,7 @@ return this._syncFileList();
                 spec: e,
                 adapterDeviceId: r
             });
-            //console.log("We should have c now:",c)
-            return e.getSourceName() === a.SOURCE_DUIRO ? (s.debug("BUILD_DUIRO_DEVICE"), o(e, c)) : (s.debug("BUILD_ADAPTER_DEVICE"), i(e, c, n)), d.check(d.MACRO_ONOFF_MISSING, c) && (c.powerMode = u.ASSUMPTION), console.log("338 doing c.reloadpowermode"),c.reloadPowerMode(), console.log("338 doing c.reloadcapabilities"),c.reloadCapabilities(), c
+            return e.getSourceName() === a.SOURCE_DUIRO ? (s.debug("BUILD_DUIRO_DEVICE"), o(e, c)) : (s.debug("BUILD_ADAPTER_DEVICE"), i(e, c, n)), d.check(d.MACRO_ONOFF_MISSING, c) && (c.powerMode = u.ASSUMPTION), c.reloadPowerMode(), c.reloadCapabilities(), c
         }
     }
 }, function(e, t, r) {// Function 339 sdkadapter save and load functions
@@ -15482,7 +15567,7 @@ return this._syncFileList();
             })
         })
     }, c.prototype.longpressHandler = function() { // This functionality is not necessary anymore
-        CP6Functions(LogThis)("Function 355").verbose("longpressHandler") // $$$
+        CP6Functions(LogThis)("Function 354").verbose("longpressHandler") // $$$
         return o.debug("long touchbutton pressed, toggle wifi ap mode"), i.increaseCounter("long-touchbutton-pressed"), clearTimeout(this.timerId), this.wifiAPModeActive ? this.disableAccesspointMode() : this._enableAccesspointMode()
     }, c.prototype.userBlink = function() {
         return this.wifiAPModeActive ? n.resolve() : s.ledIdentBrain()
@@ -16434,10 +16519,19 @@ return this._syncFileList();
         },
         startSync: function(e) {
              CP6Functions(LogThis)("Function 378").verbose("startSync");
+             if (!UseJN516x)
+             {  CP6Functions(LogThis)("Function 378").verbose("No JN516x defined in settings",UseJN516x);
+                return
+             }
             return d ? void i.warn("INTERVAL_ALREADY_RUNNING") : !e || 5e3 > e ? void i.warn("INVALID_INTERVAL_TIME", e) : (i.debug("Start routing table sync, intervalMs", e), d = setInterval(o, e), void o())
         },
         stopSync: function() {
              CP6Functions(LogThis)("Function 378").verbose("stopSync");
+             if (!UseJN516x)
+             {  CP6Functions(LogThis)("Function 378").verbose("No JN516x defined in settings",UseJN516x);
+                return
+             }
+
             clearInterval(d), d = void 0
         },
         sendPushMessage: function(e) {
@@ -16519,7 +16613,7 @@ return this._syncFileList();
                 return new i(e).parsedAddress.join(":") === r
             }) || this.knownTr2.push(e)
         }
-        updateTr2Addresses(e) {
+        updateTr2Addresses(e) {    //##### Filter in Neighbor-addressess... Only checks for Valid IPV6-address....
             Array.isArray(e) ? (this.knownTr2 = e.filter(n.isIPv6), o.debug("refreshed tr2 list, entries:", e.length)) : o.warn("INVALID_TR2_ADDRESS_PUSHED", {
                 data: e
             })
@@ -18639,14 +18733,14 @@ return this._syncFileList();
         return n(o)
     }
 }, function(e, t, r) {// Function 443 TR2_REQUESTHANDLER; setForwardingHosts, handleCoAPRequest, handleWifiRequest
-    "use strict";  // ##### from here, we see a lot of TR2-related functions
+    "use strict";
     CP6Functions(LogThis)("Function 443").verbose("TR2_REQUESTHANDLER; setForwardingHosts, handleCoAPRequest, handleWifiRequest")
 
     function n(e, t, r, n) {
         const o = d.resolve(e, t),
             i = m.urlMatchInfraredTrigger(o, r);
         return i ? function(e, t, r) {
-            CP6Functions(LogThis)("Function 443").verbose("TR2_REQUESTHANDLER; simple infraredgtrigger detected");
+            CP6Functions(LogThis)("Function 443").verbose("TR2_REQUESTHANDLER; simple infraredgtrigger deteced");
             s.debug("simple trigger detected", {
                 query: r
             });
@@ -18749,12 +18843,40 @@ return this._syncFileList();
                 }
             }) : (s.debug("COAP_DUPLICATE_MESSAGE"), h.updateDuplicateCoapMessages(), e.end(), c.reject(new Error("COAP_DUPLICATE_MESSAGE")))
         },
-        handleWifiRequest: function(e) {
+        handleWifiRequest: function(payload, remoteInfo, socket) {
             CP6Functions(LogThis)("Function 443").verbose(" handleWifiRequest")
             return new c((t, r) => {
                 s.debug("handle wifi request:", {
                     url: e
                 });
+                CP6Functions(LogThis)("Function 443").debug("UDP handleWifiRequest using extra logic to respond to IP-requests")
+                var LookingFor="WHO_IS_NEEO->"+NeeoHostName;
+                try { 
+                    if (payload == LookingFor)
+                        {var reply = Buffer.from("I_AM_NEEO");
+                        let targetAddress = remoteInfo.address;
+                        if (remoteInfo.family === 'IPv4' && !targetAddress.includes('::ffff:')) {
+                            targetAddress = `::ffff:${targetAddress}`;
+                        }
+                    CP6Functions(LogThis)("Function 443").verbose("Sending our IP-address back to Border-router @"+targetAddress)
+                    socket.coapServer._sock.send(
+                        reply, 
+                        0, 
+                        reply.length, 
+                        remoteInfo.port, 
+                        targetAddress, 
+                        (err) => {
+                            if (err) {
+                                console.error("UDP Reply failed", err);
+                                return reject(err); // Now reject is defined
+                            }
+                            CP6Functions(LogThis)("Function 443").debug("Sent succesfully")
+                            return;
+                            }
+                        );   
+                    } 
+                } catch(err) {console.log("Error sending UDP-datagram back to border-router",err);return}
+
                 const i = g.expandRequestUrl(e);
                 n(o(i.longUrl), i.longUrl, i.query, i.sendNoResponse).then(e => {
                     const r = e ? e.length : 0;
@@ -18854,9 +18976,9 @@ return this._syncFileList();
                 sendAcksForNonConfirmablePackets: !0 === e.coapSendAcksForNonConfirmablePackets
             }, n.updateTiming(r), s("CoAP max RTT in seconds:", n.parameters.maxRTT), s("CoAP max time in seconds from the first transmission (CON) to its last retransmission:", n.parameters.maxTransmitSpan), s("CoAP max waiting time (CON) in seconds until sender gives up:", n.parameters.maxTransmitWait)
         };
-    i.inherits(a, o.EventEmitter), a.prototype.bind = function() {
+    i.inherits(a, o.EventEmitter), a.prototype.bind = function() {CP6Functions(LogThis)("Function 449 i.inherits 1"),
         s("start coap server %o", this.coapOptions), this.coapServer = n.createServer(this.coapOptions), this.coapServer.on("request", (e, t) => {
-            CP6Functions(LogThis)("Function 449").verbose("i.request",e)
+            CP6Functions(LogThis)("Function 449").verbose("i.request")
             this._handleCoAPMessage(e, t)
         }), this.coapServer.on("error", e => {
             CP6Functions(LogThis)("Function 449").verbose(" i.error")
@@ -19433,15 +19555,13 @@ return this._syncFileList();
         u = n(),
         d = "development" === u.get("env");
     u.disable("x-powered-by"), u.set("json replacer", c.replacer);
-    const l = r(142);                                           // Locale-definitions
+    const l = r(142);                                           
     u.use(l.init), u.use(function(e, t, r) {
-
         CP6Functions(LogThis)("Function 460").verbose("express.use init",e.method,e.url)
-
         "OPTIONS" === e.method ? t.send() : r()
-    }), u.use(o.json({
-        limit: "2mb"
-    })), u.use(s.generateDecryptMiddleware(s.decrypt)), u.use(i());
+    }), 
+    u.use(o.json( {limit: "2mb"})), 
+    u.use(s.generateDecryptMiddleware(s.decrypt)), u.use(i());
     const p = n.Router();
     u.use("/v1", p), u.use("/", p);
     const h = {
@@ -21202,7 +21322,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         a = r(15),
         c = r(83);
     o.get("/", function(e, t) {
-        CP6Functions(LogThis)("Function 493").verbose("router get(/")
+        CP6Functions(LogThis)("Function 493").verbose("router get(/ (means summary)")
         t.json(i.summary())
     }), o.get("/useProUI", function(e, t) {
         CP6Functions(LogThis)("Function 493").verbose("router useProUI")
@@ -21760,6 +21880,7 @@ function metaMessageHandler(req, res,f)
     metaLog({type:LOG_TYPE.ERROR,content:"logLevel passed "+req.query.logLevel});
     return "Returning error"
 }
+
 function ReplaceSettingsFile(newURL)
 {    
     Settings.CloudReplacementUrl = newURL
@@ -21776,4 +21897,99 @@ function ReplaceSettingsFile(newURL)
                 }
             });
         });
+}
+
+async function getBridgeIp(name) {
+  // 1. Normaliseer de input (case-insensitive check voor .local)
+  const normalizedName = name.toLowerCase();
+  const target = normalizedName.endsWith('.local') ? normalizedName : `${normalizedName}.local`;
+  
+  return new Promise((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      mdns.removeListener('response', onResponse);
+      CP6Functions(LogThis)("Function 33").verbose("Mdns timeout: not found after 5 seconds.",target);
+      resolve(null); 
+    }, 5000);
+
+    const onResponse = (response) => {
+      const records = [...response.answers, ...response.additionals];
+      
+      const match = records.find(r => 
+        r.name && 
+        r.name.toLowerCase() === target && 
+        r.type === 'A'
+      );
+
+      if (match) {
+        clearTimeout(timeoutId);
+        mdns.removeListener('response', onResponse);
+        resolve(match.data);
+      }
+    };
+
+    mdns.on('response', onResponse);
+
+    mdns.query({
+      questions: [{
+        name: target,
+        type: 'A'
+      }]
+    });
+  });
+}
+
+async function getCP6Settings(r) {
+
+    NeeoHostName = r(110).hostname().toString()
+    metaLog({type:LOG_TYPE.DEBUG, content: 'Hostname of Brain: '+NeeoHostName});
+    metaLog({type:LOG_TYPE.DEBUG, content: 'Starting fileIO for ' + CP6SettingsFile});
+
+    return new Promise((resolve) => {
+        fs.readFile(SettingsFile, (err, data) => {
+            if (err) {
+                metaLog({type:LOG_TYPE.ERROR, content: 'No ' + CP6SettingsFile + ' file, cannot send IR-DATA'});
+            } else if (data && data != '') {
+                try {
+                    metaLog({type:LOG_TYPE.DEBUG, content: 'Parsing ' + CP6SettingsFile});
+                    Settings = JSON.parse(data);
+                    if (Settings.IR)
+                    {    if (Settings.IR.toUpperCase()=="JN516X")
+                        {   UseJN516x = true;
+                            IRUse="JN516x";
+                            metaLog({type:LOG_TYPE.ALWAYS, content: "Brain will try to use JN516x for Infrared"});
+                            BrainBroadLink = false;
+                        }                         
+                        else
+                            if (Settings.IR.toUpperCase()=="BROADLINK")
+                            {   IRUse="BROADLINK";
+                                metaLog({type:LOG_TYPE.ALWAYS, content: "Brain will try to use Broadlink for Infrared",});
+                            }                            
+                    }
+                    else IRUse=""
+                    
+                    if (Settings.UseJN516x) {
+                        UseJN516x = true;
+                        BrainBroadLink = false;
+                        let hostname = hn + 'jn5168';
+                        metaLog({type:LOG_TYPE.ALWAYS, content: "Brain will try to use JN516x", hostname});
+                    } else 
+                        UseJN516x = false;
+                    if (IRUse=="BROADLINK" && Settings.BrainBroadLink != undefined && !Settings.BrainBroadLink.broadlinkIp.includes("<")) {
+                        BrainBroadLink = Settings.BrainBroadLink;
+                        metaLog({type:LOG_TYPE.ALWAYS, content: "Brain uses broadlink! ", params: BrainBroadLink});
+                    } else if (IRUse=="BROADLINK")
+                        metaLog({type:LOG_TYPE.ERROR, content: "Please add BrainBroadLink to " + CP6SettingsFile});
+
+                    if (Settings.CloudReplacementUrl != undefined && !Settings.CloudReplacementUrl.includes("<")) {
+                        CloudReplacementUrl = "http://" + Settings.CloudReplacementUrl + ":6468/download";
+                        metaLog({type:LOG_TYPE.ALWAYS, content: "Cached CloudreplacementUrl used: " + CloudReplacementUrl});
+                    }
+                } catch (parseErr) {
+                    metaLog({type:LOG_TYPE.ERROR, content: 'Invalid ' + CP6SettingsFile + ' file ' + parseErr});
+                    BrainBroadLink = {};
+                }
+            }
+            resolve(); 
+        });
+    });
 }
