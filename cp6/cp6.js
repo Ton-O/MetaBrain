@@ -18737,10 +18737,12 @@ return this._syncFileList();
     CP6Functions(LogThis)("Function 443").verbose("TR2_REQUESTHANDLER; setForwardingHosts, handleCoAPRequest, handleWifiRequest")
 
     function n(e, t, r, n) {
+        CP6Functions(LogThis)("Function 443").verbose("Function n deel 1",d.resolve(e, t))
         const o = d.resolve(e, t),
             i = m.urlMatchInfraredTrigger(o, r);
+             CP6Functions(LogThis)("Function 443").verbose("Function n deel 2",i)
         return i ? function(e, t, r) {
-            CP6Functions(LogThis)("Function 443").verbose("TR2_REQUESTHANDLER; simple infraredgtrigger deteced");
+            CP6Functions(LogThis)("Function 443").verbose("TR2_REQUESTHANDLER; simple infraredtrigger detected");
             s.debug("simple trigger detected", {
                 query: r
             });
@@ -18751,11 +18753,11 @@ return this._syncFileList();
             return f.getRepository().then(e => {
                 CP6Functions(LogThis)("Function 443").verbose("TR2_REQUESTHANDLER; triggerAction");
 //                CP6Functions(LogThis)("Function 443 TR2_REQUESTHANDLER; e",e);
-                CP6Functions(LogThis)("Function 443").verbose(" TR2_REQUESTHANDLER; n",n);
+/*                CP6Functions(LogThis)("Function 443").verbose(" TR2_REQUESTHANDLER; n",n);
                 CP6Functions(LogThis)("Function 443").verbose(" TR2_REQUESTHANDLER; o",o);
                 CP6Functions(LogThis)("Function 443").verbose(" TR2_REQUESTHANDLER; i",i);
                 CP6Functions(LogThis)("Function 443").verbose(" TR2_REQUESTHANDLER; a",a);
-
+*/
                 e.triggerAction(n, o, i, a)
             })
         }(i, 0, r) : (s.debug("request", {
@@ -18768,7 +18770,7 @@ return this._syncFileList();
             resolveWithFullResponse: !0,
             qs: r,
             timeout: y
-        }).then(e => {
+        }).then(e => { CP6Functions(LogThis)("Function 443").verbose("Function n eind",e)
             if (!e || n) return;
             let t = p.answerForTr2(o, e);
             return t = p.transliterationToAscii(t), s.debug("payload response:", t), t
@@ -18823,10 +18825,10 @@ return this._syncFileList();
                     }).on("error", e => {
                         i("COAP_SERVER_ERROR", e.message, a)
                     });
-                    CP6Functions(LogThis)("Function 443").verbose(" expandRequestUrl t",t)
                     const c = g.expandRequestUrl(t);
                     n(o(c.longUrl), c.longUrl, c.query, c.sendNoResponse).then(t => {
                         const n = t ? t.length : 0;
+                        console.log("Tak 1",t,n)
                         return n > 65535 ? (s.warn("COAP_REQUEST_MAXIMAL_SIZE_EXCEEDED", {
                             size: n
                         }), a(new Error("MAXIMAL_COAP_DATA_PACKAGE_SIZE_EXCEEDED"))) : (h.updateRecievedData(!0), h.updateSentData(n), e.end(t), void r(t))
@@ -18843,7 +18845,7 @@ return this._syncFileList();
                 }
             }) : (s.debug("COAP_DUPLICATE_MESSAGE"), h.updateDuplicateCoapMessages(), e.end(), c.reject(new Error("COAP_DUPLICATE_MESSAGE")))
         },
-        handleWifiRequest: function(payload, remoteInfo, socket) {
+        handleWifiRequest: function(e, remoteInfo, socket) {
             CP6Functions(LogThis)("Function 443").verbose(" handleWifiRequest")
             return new c((t, r) => {
                 s.debug("handle wifi request:", {
@@ -18852,40 +18854,44 @@ return this._syncFileList();
                 CP6Functions(LogThis)("Function 443").debug("UDP handleWifiRequest using extra logic to respond to IP-requests")
                 var LookingFor="WHO_IS_NEEO->"+NeeoHostName;
                 try { 
-                    if (payload == LookingFor)
-                        {var reply = Buffer.from("I_AM_NEEO");
+                    if (e == LookingFor)
+                        {var reply = Buffer.from("I_AM_NEEO");                            
                         let targetAddress = remoteInfo.address;
                         if (remoteInfo.family === 'IPv4' && !targetAddress.includes('::ffff:')) {
                             targetAddress = `::ffff:${targetAddress}`;
                         }
-                    CP6Functions(LogThis)("Function 443").verbose("Sending our IP-address back to Border-router @"+targetAddress)
-                    socket.coapServer._sock.send(
-                        reply, 
-                        0, 
-                        reply.length, 
-                        remoteInfo.port, 
-                        targetAddress, 
-                        (err) => {
-                            if (err) {
-                                console.error("UDP Reply failed", err);
-                                return reject(err); // Now reject is defined
-                            }
-                            CP6Functions(LogThis)("Function 443").debug("Sent succesfully")
-                            return;
-                            }
-                        );   
-                    } 
-                } catch(err) {console.log("Error sending UDP-datagram back to border-router",err);return}
-
-                const i = g.expandRequestUrl(e);
-                n(o(i.longUrl), i.longUrl, i.query, i.sendNoResponse).then(e => {
+                        CP6Functions(LogThis)("Function 443").verbose("Sending our IP-address back to Border-router @"+targetAddress)
+                        socket.coapServer._sock.send(
+                            reply, 
+                            0, 
+                            reply.length, 
+                            remoteInfo.port, 
+                            targetAddress, 
+                            (err) => {
+                                if (err) {
+                                    console.error("UDP Reply failed", err);
+                                    return reject(err); // Now reject is defined
+                                }
+                                CP6Functions(LogThis)("Function 443").debug("Sent succesfully")
+                                return;
+                                }
+                            );   
+                        return;
+                        } 
+                    } catch(err) {console.log("Error sending UDP-datagram back to border-router",err);return}
+            try {
+                CP6Functions(LogThis)("Function 443").verbose("'Normal' request from TR2",e)
+                const i = g.expandRequestUrl(e); CP6Functions(LogThis)("Function 443").verbose("Back in 443",i)
+                n(o(i.longUrl), i.longUrl, i.query, i.sendNoResponse).then(e => {console.log("ff");
                     const r = e ? e.length : 0;
-                    h.updateWifiRecievedData(!0), h.updateWifiSentData(!0, r), t(e)
+                    CP6Functions(LogThis)("Function 443").verbose("Back in 443 before updateWifiReceived",r)
+                    h.updateWifiRecievedData(!0), CP6Functions(LogThis)("Function 443").verbose("Back in 443 updateWifiSentData",r), h.updateWifiSentData(!0, r),CP6Functions(LogThis)("Function 443").verbose("Back in 443 now t(e)",E,t.toString()),  t(e)
                 }).catch(e => {
                     h.updateWifiRecievedData(!1);
                     const t = l.extractInfo(e);
                     s.error("WIFI_REQUEST_FAILED", t.message), r(new Error("WIFI_REQUEST_FAILED"))
                 })
+            }catch(err) {console.log("err 443",err)}
             })
         }
     }
@@ -18910,6 +18916,8 @@ return this._syncFileList();
         i = r(105);
     e.exports = {
         expandRequestUrl: function(e) {
+            CP6Functions(LogThis)("Function 445").verbose("expandRequestUrl",e)
+try {
             const t = n.parse(e),
                 r = s(t),
                 i = o.parse(t.query),
@@ -18922,22 +18930,31 @@ return this._syncFileList();
                 sendNoResponse: c
             }
         }
+     catch (err) {console.log("err in 445",err)}
+    }
     };
     const s = function(e) {
+        console.log("const s",e);
         if (!e || !e.pathname || "/" === e.pathname) throw new Error("INVALID_SHORT_URL");
         let t = e.pathname;
         "/" === t[0] && (t = t.slice(1));
+        console.log("const s deel 2",t);
         const r = i.longUrl(t);
+        console.log("const s deel 3",r);
+        if (r) console.log("const s deel 4",n.parse(r));
         return r ? n.parse(r) : e
     }
 }, function(e) {// Function 446 exports = require("querystring")
     e.exports = require("querystring")
 }, function(e, t, r) {// Function 447 urlMatchInfraredTrigger
     "use strict";
+    
     const n = r(2).port,
         o = new RegExp("^http://127.0.0.1:" + n + "/projects/home/rooms/([\\d]+)/scenarios/([\\d]+)/trigger$");
     e.exports = {
         urlMatchInfraredTrigger: function(e, t) {
+            CP6Functions(LogThis)("Function 443").verbose("urlMatchInfraredTrigger a");
+            console.log("urlMatchInfraredTrigger b",t);
             return t && t.name ? t.value || !1 === t.value ? null : e.match(o) : null
         }
     }
