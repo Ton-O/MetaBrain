@@ -35,6 +35,7 @@ var CP6SettingsFile = "CP6Settings.json";
 var SettingsFile = "/steady/neeo/cp6/"+CP6SettingsFile 
 //var SettingsFile = __dirname + "/"+CP6SettingsFile 
 var UseJN516x;
+var JN5168IP;
 var IRUse=""
 
 const currChannelArray = [];        
@@ -728,7 +729,7 @@ const currChannelArray = [];
     }
 }, function(e, t, r) {// Function 10 notificationfacade
     "use strict";
-    CP6Functions(LogThis)("Function 10").verbose("")
+    CP6Functions(LogThis)("Function 10").verbose("handle internal notifications")
     const n = r(6)("cp6:lib:notificationfacade"),
         o = r(69),
         i = r(187),
@@ -1895,9 +1896,14 @@ e.exports.bootstrapJn5168 = function() {
         return getBridgeIp(bridgeHostname)
             .then(ip => {
                 if (ip) {
-                    a.debug("mDNS Discovery successful, updating file with:", ip);
-                    // 2. Schrijf het nieuwe IP naar het bestand
-                    return fs.promises.writeFile(t, "{ \"nbr_web_server\" : \"" + ip + "\"}", 'utf8');
+                    if (ip == JN5168IP)
+                        return a.debug("mDNS Discovery successful, same IP-address:", ip);
+                    else
+                        {a.debug("mDNS Discovery successful and IP changed, updating file with:", ip);
+                        JN5168IP=ip;
+                        // 2. Write new IP to file
+                        return fs.promises.writeFile(t, "{ \"nbr_web_server\" : \"" + ip + "\"}", 'utf8');
+                        }
                 }
                 a.debug("mDNS Discovery returned no IP, proceeding with existing file");
             })
@@ -1926,6 +1932,7 @@ e.exports.bootstrapJn5168 = function() {
                     return !cfg || !(d.baseUrl === "http://" + cfg.nbr_web_server + ":" + c.jn5168Port && cfg && cfg.nbr_web_server);
                 })(config);
                 if (shouldUpdate || !m) {
+                    CP6Functions(LogThis)("Function 31").debug("Update of JN516x-address; performing (re-) init of JN516x",);
                     return n(config).catch(err => {
                         p.increaseError();
                         m = !1;
@@ -1933,6 +1940,8 @@ e.exports.bootstrapJn5168 = function() {
                         return o.reject(new Error("NBR_ENABLE_DISCOVERY_FAILED"));
                     });
                 }
+                else
+                    CP6Functions(LogThis)("Function 31").debug("No need to update nbr_file");
             });
     }
 
@@ -16670,10 +16679,12 @@ return this._syncFileList();
         const t = this.urlToIndex[e];
         if (t) return t;
         const r = this.toBase36(this.id);
+        //CP6Functions(LogThis)("Function 383").debug("adding url to use by TR2 shortURL",e,"as",r)
         return this.urlToIndex[e] = r, this.indexToUrl[r] = e, this.id++, r
     }, s.prototype.shortUrl = function(e) {
         return e ? this._getIndex(n.resolve(this.baseUrl, e)) : void o.debug("invalid url parameter to shortUrlPath")
     }, s.prototype.longUrl = function(e) {
+        CP6Functions(LogThis)("Function 383").debug("longUrl",e)
         const t = this.indexToUrl[e];
         return t || void o.debug("long url not found for", e)
     }, s.prototype.size = function() {
@@ -18737,10 +18748,9 @@ return this._syncFileList();
     CP6Functions(LogThis)("Function 443").verbose("TR2_REQUESTHANDLER; setForwardingHosts, handleCoAPRequest, handleWifiRequest")
 
     function n(e, t, r, n) {
-        CP6Functions(LogThis)("Function 443").verbose("Function n deel 1",d.resolve(e, t))
+        CP6Functions(LogThis)("Function 443").verbose("Actual msg-handler", d.resolve(e, t))
         const o = d.resolve(e, t),
-            i = m.urlMatchInfraredTrigger(o, r);
-             CP6Functions(LogThis)("Function 443").verbose("Function n deel 2",i)
+            i = m.urlMatchInfraredTrigger(o, r);        //Is it a simple IR-trigger
         return i ? function(e, t, r) {
             CP6Functions(LogThis)("Function 443").verbose("TR2_REQUESTHANDLER; simple infraredtrigger detected");
             s.debug("simple trigger detected", {
@@ -18814,10 +18824,10 @@ return this._syncFileList();
         },
         handleCoAPRequest: function(e, t) {
             CP6Functions(LogThis)("Function 443").verbose("handleCoAPRequest")
-            return function(e) {
+            return function(e) {  // Check if we have received a duplicate message 
                 return e._packet && e._packet.messageId ? v !== e._packet.messageId && (v = e._packet.messageId, !0) : (s.debug("COAP_NO_MESSAGEID_IN_PACKET"), !1)
-            }(e) ? new c((r, a) => {
-                try {CP6Functions(LogThis)("Function 443").verbose(" handleCoAPRequest goOn")
+            }(e) ? new c((r, a) => { // No, not  duplicate
+                try {
                     s.debug("handle coap request:", {
                         shortUrl: t
                     }), e.on("timeout", e => {
@@ -18825,10 +18835,9 @@ return this._syncFileList();
                     }).on("error", e => {
                         i("COAP_SERVER_ERROR", e.message, a)
                     });
-                    const c = g.expandRequestUrl(t);
-                    n(o(c.longUrl), c.longUrl, c.query, c.sendNoResponse).then(t => {
+                    const c = g.expandRequestUrl(t);                                    // translate logurl
+                    n(o(c.longUrl), c.longUrl, c.query, c.sendNoResponse).then(t => {   // Handle message
                         const n = t ? t.length : 0;
-                        console.log("Tak 1",t,n)
                         return n > 65535 ? (s.warn("COAP_REQUEST_MAXIMAL_SIZE_EXCEEDED", {
                             size: n
                         }), a(new Error("MAXIMAL_COAP_DATA_PACKAGE_SIZE_EXCEEDED"))) : (h.updateRecievedData(!0), h.updateSentData(n), e.end(t), void r(t))
@@ -18843,7 +18852,7 @@ return this._syncFileList();
                         param: t.param
                     }, a)
                 }
-            }) : (s.debug("COAP_DUPLICATE_MESSAGE"), h.updateDuplicateCoapMessages(), e.end(), c.reject(new Error("COAP_DUPLICATE_MESSAGE")))
+            }) : (s.debug("COAP_DUPLICATE_MESSAGE"), h.updateDuplicateCoapMessages(), e.end(), c.reject(new Error("COAP_DUPLICATE_MESSAGE"))) // It was a duplicate msg
         },
         handleWifiRequest: function(e, remoteInfo, socket) {
             CP6Functions(LogThis)("Function 443").verbose(" handleWifiRequest")
@@ -21364,29 +21373,29 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
     }), e.exports = o
 }, function(e, t, r) {// Function 494 Router: 
     "use strict";
-    CP6Functions(LogThis)("Function 494").verbose("Router")
+    CP6Functions(LogThis)("Function 494").verbose("Statistics Router")
     const n = r(5).Router(),
         o = r(3),
         i = r(31);
     n.get("/", function(e, t) {
-        CP6Functions(LogThis)("Function 494").verbose("Router - /")
+        CP6Functions(LogThis)("Function 494").verbose("Statistics Router - / getStatistics")
         t.json({
             statistics: o.getStatistic()
         })
     }), n.get("/tr2", function(e, t) {
-        CP6Functions(LogThis)("Function 494").verbose("Router - /tr2")
+        CP6Functions(LogThis)("Function 494").verbose("Statistics Router - /tr2 getStatistics")
         t.json({
             statistics: o.tr2.getStatistic()
         })
     }), n.get("/errors", function(e, t) {
-        CP6Functions(LogThis)("Function 494").verbose("Router - /errors")
+        CP6Functions(LogThis)("Function 494").verbose("Statistics Router - /getLasterrors")
         t.json({
             statistics: o.getLastErrors()
         })
     }), n.get("/nbr", function(e, t) {
-        CP6Functions(LogThis)("Function 494").verbose("Router - /nbr")
+        CP6Functions(LogThis)("Function 494").verbose("Statistics Router - /nbr / ")
         i.updateStatistics().then(() => {
-            CP6Functions(LogThis)("Function 494").verbose("Router - /updateStatistics")
+            CP6Functions(LogThis)("Function 494").verbose("Statistics Router - /updateStatistics")
             t.json({
                 statistics: o.getStatistic()
             })
@@ -22009,4 +22018,7 @@ async function getCP6Settings(r) {
             resolve(); 
         });
     });
+}
+ function Bluebird(e) { // Copy of function 1; only contains exports = require("bluebird")
+    e.exports = require("bluebird")
 }
