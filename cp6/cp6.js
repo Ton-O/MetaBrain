@@ -4482,7 +4482,8 @@ function n(payload, remoteInfo, socket) {
                     s.error("AUTO_UPDATE_ERROR", {
                         msg: e.message
                     })
-                }), null
+                }), 
+                null
             })(e), a.updateCheckIntervalMs))
         },
         stopTask: function() {
@@ -10824,7 +10825,7 @@ return this._syncFileList();
     "use strict";
 
     function n(e, t = c) {
-        CP6Functions(LogThis)("Function 228").verbose("AdapterSpecsSource: get:",e) 
+        CP6Functions(LogThis)("Function 228").verbose("Get:",e) 
         return o.get(e, {
             timeout: t
         }).then(e => (JSON.parse(e)))
@@ -10841,11 +10842,13 @@ return this._syncFileList();
         const t = this.baseUrl + "/db/search?q=" + e;
         return s.debug("search adapter:", t), n(t)
     }, u.prototype._getFullSpec = function(e) {
-        CP6Functions(LogThis)("Function 228").verbose("AdapterSpecsSource: getfullspec (get ful spec from source:)",e)        
+        CP6Functions(LogThis)("Function 228").verbose("_getFullSpec",e)        
         return n(this.baseUrl + "/db/" + e)
     }, u.prototype._getAdapterSpec = function(e, t) {
+        CP6Functions(LogThis)("Function 228").verbose("_getAdapterSpec",e)  
         return n(this.baseUrl + "/db/adapterdefinition/" + e, t)
     }, u.prototype._getCapabilities = function(e, t) {
+        CP6Functions(LogThis)("Function 228").verbose("_getCapabilities",e)  
         return n(this.baseUrl + "/" + e + "/capabilities/" + t)
     }, u.prototype._getSpec = u.prototype._getFullSpec
 }, function(e) {// Function 229 contains only exports = require("lodash/union")
@@ -12044,6 +12047,7 @@ return this._syncFileList();
                     if (!r || "object" != typeof r) return !1;
                     const n = r.driverVersion,
                         o = t.driverVersion;
+                    console.log("checkForAndUpdateDevice 2",)
                     return !!o && (!n && 0 < o || n < o)
                 }(e, t) && u.tryAdapterDeviceUpdate(e, t)
             })(e, t)) : (o.resolve(!1))
@@ -12078,12 +12082,13 @@ return this._syncFileList();
             if (e.details.deviceCapabilities != undefined) 
                 if (e.details.deviceCapabilities[0] === "dynamicDevice") 
                     isDiscoveringDriver=true
+
         if (isDiscoveringDriver == true) 
         {   CP6Functions(LogThis)("Function 265").verbose("Activating discovery for updated discoverable driver",e.name);
             deviceExistsNow=false;
-            if (adapterName == cachedDiscovery.discoveredSDKadapterName)    // did we discover devices for ths adapter already
+            if (adapterName == cachedDiscovery.discoveredSDKadapterName)    // did we discover devices for this adapter already
             {    discoveredData=cachedDiscovery.discoveredItems;
-                CP6Functions(LogThis)("Function 265").verbose("Re-using cached discovery values:iscovery",cachedDiscovery.discoveredSDKadapterName);
+                CP6Functions(LogThis)("Function 265").verbose("Re-using cached discovery values: discovery",cachedDiscovery.discoveredSDKadapterName);
             }
             else
             {   cachedDiscovery.discoveredSDKadapterName = adapterName;
@@ -12102,18 +12107,18 @@ return this._syncFileList();
                 discoveredData = await requestpromise(options);
                 cachedDiscovery.discoveredItems = discoveredData;           // save discovery result for later
             }
-
             for (let count = 0; count < discoveredData.length; count++) 
-                if (discoveredData[count].id == e.adapterDeviceId)
+                {if (discoveredData[count].id == e.adapterDeviceId)
                     {deviceExistsNow=true;
                     t = discoveredData[count].device; // replace the "small unpopulated information with the discovered one"
                     break;
                     }
+                }
                 
             if (deviceExistsNow==false)
                 CP6Functions(LogThis)("Function 265").warn("Device "+e.name+" is not discovered so cannot be updated");
             else    
-                CP6Functions(LogThis)("Function 265").info("Success!! We are using discovered device:"+ t.name);
+                CP6Functions(LogThis)("Function 265").info("Success!! We are implementing a change to a discoverable device:"+ t.name);
         }           // end: if (isDiscoveringDriver == true) 
         r = t.capabilities || [];    
         r.forEach(e => {
@@ -12171,19 +12176,19 @@ return this._syncFileList();
                     r.icon = l(t.icon || t.type);
                     r.driverVersion = t.driverVersion;
                     r.deviceCapabilities = t.deviceCapabilities || [];
-                    e.reloadCapabilities();
+                    e.reloadCapabilities(); 
                     return !i(n, r);
                 }
             }(e, t);
             let result;
             if (!deviceExistsNow)
-                {CP6Functions(LogThis)("Function 265").verbose("Instructing brain to not update this device")
+                {CP6Functions(LogThis)("Function 265").verbose("Instructing brain to not update this device as device doesn't exists at the moment")
                 result=0
                 }
-            else
-                result = r || n;
+            else {CP6Functions(LogThis)("Function 265").verbose("Updated device; should be updated in project file")
+                result = r || n;}
             if (deviceExistsNow && result) {
-                const r = `Updated device ${e.name} to version ${t.driverVersion} (${e.roomName})`;
+                const r = `Updated device ${e.name} to version ${t.driverVersion} (Room:${e.roomName})`;
                 u.event(r), u.debug(r)
             }            
             return result
@@ -12822,7 +12827,7 @@ return this._syncFileList();
             status: "unreachable"
         }))
     }, v.prototype.getTemperature = function() {
-        return g.getTemperature()
+        return 20; //g.getTemperature()
     }, v.prototype.isProHardware = function() {
         return !0 === d.isProHardware()
     }, v.prototype.isProLicensed = function() {
@@ -13664,11 +13669,13 @@ return this._syncFileList();
         s = r(0)("Temperature");
     let a;
     e.exports = {
-        startMeasuringTask: function() {
+        startMeasuringTask:  function() {
+            return /*
             const {
                 temperatureMeasureIntervalMs: e
             } = i.systeminfo;
             n(), setInterval(() => n(), e)
+            */
         },
         getTemperature: function() {
             return a
