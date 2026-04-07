@@ -21998,7 +21998,7 @@ async function getCP6Settings(r) {
                                 metaLog({type:LOG_TYPE.ALWAYS, content: "Brain will try to use Broadlink for Infrared",});
                             }                            
                     }
-                    else IRUse=""
+                    else IRUse="BROADLINK" // assume current style infrared, no beta use by default
                     
                     if (Settings.UseJN516x) {
                         UseJN516x = true;
