@@ -12774,7 +12774,10 @@ return this._syncFileList();
     }, v.prototype.getWlanAddress = function() {
         return this.getWlanAddressIPv4() || this.getWlanAddressIPv6()
     }, v.prototype.isTouchbuttonPressed = function() {
-        return d.isTouchbuttonPressed()
+        if (UseJN516x)
+            return d.isTouchbuttonPressed()
+        else
+            return false
     }, v.prototype.getRegionCode = function() {
         return d.getRegionCode()
     }, v.prototype.getHardwareRevision = function() {
