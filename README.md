@@ -1,3 +1,6 @@
+# EXPERIMENTAL BRANCH ** CONTAINS WORK IN PROGRESS **** 
+This experimental branch contains code to let the Docker-based MetaBrain communicate with an external JN516x.
+Code is stable at this moment, but next step is to connect an actual JN516x to it and test with that configuration.
 # Brain functionality for your NEEO-remotes as the original providers abandoned the device. 
 ## Function
 This repository provides updated code that could run on a raspberry-Pi, or (as I do) as a Docker container. 
