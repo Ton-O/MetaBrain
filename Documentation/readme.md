@@ -36,3 +36,15 @@ This file controls the messagelevel of the Brain-components. It will be adapted 
 This Brain is accessible via the IP-address you defined in the yml-file. The normal url applies:
 http://<ip>:3200/eui
 If you access the Brain-GUI from a mobile device, you HAVE to tell your browser to use a desktop-version (but that applies to the physical NEEO Brain too).
+
+If Your NEEO Remote (official name is NEEO TR2) was already connected via Wifi to the physical Brain, it has the follwoing information stored internally:
+1. Wifi SSID
+2. Wifi Password
+3. IP-address of your Brain.
+
+When you startup your TR2, it will try to connect via the same wifi to the IP-Address it used before.
+When your Docker image uses the same IP-address as the physical Brain, nothing will change nd yourn TR2 will acrt normally. Obviously, your physical Brain should be powered down.
+However, if you do not use the same IP-address, then the TR2 will not be able to connect to the virtual Brain as it hads no knowledge of where to look. 
+NOTE: at this moment, you can NOT pair the TR2 with the virtual brain as no 6LowPan communication is possible (but I'm working on that).
+Controlling devices via infrared is at this moment only possible via a Broadlink device. Brain knows how to send IR-data, you just have to tell Brain the IP-address of the Brodalink device you're using (in CP6Settings.json).  
+Though experimental, you can use a USB WIFI-Dongle to connect the Brain also via WiFi. See the USB-stick for wifi for more details.  Note that this extra connection does not really provide any (functional) benefits.    
