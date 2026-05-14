@@ -1,0 +1,26 @@
+services:
+  neeobrain:
+    image: ${DOCKER_USER}/${NEEOPROJECT_NAME}:${NEEOAPP_VERSION}
+    #build:
+    #  context: ./build/
+    #  dockerfile: Dockerfile
+    container_name: BrainMetaBeta
+    privileged: true
+    volumes:
+      - /media/Media/NEEO/Runtime/Beta/cp6:/steady/neeo/cp6
+      - /media/Media/NEEO/Runtime/Beta/cp6/CP6Settings.json:/opt/cp6/CP6Settings.json
+      - /dev/bus/usb:/dev/bus/usb 
+      - /etc/timezone:/etc/timezone:ro
+    restart: unless-stopped
+    hostname: NEEOBETA
+    networks:
+     metavlan:
+       ipv4_address: 192.168.aaa.bbb
+    environment:
+     - BrainIP='192.168.xxx.yyy'
+     - Severity=VERBOSE
+     - TZ=Europe/Amsterdam
+
+networks:
+  metavlan:
+       external: true
