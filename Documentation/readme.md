@@ -42,6 +42,14 @@ If Your NEEO Remote (official name is NEEO TR2) was already connected via Wifi t
 2. Wifi Password
 3. IP-address of your Brain.
 
+You HAVE to have at least one driver in the /opt/meta/active directory (noticed this when testing on ARM): meta connects to Brain via the SDK, but that fails if no drivers are identified. Brain then says: why do you offer yourself as an SDK-adapter but not offering any driver? You'll see this message:
+  ******** Severe error: Message type = { Code: 'E', Color: '\x1B[31m' } Component: meta content: Failed running Neeo with error: Error: Empty collection! ******** 
+
+Another pitfall is to start brain without any meta running. As Brain wants some "cloud-data", it needs the url of Meta that provides that data.
+
+I've tested the ARM-versions of both Brain and Meta on an Raspberry Pi 3B (that's already an ancient RPI) running Raspberry PI OS Lite (64 bit) (The Trixie version, with no desktop).
+Do not expect snappy responses, but it works...
+
 When you startup your TR2, it will try to connect via the same wifi to the IP-Address it used before.
 When your Docker image uses the same IP-address as the physical Brain, nothing will change nd yourn TR2 will acrt normally. Obviously, your physical Brain should be powered down.
 However, if you do not use the same IP-address, then the TR2 will not be able to connect to the virtual Brain as it hads no knowledge of where to look. 
