@@ -31,11 +31,13 @@ var BrainBroadLink = {};
 var NeeoHostName;
 var Settings = {};
 var CP6SettingsFile = "CP6Settings.json";
+var JN5168IP = false;
+var JN5168IPAddress;
+
 
 var SettingsFile = "/steady/neeo/cp6/"+CP6SettingsFile 
 //var SettingsFile = __dirname + "/"+CP6SettingsFile 
 var UseJN516x;
-var JN5168IP;
 var IRUse=""
 
 const currChannelArray = [];        
@@ -226,7 +228,7 @@ const currChannelArray = [];
                 listPageSize: process.env.TR2_LIST_PAGE_SIZE || 64,
                 maxPayloadSize: process.env.TR2_MAX_PAYLOAD_SIZE || 980,
                 coapPort: process.env.TR2_PUSH_UPDATE_COAP_SERVER_PORT || 5683,
-                routingTableRefreshTimeMs: process.env.TR2_ROUTING_TABLE_REFRESH_INTERVAL_MS || 3e5
+                routingTableRefreshTimeMs: process.env.TR2_ROUTING_TABLE_REFRESH_INTERVAL_MS || 36e5
             },
             tr2coapserver: {
                 listeningPort: process.env.TR2_COAPSERVER_PORT || 3901,
@@ -1853,6 +1855,7 @@ const currChannelArray = [];
 }, function(e, t, r) {// Function 31 JN5168 Bootstrap
     "use strict";
     CP6Functions(LogThis)("Function 31").verbose("JN5168 Bootstrap");
+    var FirstTime=true;
 
     function n(e) {
         return function(e) {
@@ -1881,33 +1884,58 @@ e.exports.bootstrapJn5168 = function() {
         return o.resolve();
     }
 
+    /*
+    * Function bootstrapJn5168 determines how to reach a jn5168-chip so it can communicate over 6lowpan (pairing remotes), send & learn infrared and blink visible LED
+    *
+    * As this custom firmware does not run on a physical NEEO Brain, it cannot perform any of these actions by itself
+    * By using the NEEO Brain's hardware capabilities in this area, we CAN perform all of these functions.
+    *    Just let NEEO Brain handle 6lowpan and LEDs, that's all it needs to do. This way, the limited (and a bit outdated hardware) can be still used perfectly!
+    * One thing to keep in mind is that the jn5168 is communicating with (and relying heavily on!) a border router that bridges JN5168 and normal IPv6-network. 
+    * Please note that this custom firmware will most likely be running on docker, where using IPv6 is a bit more involved.
+    * Therefore I created a bridge-process that runs on NEEO Brain and advertises its bridge function as a service to the outer world.
+    * This bridge-process has a listener on its IPv4-address and forwards the request (and params associated with it) to the Border Router over IPv6 and back.
+    * This way, the eocker container can remain unaware of IPv6-traffic, but can still communciate with border-router. 
+    */
     a.debug("BOOTSTRAP_JN5168 - Starting with mDNS Discovery");
     const t = c.jn5168RestIpFile;
-    CP6Functions(LogThis)("Function 31").verbose("getting hostname to find broder-router");
-    const bridgeHostname = r(12).hostname() + '-jn5168';
+    CP6Functions(LogThis)("Function 31").verbose("getting hostname to find border-router");
+    const bridgeHostname = r(110).hostname().toString() + '-jn5168';
+
     a.debug("BOOTSTRAP_JN5168 - Starting with mDNS Discovery",bridgeHostname);
-    /**
-     * Internal function to perform mDNS discovery AND process the file that contains the IP-address of the border-router
+    /*
+     * Internal function to:
+     * - Is JN5168-IPAddress defined in CP6Settings?
+     * - mDNS discovery on servicename <hostname> appended with -jn5168 
+     * - use content of /var/opt/neeo/nbr-rest.json
+     * process the file that contains the IP-address of the border-router
+     * 
+     * If any change in IP-address is detected, it will reflect this in the internal registratin file (/var/opt/neeo/nbr-rest.json)
+     * 
+     * Please note that although we use the term "communicate with jn5168" and "jn5168IPAddress", 
+     *      what actually happens is that we communciate with the border router that controls the jn5168-chip
      */
+
      function performDiscoveryAndProcess() {
         a.debug("Running scheduled mDNS discovery for:", bridgeHostname);
         
         // 1. Voer de mDNS query uit
-        return getBridgeIp(bridgeHostname)
+        return getBridgeIp(r,bridgeHostname,FirstTime)
             .then(ip => {
                 if (ip) {
-                    if (ip == JN5168IP)
+                    if (!FirstTime &&ip == JN5168IPAddress ) 
                         return a.debug("mDNS Discovery successful, same IP-address:", ip);
                     else
                         {a.debug("mDNS Discovery successful and IP changed, updating file with:", ip);
-                        JN5168IP=ip;
-                        // 2. Write new IP to file
+                        JN5168IPAddress=ip;
+                        d.baseUrl = "http://" + ip + ":" + c.jn5168Port
+                        FirstTime=false;
+                        // 2. Write (new) IP to file
                         return fs.promises.writeFile(t, "{ \"nbr_web_server\" : \"" + ip + "\"}", 'utf8');
                         }
                 }
                 a.debug("mDNS Discovery returned no IP, proceeding with existing file");
             })
-            .catch(err => {
+            .catch(err => {console.log(err)
                 a.error("mDNS Discovery error during interval, attempting fallback", { error: err.message });
             })
             .then(() => {
@@ -1915,6 +1943,12 @@ e.exports.bootstrapJn5168 = function() {
                 return e();
             });
     }
+    function UpdateNbrFile( d,nbr_web_server, jn5168Port)
+    {
+        d.baseUrl === "http://" + cfg.nbr_web_server + ":" + c.jn5168Port
+    }
+
+    
 
     /**
      * Original internal function to read and process the NBR file
@@ -5403,7 +5437,7 @@ function n(payload, remoteInfo, socket) {
                             {Object.entries(device.macros.store).forEach(([key, data]) => 
                                 {if (device.details.sourceName === e.name)    // are we processing the newly added SDKAdapter? 
                                     {CP6Functions(LogThis)("Function 119").debug("Processing SDKAdapter button "+data.name)
-                                        if (data.name == METAREINIT)             // did we define a METAREINIT button in this device?
+                                    if (data.name == METAREINIT)             // did we define a METAREINIT button in this device?
                                         {CP6Functions(LogThis)("Function 119").debug("Processing SDKAdapter 5 ")
                                         // Prepare url to trigger the push of the METAREINIT button
                                         theUrl="http://127.0.0.1:3000/v1/projects/home/rooms/"+thisroom.key+"/devices/"+device.key+"/macros/"+key+"/trigger"
@@ -10601,7 +10635,7 @@ CP6Functions(LogThis)("Function 174").verbose("checking uiAction e.uiAction",e);
         CP6Functions(LogThis)("Function 223").verbose("DuiroSpecsSource: _getSpec done t",t)
 
         return t || o.reject(new Error("no such devicespec: " + e)), o.resolve(t)
-    }, p.prototype._stripGenericCommandsets = function(e) {
+    }, p.prototype._stripGenericCommandsets = function(e) { // added log
 
         if (!e.commandSets) return e;
         if (e.isGeneric) {
@@ -11791,6 +11825,7 @@ return this._syncFileList();
     }
 
     function s(e) {
+        // added log
         return {
             name: e.details.name,
             type: e.details.type,
@@ -13020,9 +13055,11 @@ return this._syncFileList();
                 retryStatusCode: 503,
                 payloadDurationMs: 0
             })
-        }(r, this.irRetryDelay);
-        const nx = this.queuePromise.then(() => this._postRequestHelper(e, t, r));
-        return this.queuePromise = nx.catch(() => {}), nx
+        }(r, this.irRetryDelay); // this is probably an incorr3ct leftover from broadlink conversion.
+//        const nx = this.queuePromise.then(() => this._postRequestHelper(e, t, r));
+//        return this.queuePromise = nx.catch(() => {}), nx
+        const n = this.queuePromise.then(() => this._postRequestHelper(e, t, r));
+        return this.queuePromise = n.catch(() => {}), n
     }, 
     p.prototype._BroadlinkpostRequestHelper = function(e, t, r) {
         a.debug("send Payload to Broadlink (no JN516x available ))", {
@@ -13095,11 +13132,10 @@ return this._syncFileList();
             }), i.reject(n))
         })
     }, p.prototype._postRequestHelper = function(e, t, r) {
-        a.debug("send Payload to NBR JN5168", {
-            path: e,
-            uri: this.baseUrl + e,
-            method: "POST"
-        });
+
+        CP6Functions(LogThis)("Function 288").verbose("JN5168 _postRequestHelper e",e)
+        CP6Functions(LogThis)("Function 288").verbose("JN5168 _postRequestHelper t",t)
+
         const o = n({
             uri: this.baseUrl + e,
             method: "POST",
@@ -13111,7 +13147,7 @@ return this._syncFileList();
             },
             body: t
         });
-        CP6Functions(LogThis)("Function 288").verbose("Going to call border-router",o.host)
+
         return i.resolve(o).delay(r.payloadDurationMs).then(() => {
             d.increaseCounter("jn5168-call-succeeded"), a.debug("JN5168_CALL_SUCCEEDED", {
                 retryCount: r.retryCount,
@@ -18871,32 +18907,39 @@ return this._syncFileList();
                     url: e
                 });
                 CP6Functions(LogThis)("Function 443").debug("UDP handleWifiRequest using extra logic to respond to IP-requests")
-                var LookingFor="WHO_IS_NEEO->"+NeeoHostName;
-                try { 
-                    if (e == LookingFor)
-                        {var reply = Buffer.from("I_AM_NEEO");                            
-                        let targetAddress = remoteInfo.address;
-                        if (remoteInfo.family === 'IPv4' && !targetAddress.includes('::ffff:')) {
-                            targetAddress = `::ffff:${targetAddress}`;
-                        }
-                        CP6Functions(LogThis)("Function 443").verbose("Sending our IP-address back to Border-router @"+targetAddress)
-                        socket.coapServer._sock.send(
-                            reply, 
-                            0, 
-                            reply.length, 
-                            remoteInfo.port, 
-                            targetAddress, 
-                            (err) => {
-                                if (err) {
-                                    console.error("UDP Reply failed", err);
-                                    return reject(err); // Now reject is defined
-                                }
-                                CP6Functions(LogThis)("Function 443").debug("Sent succesfully")
-                                return;
-                                }
-                            );   
+                var LookingFor="WHO_IS_NEEO->";
+                var New_e=e.toString('utf8');
+                try {
+                    if (New_e.startsWith(LookingFor))
+                        {CP6Functions(LogThis)("Function 443").debug("A JN516x is broadcasting to get its Brain",New_e)
+                        LookingFor="WHO_IS_NEEO->"+NeeoHostName;
+                        if (New_e == LookingFor)
+                        {
+                            var reply = Buffer.from("I_AM_NEEO");                            
+                            let targetAddress = remoteInfo.address;
+                            if (remoteInfo.family === 'IPv4' && !targetAddress.includes('::ffff:')) {
+                                targetAddress = `::ffff:${targetAddress}`;
+                            }
+                            CP6Functions(LogThis)("Function 443").verbose("Sending our IP-address back to Border-router @"+targetAddress)
+                            socket.coapServer._sock.send(
+                                reply, 
+                                0, 
+                                reply.length, 
+                                remoteInfo.port, 
+                                targetAddress, 
+                                (err) => {
+                                    if (err) {
+                                        console.error("UDP Reply failed", err);
+                                        return reject(err); // Now reject is defined
+                                    }
+                                    CP6Functions(LogThis)("Function 443").debug("Sent succesfully")
+                                    return;
+                                    }
+                                );   
+                            } 
                         return;
-                        } 
+
+                        }
                     } catch(err) {console.log("Error sending UDP-datagram back to border-router",err);return}
             try {
                 CP6Functions(LogThis)("Function 443").verbose("'Normal' request from TR2",e)
@@ -21700,7 +21743,7 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
                         const n = r.digest("hex");
                         t(n)
                     }), n.on("error", e => {
-                        CP6Functions(LogThis)("Function 505").verbose("checksum error", e), t()
+                        CP6Functions(LogThis)("Function 505").error("checksum error", e), t()
                     })
                 })
             },
@@ -21709,20 +21752,23 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
         downloadJSONContent : 
             function(e) {
                 CP6Functions(LogThis)("Function 505").verbose("downloadJSONContent")
-                return this.downloadContent(e).then(mycontent => (typeof mycontent == "string" ? JSON.parse(mycontent)  : (mycontent))).catch(err => (CP6Functions(LogThis)("Function 505").verbose("Error converting json",err)))
+                return this.downloadContent(e).then(mycontent => (typeof mycontent == "string" ? JSON.parse(mycontent)  : (mycontent))).catch(err => (CP6Functions(LogThis)("Function 505").error("Error converting json",err),Promise.reject(err)))
             },    
 
         JSONContent : 
             function(e) {
                 CP6Functions(LogThis)("Function 505").verbose("noCloud - JSONContent")
-                return JSON.parse(e).catch(err => CP6Functions(LogThis)("Function 505").verbose("File e.name not found",err,e.name))
+                return JSON.parse(e).catch(err => (CP6Functions(LogThis)("Function 505").error("File not found",e.name),Promise.reject(err)))
             },    
             
         downloadContent : 
             function(e) {
                 CP6Functions(LogThis)("Function 505").verbose("noCloud - downloadContent")
                 var dest = e.targetDir+"/"+e.name;
-                return this.download(e).then( () => this.loadContent(dest)).then(content => (content)).catch(err => CP6Functions(LogThis)("Function 505").verbose("File e.name not found",err,e.name))
+                return this.download(e).then( () => this.loadContent(dest)).then(content => (content)).catch(err => {
+                    CP6Functions(LogThis)("Function 505").verbose("File e.name not found",err,e.name);
+                    throw err;
+                })
             },    
     
         loadContent : 
@@ -21733,7 +21779,10 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
                         encoding: "utf-8"
                     })
                 }
-                catch (err) {CP6Functions(LogThis)("Function 505").verbose("Catch",err)}
+                catch (err) {
+                    CP6Functions(LogThis)("Function 505").verbose("Catch",err);
+                    throw err;
+                }
             },    
 
         moveTempFileToDest:
@@ -21743,7 +21792,8 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
                 var dest = t.targetDir+"/"+t.name;
                 return this.copy(src,dest)
                 .catch(err => {
-                    CP6Functions(LogThis)("Function 505").verbose("Catch foutje:",err)
+                    CP6Functions(LogThis)("Function 505").verbose("Catch foutje:",err);
+                    throw err;
                 })
 
             },
@@ -21771,16 +21821,35 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
                 var url = CloudReplacementUrl  +"?type="+e.type+"&name="+e.name;
                 var dest = e.targetDir+"/"+e.name;
                 CP6Functions(LogThis)("Function 505").verbose("getting file:",e,url,dest,t.name)
-                return  s(i(url), r) //.then(x => this._checkSum(t.name))
+                
+                // Vooraf opruimen als het bestand al bestaat op de bestemming
+                if (o.existsSync(dest)) {
+                    CP6Functions(LogThis)("Function 505").verbose("Oud bestand gevonden, verwijderen...", dest);
+                    o.unlinkSync(dest);
+                }
+
+                const req = i(url);
+
+                // Controleer de Express statuscode zodra de headers binnenkomen
+                req.on('response', (response) => {
+                    if (response.statusCode >= 400) {
+                        req.destroy(new Error(`HTTP Status ${response.statusCode} voor ${e.name}`));
+                    }
+                });
+
+                // s() start de stream en geeft de originele Bluebird Promise terug
+                return s(req, r)
                 .then(r => this.copy(t.name, dest))
                 .catch(err => {
-                    CP6Functions(LogThis)("Function 505").verbose("Catch foutje:",err)
+                    CP6Functions(LogThis)("Function 505").verbose("Catch foutje:",err);
+                    throw err;
                 })
                 .finally(() => {
                     t.removeCallback()
                 })
             }
         }
+        
 },  function(e, t)  { // Function 506 Custom functionality - added without NEEO development
         "use strict";
         CP6Functions(LogThis)("Function 506").verbose("CurrentChannel")
@@ -21935,43 +22004,49 @@ function ReplaceSettingsFile(newURL)
         });
 }
 
-async function getBridgeIp(name) {
-  // 1. Normaliseer de input (case-insensitive check voor .local)
-  const normalizedName = name.toLowerCase();
-  const target = normalizedName.endsWith('.local') ? normalizedName : `${normalizedName}.local`;
-  
-  return new Promise((resolve, reject) => {
-    const timeoutId = setTimeout(() => {
-      mdns.removeListener('response', onResponse);
-      CP6Functions(LogThis)("Function 33").verbose("Mdns timeout: not found after 5 seconds.",target);
-      resolve(null); 
-    }, 5000);
+async function getBridgeIp(r,name,FirstTime) {
 
-    const onResponse = (response) => {
-      const records = [...response.answers, ...response.additionals];
-      
-      const match = records.find(r => 
-        r.name && 
-        r.name.toLowerCase() === target && 
-        r.type === 'A'
-      );
+    if (JN5168IP) {
+        if (FirstTime)
+            CP6Functions(LogThis)("getBridgeIp").verbose("CP6Settings defined border-router as fixed on",JN5168IPAddress);
+        return JN5168IPAddress;
+    }
 
-      if (match) {
-        clearTimeout(timeoutId);
-        mdns.removeListener('response', onResponse);
-        resolve(match.data);
-      }
-    };
+    const mDNSTimeout = 20000;
+    const normalizedName = name.toLowerCase();
+    if (FirstTime)
+        CP6Functions(LogThis)("getBridgeIp").verbose("Trying to determine IPv4-address of border-router bridge by querying DNS:",normalizedName);
+    return new Promise((resolve, reject) => {
+        const timeoutId = setTimeout(() => {
+            mdns.removeListener('response', onResponse);
+            CP6Functions(LogThis)("getBridgeIp").warning("Mdns timeout: not found after",mDNSTimeout,"seconds.",normalizedName);
+            resolve(null); 
+        }, mDNSTimeout);
 
-    mdns.on('response', onResponse);
+        const onResponse = (response) => {
+            const records = [...response.answers, ...response.additionals];
+            const match = records.find(r => 
+                r.name && 
+                r.name.toLowerCase().startsWith(normalizedName) &&
+                (r.type === 'SRV' || r.type === 'A'))
+            if (match) {
+                clearTimeout(timeoutId);
+                mdns.removeListener('response', onResponse);
+                if (FirstTime)
+                    CP6Functions(LogThis)("getBridgeIp").verbose("Got loction of border router bridge:",match.data.target);
+                resolve(match.data.target);
+            }
+        };
 
-    mdns.query({
-      questions: [{
-        name: target,
-        type: 'A'
-      }]
+        mdns.on('response', onResponse);
+
+        mdns.query({
+            questions: [
+                { name: '_http._tcp.local', type: 'PTR' },
+                { name: `${normalizedName}._http._tcp.local`, type: 'SRV' }
+            ]
+        });
     });
-  });
 }
 
 async function getCP6Settings(r) {
@@ -22006,11 +22081,19 @@ async function getCP6Settings(r) {
                     if (Settings.UseJN516x) {
                         UseJN516x = true;
                         BrainBroadLink = false;
-                        let hostname = hn + 'jn5168';
+                        let hostname = NeeoHostName + 'jn5168';
                         metaLog({type:LOG_TYPE.ALWAYS, content: "Brain will try to use JN516x", hostname});
                     } else 
                         UseJN516x = false;
-                    if (IRUse=="BROADLINK" && Settings.BrainBroadLink != undefined && !Settings.BrainBroadLink.broadlinkIp.includes("<")) {
+
+                    if (Settings.JN5168IP) {
+                        JN5168IP = true;
+                        JN5168IPAddress = Settings.JN5168IP;
+                        metaLog({type:LOG_TYPE.ALWAYS, content: "Brain will try to use JN5168 at IPAddress", JN5168IPAddress});
+                    } else 
+                        JN5168IP = false;
+                        
+                        if (IRUse=="BROADLINK" && Settings.BrainBroadLink != undefined && !Settings.BrainBroadLink.broadlinkIp.includes("<")) {
                         BrainBroadLink = Settings.BrainBroadLink;
                         metaLog({type:LOG_TYPE.ALWAYS, content: "Brain uses broadlink! ", params: BrainBroadLink});
                     } else if (IRUse=="BROADLINK")
