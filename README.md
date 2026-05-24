@@ -43,3 +43,9 @@ Adding support to allow a USB WIFI-stick to be usxed by NEEO. This allows changi
 It is working as prototype in my own lab, will publish more details at some time. Keep in mind that drivers for usb-wificard are included in the Linux kernal, so using "well known usb wifi sticks" is adviced.
 
 ### V3.8 adds suport for a wifi stick. See Documentation folder.
+
+### V3.9 is all about preparations for adding jn5168-support
+I'm investing quite some time on getting the virtual Docker container for MetaBrain as compatible with the original NEEO-Brain as possible.
+The biggest functional area that is lacking, is support for native Infrared, LED and, most important, the lack of 6lowpan communication.
+The latter has the highest priority for me: allow a physical NEEO Remote (TR2) to pair with the virutal Brain.
+In my lab-environment, Im making good progress, but it is still highly experimental; for that reason, I'm not disclosing anything on it yet.
