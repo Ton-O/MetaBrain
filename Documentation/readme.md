@@ -50,6 +50,8 @@ Another pitfall is to start brain without any meta running. As Brain wants some 
 I've tested the ARM-versions of both Brain and Meta on an Raspberry Pi 3B (that's already an ancient RPI) running Raspberry PI OS Lite (64 bit) (The Trixie version, with no desktop).
 Do not expect snappy responses, but it works...
 
+Another thing to know: I did NOT include the original Infrared-database in the NoCloud folder.... That database might have some copyright or can be seen as Intellectual Capital, so I'm not going to put that in a public area. If you have a physical NEEO-brain, it can be found there. If you want to know where, you my ask me.
+
 When you startup your TR2, it will try to connect via the same wifi to the IP-Address it used before.
 When your Docker image uses the same IP-address as the physical Brain, nothing will change nd yourn TR2 will acrt normally. Obviously, your physical Brain should be powered down.
 However, if you do not use the same IP-address, then the TR2 will not be able to connect to the virtual Brain as it hads no knowledge of where to look. 
