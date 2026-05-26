@@ -18997,14 +18997,10 @@ try {
     }
     };
     const s = function(e) {
-        console.log("const s",e);
         if (!e || !e.pathname || "/" === e.pathname) throw new Error("INVALID_SHORT_URL");
         let t = e.pathname;
         "/" === t[0] && (t = t.slice(1));
-        console.log("const s deel 2",t);
-        const r = i.longUrl(t);
-        console.log("const s deel 3",r);
-        if (r) console.log("const s deel 4",n.parse(r));
+        const r = i.longUrl(t);       
         return r ? n.parse(r) : e
     }
 }, function(e) {// Function 446 exports = require("querystring")
@@ -19017,7 +19013,6 @@ try {
     e.exports = {
         urlMatchInfraredTrigger: function(e, t) {
             CP6Functions(LogThis)("Function 443").verbose("urlMatchInfraredTrigger a");
-            console.log("urlMatchInfraredTrigger b",t);
             return t && t.name ? t.value || !1 === t.value ? null : e.match(o) : null
         }
     }
