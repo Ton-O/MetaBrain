@@ -1889,7 +1889,7 @@ e.exports.bootstrapJn5168 = function() {
     *
     * As this custom firmware does not run on a physical NEEO Brain, it cannot perform any of these actions by itself
     * By using the NEEO Brain's hardware capabilities in this area, we CAN perform all of these functions.
-    *    Just let NEEO Brain handle 6lowpan and LEDs, that's all it needs to do. This way, the limited (and a bit outdated hardware) can be still used perfectly!
+    *    Just let NEEO Brain handle 6lowpan and LEDs, that's all it needs to do. This way, the limited (and a bit outdated hardware) can still be used perfectly!
     * One thing to keep in mind is that the jn5168 is communicating with (and relying heavily on!) a border router that bridges JN5168 and normal IPv6-network. 
     * Please note that this custom firmware will most likely be running on docker, where using IPv6 is a bit more involved.
     * Therefore I created a bridge-process that runs on NEEO Brain and advertises its bridge function as a service to the outer world.
@@ -15603,10 +15603,10 @@ return this._syncFileList();
             o.debug("init", e), this.timerId = void 0, this.wifiAPModeActive = !1, this.systemctl = e.systemctl, this.parameterStart = e.parameterStart, this.parameterStop = e.parameterStop, this.disableAccessPointModeAfterMs = e.disableAccessPointModeAfterMs
         };
     c.prototype.shortpressHandler = function() {
-        CP6Functions(LogThis)("Function 354").verbose("shortpressHandler") // $$$
+        CP6Functions(LogThis)("Function 355").verbose("shortpressHandler") // $$$
         return o.debug("touchbutton pressed, enable jn discovery mode"), i.increaseCounter("touchbutton-pressed"), o.event("NEEO Pairing mode enabled"), s.enableDiscoveryMode()
     }, c.prototype.disableAccesspointMode = function() {
-        CP6Functions(LogThis)("Function 354").verbose("disableAccesspointMode") // $$$
+        CP6Functions(LogThis)("Function 355").verbose("disableAccesspointMode") // $$$
         return a(this.systemctl, this.parameterStop).then(() => (this.wifiAPModeActive = !1, o.event("NEEO Access Point disabled"), s._ledOn())).catch(e => {
             o.error("AP_MODE_DISABLE", {
                 msg: e.message
@@ -15622,8 +15622,9 @@ return this._syncFileList();
             })
         })
     }, c.prototype.longpressHandler = function() { // This functionality is not necessary anymore
-        CP6Functions(LogThis)("Function 354").verbose("longpressHandler") // $$$
-        return o.debug("long touchbutton pressed, toggle wifi ap mode"), i.increaseCounter("long-touchbutton-pressed"), clearTimeout(this.timerId), this.wifiAPModeActive ? this.disableAccesspointMode() : this._enableAccesspointMode()
+        CP6Functions(LogThis)("Function 355").verbose("longpressHandler") // $$$
+        return CP6Functions(LogThis)("Function 355").always("Long touchbutton pressed, toggle wifi ap mode"),
+            i.increaseCounter("long-touchbutton-pressed"), clearTimeout(this.timerId), this.wifiAPModeActive ? this.disableAccesspointMode() : this._enableAccesspointMode()
     }, c.prototype.userBlink = function() {
         return this.wifiAPModeActive ? n.resolve() : s.ledIdentBrain()
     }
@@ -22019,12 +22020,36 @@ async function getBridgeIp(r,name,FirstTime) {
     return new Promise((resolve, reject) => {
         const timeoutId = setTimeout(() => {
             mdns.removeListener('response', onResponse);
-            CP6Functions(LogThis)("getBridgeIp").warning("Mdns timeout: not found after",mDNSTimeout,"seconds.",normalizedName);
+            CP6Functions(LogThis)("getBridgeIp").info("Mdns timeout: not found after",mDNSTimeout,"seconds.",normalizedName);
             resolve(null); 
         }, mDNSTimeout);
 
         const onResponse = (response) => {
             const records = [...response.answers, ...response.additionals];
+
+    const txtMatch = records.find(r => 
+                r.name && 
+                r.name.toLowerCase().startsWith(normalizedName) && 
+                r.type === 'TXT'
+            );
+
+            if (txtMatch && Array.isArray(txtMatch.data)) {
+                // Avahi TXT data is vaak een array van buffers of strings (bijv. [ <Buffer 69 70 3d 31... > ] of ["ip=192.168.73.95"])
+                for (const element of txtMatch.data) {
+                    const row = Buffer.isBuffer(element) ? element.toString('utf8') : String(element);
+                    if (row.startsWith('ip=')) {
+                        const extractedIp = row.split('=')[1];
+                        if (extractedIp) {
+                            clearTimeout(timeoutId);
+                            mdns.removeListener('response', onResponse);
+                            if (FirstTime)
+                                CP6Functions(LogThis)("getBridgeIp").verbose("Got direct IP of border router bridge from TXT record:", extractedIp);
+                            resolve(extractedIp);
+                            return;
+                        }
+                    }
+                }
+            }
             const match = records.find(r => 
                 r.name && 
                 r.name.toLowerCase().startsWith(normalizedName) &&
