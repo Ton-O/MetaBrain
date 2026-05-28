@@ -1,4 +1,7 @@
-# EXPERIMENTAL BRANCH ** CONTAINS WORK IN PROGRESS **** 
+# V4.0 has been released!!!
+This release has integration of your Docker MetaBrain with the original (physical) NEEO Brain, allowing the physical device to send IR, press the lid and more important: pair NEEO Remotes (TR2).
+More details will be provided in the README-files (working oin them right now) 
+# As always:  EXPERIMENTAL BRANCH ** CONTAINS WORK IN PROGRESS **** 
 This experimental branch contains code to let the Docker-based MetaBrain communicate with an external JN516x.
 Code is stable at this moment, but next step is to connect an actual JN516x to it and test with that configuration.
 # Brain functionality for your NEEO-remotes as the original providers abandoned the device. 

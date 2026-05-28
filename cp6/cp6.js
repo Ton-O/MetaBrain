@@ -5393,10 +5393,9 @@ function n(payload, remoteInfo, socket) {
                 CloudReplacementUrl = CloudReplacement+":6468/download"
                 CP6Functions(LogThis)("Function 119").always("We've assigned ",urlComponents[0]+":"+urlComponents[1],"as the source to replace NEEO cloud")
                 }
-            setTimeout(() => {
+
             CP6Functions(LogThis)("Function 119").verbose("Calling METAREINIT")
             this.METAREINIT(e,t,r);
-            }, 3000);
 
             return !0 === e.protected && (t.protected = !0), this.sdkAdapters.set(e.name, t), !0
         }
@@ -8993,14 +8992,7 @@ CP6Functions(LogThis)("Function 174").verbose("checking uiAction e.uiAction",e);
         E = r(212),
         y = r(213),
         _ = r(115),
-        noCloud = r(505),
-        NoCloudc = r(227),
-        NoCloudo = r(26),
-        NoCloudi = r(123),
-        NoClouds = r(226),
-        NoClouda = r(41),
-        NoCloudoo = r(1),  
-        NoCloudsf = r(37),      
+        noCloud = r(505),     
         NoCloudchksum = r(225),
         v = [/^no stored account data found$/, /^ENOENT:/],
         T = {
@@ -9743,11 +9735,12 @@ CP6Functions(LogThis)("Function 174").verbose("checking uiAction e.uiAction",e);
             return Buffer.concat([r.update(t), r.final()])
         };
     t.encryptJson = function(e, t) {
-        const r = new Buffer(JSON.stringify(t));
+        const r = Buffer.from(JSON.stringify(t));
         return i(e, r)
     }, t.decryptDataToJson = function(e, t) {
         const r = s(e, t);
         return JSON.parse(r)
+    
     }
 }, function(e, t, r) {// Function 211 PromiseCache
     "use strict";
@@ -13349,42 +13342,70 @@ return this._syncFileList();
     const n = r(1),
         o = r(26),
         i = r(41),
-        s = r(123),
+        //s = r(123),xs=r(507),
+        s = r(507),
         a = r(0)("FirmwareDownloader"),
         c = r(3);
     e.exports = {
         downloadFirmware: function(e, t = 252e4) {
-            return new n((r, n) => {
+            const Bluebird = r(1); // Your Bluebird module (the 'n' in your original code)
+
+            return new s((resolve, reject) => {
+                const d = Date.now();
+                const l = o.createWriteStream(e.downloadPath);
+                const controller = new AbortController();
+                let p, h, g;
+
                 function i() {
-                    h || g || (a.info("FIRMWARE_DOWNLOAD_COMPLETE", {
+                    if (h || g) return;
+                    a.info("FIRMWARE_DOWNLOAD_COMPLETE", {
                         firmwareVersion: e.version,
                         durationMs: Date.now() - d
-                    }), clearTimeout(p), r(e))
+                    });
+                    clearTimeout(p);
+                    resolve(e);
                 }
 
                 function u() {
-                    const t = Date.now() - d;
-                    a.debug("FIRMWARE_DOWNLOAD_TIMEOUT", {
-                        durationMs: t,
-                        firmwareVersion: e.version
-                    }), h = !0, c.increaseCounter("firmware-download-failed"), m.abort(), n(new Error(`Download timeout triggered after ${t}ms`))
+                    const elapsed = Date.now() - d;
+                    a.debug("FIRMWARE_DOWNLOAD_TIMEOUT", { durationMs: elapsed, firmwareVersion: e.version });
+                    h = true;
+                    c.increaseCounter("firmware-download-failed");
+                    controller.abort(); // Cancels the axios request
+                    reject(new Error(`Download timeout triggered after ${elapsed}ms`));
                 }
-                const d = Date.now(),
-                    l = o.createWriteStream(e.downloadPath);
-                let p, h, g;
-                a.debug("FIRMWARE_DOWNLOAD", {
+
+                a.debug("FIRMWARE_DOWNLOAD", { url: e.url, targetdir: e.downloadPath, downloadTimeoutMs: t });
+                c.increaseCounter("firmware-download-started");
+
+                p = setTimeout(u, t);
+
+                axios({
+                    method: 'get',
                     url: e.url,
-                    targetdir: e.downloadPath,
-                    downloadTimeoutMs: t
-                }), c.increaseCounter("firmware-download-started");
-                const m = s(e.url);
-                m.on("response", function(e) {
-                    200 === e.statusCode ? (a.debug("FIRMWARE_DOWNLOAD_START"), p = setTimeout(u, t), e.on("end", i)) : (c.increaseCounter("firmware-download-failed"), n(new Error(`wrong status code: ${e.statusCode} ${e.statusMessage}`)))
-                }).on("error", function(e) {
-                    h || (g = !0, c.increaseCounter("firmware-download-failed"), clearTimeout(p), n(e))
-                }).pipe(l)
-            })
+                    responseType: 'stream',
+                    signal: controller.signal // Link axios to the abort controller
+                })
+                .then(response => {
+                    if (response.status === 200) {
+                        a.debug("FIRMWARE_DOWNLOAD_START");
+                        response.data.pipe(l);
+                        response.data.on("end", i);
+                    } else {
+                        c.increaseCounter("firmware-download-failed");
+                        reject(new Error(`wrong status code: ${response.status} ${response.statusText}`));
+                    }
+                })
+                .catch(err => {
+                    if (h) return; // Ignore if timeout already triggered
+                    g = true;
+                    c.increaseCounter("firmware-download-failed");
+                    clearTimeout(p);
+                    reject(err);
+                });
+            });
         },
+
         validateChecksum: function(e) {
             CP6Functions(LogThis)("Function 291").verbose("validateChecksum e:",e); 
             try {
@@ -13620,7 +13641,7 @@ return this._syncFileList();
                 r(e.touchbuttonPin)
             } catch (e) {CP6Functions(LogThis)("Function 295").debug("GPIO touchbutton failed; e:",e); 
                 i.error("GPIO_WATCHBUTTON_FAILED", e.message)
-            }*/
+            }
             try {
                 this.regionCode = function(e, t) {
                     const r = new s(e, "in").readSync(),
@@ -13639,7 +13660,7 @@ return this._syncFileList();
                 })
             } catch (e) {
                 i.error("GPIO_READVERSION_FAILED", e.message)
-            }
+            }*/
         }
     };
     a.prototype.isTouchbuttonPressed = function() {
@@ -16636,7 +16657,7 @@ return this._syncFileList();
             i.on("error", e => {
                 n.debug("TR2_PUSH_NOTIFICATION_FAILED", e.message)
             }), i.on("response", e => {
-                n.debug("TR2_PUSH_RESPONSE"), e && e.payload && e.payload.data && n.debug("response:", new Buffer(e.payload.data))
+                n.debug("TR2_PUSH_RESPONSE"), e && e.payload && e.payload.data && n.debug("response:", Buffer.from(e.payload.data))
             }), i.end(e)
         }), i.resolve())
     }
@@ -17217,7 +17238,7 @@ return this._syncFileList();
     "use strict";
 
     function n(e) {
-        return new Buffer(JSON.stringify(e)).toString("base64")
+       return Buffer.from(JSON.stringify(e)).toString("base64")
     }
     const o = r(1),
         i = r(13),
@@ -17302,7 +17323,7 @@ return this._syncFileList();
     }
 
     function o(e) {
-        return new Buffer(JSON.stringify(e)).toString("base64")
+       return Buffer.from(JSON.stringify(e)).toString("base64")
     }
 
     function i(e) {
@@ -18100,7 +18121,7 @@ return this._syncFileList();
     CP6Functions(LogThis)("Function 429").verbose("Render directoryscreen")
 
     function n(e) {
-        return new Buffer(JSON.stringify(e)).toString("base64")
+       return Buffer.from(JSON.stringify(e)).toString("base64")
     }
     const o = r(13),
         i = r(7),
@@ -19598,7 +19619,7 @@ try {
         parseEncodedListParameter: function(e) {
             const t = function(e) {
                 try {
-                    const t = new Buffer(e, "base64").toString("utf8");
+                    const t = Buffer.from(e, "base64").toString("utf8");
                     return JSON.parse(t)
                 } catch (t) {
                     o.error("DECODE_FAILED", {
@@ -21708,7 +21729,6 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
     const c = r(227),
         f = r(1),
         o = r(26),
-        i = r(123),
         s = r(226),
         l = r(3),
         g = r(37), 
@@ -21808,43 +21828,33 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             }, 
         download: 
             function(e) {
-                CP6Functions(LogThis)("Function 505").verbose("noCloud - download",e)
-                const t = c.fileSync({
-                    dir: "/tmp"//,
-                    //mode: 0o666
-                });
-                r = o.createWriteStream(t.name);
-                var url = CloudReplacementUrl  +"?type="+e.type+"&name="+e.name;
-                var dest = e.targetDir+"/"+e.name;
-                CP6Functions(LogThis)("Function 505").verbose("getting file:",e,url,dest,t.name)
+            const axios = r(507);
+            const Bluebird = r(1); // Import your existing Bluebird module
+
+            // Wrap the axios call in a Bluebird Promise
+            return Bluebird.resolve(axios({
+                method: 'get',
+                url: CloudReplacementUrl + "?type=" + e.type + "&name=" + e.name,
+                responseType: 'stream',
+                timeout: 10000 // Native axios timeout as a fallback
+            })).then(response => {
+                const t = c.fileSync({ dir: "/tmp" });
+                const writeStream = o.createWriteStream(t.name);
                 
-                // Vooraf opruimen als het bestand al bestaat op de bestemming
-                if (o.existsSync(dest)) {
-                    CP6Functions(LogThis)("Function 505").verbose("Oud bestand gevonden, verwijderen...", dest);
-                    o.unlinkSync(dest);
-                }
+                response.data.pipe(writeStream);
 
-                const req = i(url);
-
-                // Controleer de Express statuscode zodra de headers binnenkomen
-                req.on('response', (response) => {
-                    if (response.statusCode >= 400) {
-                        req.destroy(new Error(`HTTP Status ${response.statusCode} voor ${e.name}`));
-                    }
+                return new Bluebird((resolve, reject) => {
+                    writeStream.on('finish', () => resolve(t)); // Pass temp file object
+                    writeStream.on('error', (err) => reject(err));
                 });
-
-                // s() start de stream en geeft de originele Bluebird Promise terug
-                return s(req, r)
-                .then(r => this.copy(t.name, dest))
-                .catch(err => {
-                    CP6Functions(LogThis)("Function 505").verbose("Catch foutje:",err);
-                    throw err;
-                })
-                .finally(() => {
-                    t.removeCallback()
-                })
-            }
+            })
+            .then(t => this.copy(t.name, e.targetDir + "/" + e.name).then(() => t))
+            .finally(t => {
+                if (t && t.removeCallback) t.removeCallback();
+            });
         }
+    }
+        
         
 },  function(e, t)  { // Function 506 Custom functionality - added without NEEO development
         "use strict";
@@ -21958,7 +21968,10 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
             return 1;
         },           
     }
-}
+},
+ function(e)  { // Function 507 Custom functionality - added without NEEO development
+    e.exports = require("axios")
+ } 
 ]);
 function metaMessageHandler(req, res,f)
 { f.debug("metaMessageHandler");
