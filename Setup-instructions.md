@@ -1,4 +1,21 @@
 # This is a summary of all features of this Brain version that are of interest to the user.
+
+## LATEST update (V4.0)
+With the release of repository [NEEOBrain-as-client-to-MetaBrain](https://github.com/Ton-O/NEEOBrain-as-client-to-MetaBrain)
+a number of additional features have become available. These require some changes in CP6Settings.json:
+```
+{"CloudReplacementUrl":"192.168.73.192",
+    "IR":"jn516x",
+    "BrainBroadLink":{"broadlinkIp":"192.168.73.47"},
+    "UseJN516x":true
+}
+```
+New are "UseJN516x":true and "IR":"jn516x".
+- "UseJN516x":true tells Brain to contact a JN516x. Brain will lookup through MDNS <BRAINNAME>-jn5168 to get it's IPv4-address. 
+- "IR":"jn516x" tells Brain to send Infrared-commands over the IPv4-address found. It will also start listening to presses on the Brains lid.
+You can only select "IR": true when you have "UseJN516x":true.
+On the other hand, you can UseJN516x and still send IR over a broadlink device 
+
 ## To start with, for some features / replacements, we need additional configuraration information. Most of that information is related to the  code in cp6.js and is stored/added into the file CP6Settings.json located in /opt/cp6. Keep an eye on this file: /opt/cp6/CP6Settings.json.
 ## No more NEEO-cloud. Where are my...
 As NEEO corporation has shutdown their servers, we need to find other ways to gather information that used to be "in the cloud". The cloud used to host:
