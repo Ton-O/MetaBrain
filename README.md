@@ -1,4 +1,9 @@
 # V4.0 has been released!!!
+
+# MAJOR UPDATE!!
+With this release, I have achieved my personal goal to use the NEEO eco-system running on good and fast hardware.
+That means I no longer strive to get things better for myself. And as very little feedback has come from other persons, this probably means no one else is interested in it. I will therefore keep this (and the other NEEO-related) repository for some months public, but will then return them to private repositories. 
+
 This release has integration of your Docker MetaBrain with the original (physical) NEEO Brain, allowing the physical device to send IR, press the lid and more important: pair NEEO Remotes (TR2).
 More details are provided in the README-files in the repository [NEEOBrain-as-client-to-MetaBrain](https://github.com/Ton-O/NEEOBrain-as-client-to-MetaBrain)
 Check the update in Setup-instructions.md for more details on what to do to activate it in MetaBrain. 
