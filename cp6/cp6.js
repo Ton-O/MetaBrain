@@ -15444,6 +15444,7 @@ return this._syncFileList();
         }))) : n.reject(new Error("INVALID_SSID")) : n.reject(new Error("INVALID_PSK_PASSWORD"))
     }, l.prototype.getSsid = function() {
         CP6Functions(LogThis)("Function 348").verbose("getSSID")
+        CP6Functions(LogThis)("Function 348").verbose(this.credentials)        
         return this.credentials.ssid
     }, l.prototype.getPassword = function() {
         return this.credentials.password
