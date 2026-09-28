@@ -1983,12 +1983,11 @@ e.exports.bootstrapJn5168 = function() {
     h = setInterval(() => {
         performDiscoveryAndProcess().catch(() => {});
     }, c.jn5168RestIpv6FilePollingTimeMs);
-
     g = setInterval(() => {
         d.updateStatistics();
     }, c.nbrStatisticsIntervalInMs);
 
-    CP6Functions(LogThis)("Function 31").debug("JN516x performDiscoveryAndProcess ");
+    CP6Functions(LogThis)("Function 31").debug("JN516x Start first performDiscoveryAndProcess ");
     // Kick off first run
     return performDiscoveryAndProcess();
 };
@@ -22014,61 +22013,128 @@ function ReplaceSettingsFile(newURL)
         });
 }
 
-async function getBridgeIp(r,name,FirstTime) {
+ function searchMDNSRecord(r,records,normalizedName,thisType) {
+    console.log("records") 
+    const Match = records.find(r => 
+                   r.name && 
+                   r.name.toLowerCase().startsWith(normalizedName) && 
+                   r.type === thisType
+                );
+    //processResult = processMDNSRecord(r,Match,records,normalizedName,thisType)
 
-    if (JN5168IP) {
-        if (FirstTime)
-            CP6Functions(LogThis)("getBridgeIp").verbose("CP6Settings defined border-router as fixed on",JN5168IPAddress);
-        return JN5168IPAddress;
+    if (Match) {
+        console.log("Found record for ",normalizedName)
+        // Avahi TXT data is vaak een array van buffers of strings (bijv. [ <Buffer 69 70 3d 31... > ] of ["ip=192.168.73.95"])
+        if (Array.isArray(Match.data))
+            {for (const element of Match.data) 
+                {   const row = Buffer.isBuffer(element) ? element.toString('utf8') : String(element);
+                    var returnThis;
+                    if (row.startsWith('ip=')) {
+                        const extractedIp = row.split('=')[1];
+                        console.log("ip,",extractedIp);
+                        if (extractedIp=="127.0.0.1")    // That's no good..
+                            {
+                                console.log("Genegeerd: TXT record geeft loopback (127.0.0.1)");
+                                continue; // Sla 127.0.0.1 over en zoek door in eventuele andere elementen
+                            }
+                        return "IP,"+extractedIp
+                    }
+                    else
+                    {
+                        console.log("Not an IP:",row);
+                    }
+                }
+            }
+            else
+                {console.log("record with match, but Match.data is not an array:",typeof Match.data,Match.data)
+                return ""
+
+        return returnThis+extractedIp
+        
+        }
     }
+    return "No-MATCH"
+}
+
+async function getBridgeIp(r,name,FirstTime) {
 
     const mDNSTimeout = 20000;
     const normalizedName = name.toLowerCase();
     if (FirstTime)
-        CP6Functions(LogThis)("getBridgeIp").verbose("Trying to determine IPv4-address of border-router bridge by querying DNS:",normalizedName);
+        console.log("Trying to determine IPv4-address of border-router bridge by querying DNS:",normalizedName);
     return new Promise((resolve, reject) => {
-        const timeoutId = setTimeout(() => {
+        let allRecords = []; // Hier verzamelen we alle binnenkomende mDNS records
+        let isFinished = false; // Voorkomt dubbele acties als timeout en response elkaar kruisen
+
+        // Gecentraliseerde helperfunctie voor alle afronding en cleanup
+        const finishAndResolve = (foundIp, logMessage) => {
+            if (isFinished) return;
+            isFinished = true;
+
+            clearTimeout(timeoutId);
             mdns.removeListener('response', onResponse);
-            CP6Functions(LogThis)("getBridgeIp").info("Mdns timeout: not found after",mDNSTimeout,"seconds.",normalizedName);
-            resolve(null); 
+            mdns.destroy();
+            
+            if (logMessage) {
+                if (FirstTime || foundIp !== null) {
+                    CP6Functions(LogThis)("getBridgeIp").verbose(logMessage, foundIp !== null ? foundIp : normalizedName);
+                }
+            }
+            resolve({ ip: foundIp, allRecords });
+        };
+
+        const timeoutId = setTimeout(() => {
+            finishAndResolve(null, `Mdns timeout: not found after ${mDNSTimeout} seconds.`);
         }, mDNSTimeout);
 
         const onResponse = (response) => {
+            if (isFinished) return;
+
             const records = [...response.answers, ...response.additionals];
+            allRecords.push(...records);
 
-    const txtMatch = records.find(r => 
-                r.name && 
-                r.name.toLowerCase().startsWith(normalizedName) && 
-                r.type === 'TXT'
-            );
-
-            if (txtMatch && Array.isArray(txtMatch.data)) {
-                // Avahi TXT data is vaak een array van buffers of strings (bijv. [ <Buffer 69 70 3d 31... > ] of ["ip=192.168.73.95"])
-                for (const element of txtMatch.data) {
-                    const row = Buffer.isBuffer(element) ? element.toString('utf8') : String(element);
-                    if (row.startsWith('ip=')) {
-                        const extractedIp = row.split('=')[1];
-                        if (extractedIp) {
-                            clearTimeout(timeoutId);
-                            mdns.removeListener('response', onResponse);
-                            if (FirstTime)
-                                CP6Functions(LogThis)("getBridgeIp").verbose("Got direct IP of border router bridge from TXT record:", extractedIp);
-                            resolve(extractedIp);
-                            return;
-                        }
-                    }
-                }
+            // attempt nr 1, first look for TXT-records
+            const myResult = searchMDNSRecord(r,allRecords,normalizedName,"TXT");
+            if (myResult && myResult.startsWith("IP,")) {
+                const ip = myResult.split(',')[1];
+                finishAndResolve(ip, "Got loction of border router bridge from TXT:");
+                return;
             }
-            const match = records.find(r => 
+
+            // Check of er direct een A-record is dat matcht
+            const directAMatch = allRecords.find(item => 
+                item.name && 
+                item.name.toLowerCase().startsWith(normalizedName) &&
+                item.type === 'A'
+            );
+            if (directAMatch && directAMatch.data) {
+                finishAndResolve(directAMatch.data, "Direct A-record IP found:");
+                return;
+            }
+
+            var Match2 = allRecords.find(r => 
                 r.name && 
                 r.name.toLowerCase().startsWith(normalizedName) &&
                 (r.type === 'SRV' || r.type === 'A'))
-            if (match) {
-                clearTimeout(timeoutId);
-                mdns.removeListener('response', onResponse);
-                if (FirstTime)
-                    CP6Functions(LogThis)("getBridgeIp").verbose("Got loction of border router bridge:",match.data.target);
-                resolve(match.data.target);
+            
+            if (Match2) {
+                // Als het een SRV record is met een target, zoeken we direct het bijbehorende A-record op
+                if (Match2.type === 'SRV' && Match2.data && Match2.data.target) {
+                    const targetHostname = Match2.data.target.toLowerCase();
+                    const aRecordMatch = allRecords.find(item =>
+                        item.name &&
+                        item.name.toLowerCase() === targetHostname &&
+                        item.type === 'A'
+                    );
+
+                    if (aRecordMatch && aRecordMatch.data) {
+                        finishAndResolve(aRecordMatch.data, "Got direct IP of border router bridge from TXT record: ");
+                        return;
+                    }
+                } else if (Match2.type === 'A') {
+                    finishAndResolve(Match2.data, "Got location of border router bridge via A-record: ");
+                    return;
+                }
             }
         };
 
@@ -22082,6 +22148,97 @@ async function getBridgeIp(r,name,FirstTime) {
         });
     });
 }
+
+// async function getBridgeIp(r,name,FirstTime) {
+
+//     if (JN5168IP) {
+//         if (FirstTime)
+//             CP6Functions(LogThis)("getBridgeIp").verbose("CP6Settings defined border-router as fixed on",JN5168IPAddress);
+//         return JN5168IPAddress;
+//     }
+
+//     const mDNSTimeout = 20000;
+//     const normalizedName = name.toLowerCase();
+//     let allRecords = []; // Gather all mDNS records
+
+//     if (FirstTime)
+//         CP6Functions(LogThis)("getBridgeIp").verbose("Trying to determine IPv4-address of border-router bridge by querying DNS:",normalizedName);
+
+//     return new Promise((resolve, reject) => {
+//         const timeoutId = setTimeout(() => {
+//             mdns.removeListener('response', onResponse);
+//             mdns.destroy();
+//             CP6Functions(LogThis)("getBridgeIp").info("Mdns timeout: not found after",mDNSTimeout,"seconds.",normalizedName);
+//             resolve({ ip: null, allRecords }); 
+//         }, mDNSTimeout);
+
+//         const onResponse = (response) => {
+//             const records = [...response.answers, ...response.additionals];
+
+//             // attempt nr 1, first look for TXT-records
+
+//             const Match1 = records.find(r => 
+//                 r.name && 
+//                 r.name.toLowerCase().startsWith(normalizedName) && 
+//                 r.type === 'TXT'
+//             );
+
+// const records = [...response.answers, ...response.additionals];
+//                 const Match = records.find(r => 
+//                    r.name && 
+//                    r.name.toLowerCase().startsWith(normalizedName) && 
+//                    r.type === 'SRV'
+//                 );
+//                 if (Match && Match.data != undefined ) {
+//                    console.log("Initial;",Match.data);
+//                    console.log(typeof Match.data)
+//                    try {
+//                         const bb = Match.data.target;
+//                         console.log("We have a target!!!",bb);
+//                    }
+//                    catch (err) {console.log("error in json.parse:",err)}
+
+//             if (Match1 && Array.isArray(Match1.data)) {
+//                 // Avahi TXT data is vaak een array van buffers of strings (bijv. [ <Buffer 69 70 3d 31... > ] of ["ip=192.168.73.95"])
+//                 for (const element of Match1.data) {
+//                     const row = Buffer.isBuffer(element) ? element.toString('utf8') : String(element);
+//                     if (row.startsWith('ip=')) {
+//                         const extractedIp = row.split('=')[1];
+//                         if (extractedIp) {
+//                             clearTimeout(timeoutId);
+//                             mdns.removeListener('response', onResponse);
+//                             if (FirstTime)
+//                                 CP6Functions(LogThis)("getBridgeIp").verbose("Got direct IP of border router bridge from TXT record:", extractedIp);
+//                             resolve(extractedIp);
+//                             return;
+//                         }
+//                     }
+//                 }
+//             }
+//             // attempt nr 2, now look for SRV or A-records
+//             const Match2 = records.find(r => 
+//                 r.name && 
+//                 r.name.toLowerCase().startsWith(normalizedName) &&
+//                 (r.type === 'SRV' || r.type === 'A'))
+//             if (Match2) {
+//                 clearTimeout(timeoutId);
+//                 mdns.removeListener('response', onResponse);
+//                 if (FirstTime)
+//                     CP6Functions(LogThis)("getBridgeIp").verbose("Got loction of border router bridge:",Match2.data.target);
+//                 resolve(Match2.data.target);
+//             }
+//         };
+
+//         mdns.on('response', onResponse);
+
+//         mdns.query({
+//             questions: [
+//                 { name: '_http._tcp.local', type: 'PTR' },
+//                 { name: `${normalizedName}._http._tcp.local`, type: 'SRV' }
+//             ]
+//         });
+//     });
+// }
 
 async function getCP6Settings(r) {
 
