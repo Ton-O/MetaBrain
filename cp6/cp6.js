@@ -13074,7 +13074,8 @@ return this._syncFileList();
 
         // create Uri to call Broadlink-device. Address is obrtained from BrainBroadLink.json file, content is delivered by driver.
         // get Url and Bradlink-type (+mac) from json file first
-        var BrainBroadLinkUri=CloudReplacement+":5384/xmitGC?host="+BrainBroadLink.broadlinkIp+"&stream=sendir,1:1,1,"
+        // switched from broadlinkIP to Broadlink MAC-address to allow improved discovery of broadlink  
+        var BrainBroadLinkUri=CloudReplacement+":5384/xmitGC?mac="+BrainBroadLink.broadlinkMac.toUpper()+"&stream=sendir,1:1,1,"
         // Driver-part
         params.forEach((element) => 
             {let theVar=element.split("=")
@@ -13090,19 +13091,32 @@ return this._syncFileList();
         CP6Functions(LogThis)("Function 288").verbose("http-call to broadlink:",BrainBroadLinkUri)
         //return i.resolve();
         }
-        const o = n({
+            const o = n({
             //uri: this.baseUrl + e,
             uri: BrainBroadLinkUri,
             method: "GET",
             pool: this._httpAgent,
-            timeout: 4e3,
+            timeout: 5e3,
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Content-Length": t.length
             },
-            body: t
+            body: t,
+            resolveWithFullResponse: true // <--- Dwingt het meesturen van statuscodes af
         });
-        return i.resolve(o).delay(r.payloadDurationMs).then(() => {
+
+        // Vang de response direct op uit de HTTP-aanroep 'o' vòòr de delay
+        return o.then((actualResponse) => {
+            console.log("---- [DEBUG CP6] SERVER ANTWOORD ----");
+            console.log("HTTP Status:", actualResponse ? actualResponse.statusCode : "Onbekend");
+            console.log("HTTP Message:", actualResponse ? actualResponse.statusMessage : "Onbekend");
+            console.log("Body inhoud:", actualResponse ? actualResponse.body : "Leeg");
+            console.log("--------------------------------------");
+
+            // Geef de response door aan de vertraging zodat de chain correct blijft werken
+            return i.resolve(actualResponse).delay(r.payloadDurationMs);
+        })
+        .then((response) => {
             d.increaseCounter("jn5168-call-succeeded"), a.debug("(Broadlink (JN5168)_CALL_SUCCEEDED", {
                 retryCount: r.retryCount,
                 path: e,
@@ -13123,6 +13137,7 @@ return this._syncFileList();
                 path: e
             }), i.reject(n))
         })
+
     }, p.prototype._postRequestHelper = function(e, t, r) {
 
         CP6Functions(LogThis)("Function 288").verbose("JN5168 _postRequestHelper e",e)
