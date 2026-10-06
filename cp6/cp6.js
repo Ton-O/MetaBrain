@@ -13075,7 +13075,7 @@ return this._syncFileList();
         // create Uri to call Broadlink-device. Address is obrtained from BrainBroadLink.json file, content is delivered by driver.
         // get Url and Bradlink-type (+mac) from json file first
         // switched from broadlinkIP to Broadlink MAC-address to allow improved discovery of broadlink  
-        var BrainBroadLinkUri=CloudReplacement+":5384/xmitGC?mac="+BrainBroadLink.broadlinkMac.toUpper()+"&stream=sendir,1:1,1,"
+        var BrainBroadLinkUri=CloudReplacement+":5384/xmitGC?mac="+BrainBroadLink.broadlinkMac.toUpperCase()+"&stream=sendir,1:1,1,"
         // Driver-part
         params.forEach((element) => 
             {let theVar=element.split("=")
