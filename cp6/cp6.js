@@ -8,7 +8,7 @@ if (StartupPath != "/opt/meta")
 const path = require('path');
 const {logModules,GlobalLogLevel} = require(path.join(StartupPath,'logComponents'));
 const LogThis=0;    // Use function 0 of CP6Functions to call log
-const mdns = require('multicast-dns')();
+const multicastDns = require('multicast-dns');
 
 const { metaMessage, LOG_TYPE, LOG_LEVEL,initialiseLogComponents, initialiseLogSeverity,OverrideLoglevel, getLoglevels } = require("/opt/meta/metaMessage");
 function metaLog(message) {
@@ -39,6 +39,7 @@ var SettingsFile = "/steady/neeo/cp6/"+CP6SettingsFile
 //var SettingsFile = __dirname + "/"+CP6SettingsFile 
 var UseJN516x;
 var IRUse=""
+var allRecords = []; // Will contain all mdns-records received
 
 const currChannelArray = [];        
 ! function(e) {
@@ -1921,16 +1922,17 @@ e.exports.bootstrapJn5168 = function() {
         // 1. Voer de mDNS query uit
         return getBridgeIp(r,bridgeHostname,FirstTime)
             .then(ip => {
-                if (ip) {
+                if (ip.ip) {
                     if (!FirstTime &&ip == JN5168IPAddress ) 
                         return a.debug("mDNS Discovery successful, same IP-address:", ip);
                     else
-                        {a.debug("mDNS Discovery successful and IP changed, updating file with:", ip);
-                        JN5168IPAddress=ip;
-                        d.baseUrl = "http://" + ip + ":" + c.jn5168Port
+                        {a.debug("mDNS Discovery successful and IP changed, updating file with:", ip.ip);
+                        JN5168IPAddress=ip.ip;
+                        d.baseUrl = "http://" + ip.ip + ":" + c.jn5168Port
                         FirstTime=false;
-                        // 2. Write (new) IP to file
-                        return fs.promises.writeFile(t, "{ \"nbr_web_server\" : \"" + ip + "\"}", 'utf8');
+                        try {
+                        return fs.promises.writeFile(t, "{ \"nbr_web_server\" : \"" + ip.ip + "\"}", 'utf8');
+                        } catch (err){console.log("Error in writefile")}
                         }
                 }
                 a.debug("mDNS Discovery returned no IP, proceeding with existing file");
@@ -13074,8 +13076,7 @@ return this._syncFileList();
 
         // create Uri to call Broadlink-device. Address is obrtained from BrainBroadLink.json file, content is delivered by driver.
         // get Url and Bradlink-type (+mac) from json file first
-        // switched from broadlinkIP to Broadlink MAC-address to allow improved discovery of broadlink  
-        var BrainBroadLinkUri=CloudReplacement+":5384/xmitGC?mac="+BrainBroadLink.broadlinkMac.toUpperCase()+"&stream=sendir,1:1,1,"
+        var BrainBroadLinkUri=CloudReplacement+":5384/xmitGC?host="+BrainBroadLink.broadlinkIp+"&stream=sendir,1:1,1,"
         // Driver-part
         params.forEach((element) => 
             {let theVar=element.split("=")
@@ -13096,27 +13097,14 @@ return this._syncFileList();
             uri: BrainBroadLinkUri,
             method: "GET",
             pool: this._httpAgent,
-            timeout: 5e3,
+            timeout: 4e3,
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Content-Length": t.length
             },
-            body: t,
-            resolveWithFullResponse: true // <--- Dwingt het meesturen van statuscodes af
+            body: t
         });
-
-        // Vang de response direct op uit de HTTP-aanroep 'o' vòòr de delay
-        return o.then((actualResponse) => {
-            console.log("---- [DEBUG CP6] SERVER ANTWOORD ----");
-            console.log("HTTP Status:", actualResponse ? actualResponse.statusCode : "Onbekend");
-            console.log("HTTP Message:", actualResponse ? actualResponse.statusMessage : "Onbekend");
-            console.log("Body inhoud:", actualResponse ? actualResponse.body : "Leeg");
-            console.log("--------------------------------------");
-
-            // Geef de response door aan de vertraging zodat de chain correct blijft werken
-            return i.resolve(actualResponse).delay(r.payloadDurationMs);
-        })
-        .then((response) => {
+        return i.resolve(o).delay(r.payloadDurationMs).then(() => {
             d.increaseCounter("jn5168-call-succeeded"), a.debug("(Broadlink (JN5168)_CALL_SUCCEEDED", {
                 retryCount: r.retryCount,
                 path: e,
@@ -13137,7 +13125,6 @@ return this._syncFileList();
                 path: e
             }), i.reject(n))
         })
-
     }, p.prototype._postRequestHelper = function(e, t, r) {
 
         CP6Functions(LogThis)("Function 288").verbose("JN5168 _postRequestHelper e",e)
@@ -22075,10 +22062,11 @@ async function getBridgeIp(r,name,FirstTime) {
 
     const mDNSTimeout = 20000;
     const normalizedName = name.toLowerCase();
-    if (FirstTime)
+    allRecords=[];
+    const mdns = multicastDns();
+//    if (FirstTime)
         console.log("Trying to determine IPv4-address of border-router bridge by querying DNS:",normalizedName);
     return new Promise((resolve, reject) => {
-        let allRecords = []; // Hier verzamelen we alle binnenkomende mDNS records
         let isFinished = false; // Voorkomt dubbele acties als timeout en response elkaar kruisen
 
         // Gecentraliseerde helperfunctie voor alle afronding en cleanup
@@ -22163,97 +22151,6 @@ async function getBridgeIp(r,name,FirstTime) {
         });
     });
 }
-
-// async function getBridgeIp(r,name,FirstTime) {
-
-//     if (JN5168IP) {
-//         if (FirstTime)
-//             CP6Functions(LogThis)("getBridgeIp").verbose("CP6Settings defined border-router as fixed on",JN5168IPAddress);
-//         return JN5168IPAddress;
-//     }
-
-//     const mDNSTimeout = 20000;
-//     const normalizedName = name.toLowerCase();
-//     let allRecords = []; // Gather all mDNS records
-
-//     if (FirstTime)
-//         CP6Functions(LogThis)("getBridgeIp").verbose("Trying to determine IPv4-address of border-router bridge by querying DNS:",normalizedName);
-
-//     return new Promise((resolve, reject) => {
-//         const timeoutId = setTimeout(() => {
-//             mdns.removeListener('response', onResponse);
-//             mdns.destroy();
-//             CP6Functions(LogThis)("getBridgeIp").info("Mdns timeout: not found after",mDNSTimeout,"seconds.",normalizedName);
-//             resolve({ ip: null, allRecords }); 
-//         }, mDNSTimeout);
-
-//         const onResponse = (response) => {
-//             const records = [...response.answers, ...response.additionals];
-
-//             // attempt nr 1, first look for TXT-records
-
-//             const Match1 = records.find(r => 
-//                 r.name && 
-//                 r.name.toLowerCase().startsWith(normalizedName) && 
-//                 r.type === 'TXT'
-//             );
-
-// const records = [...response.answers, ...response.additionals];
-//                 const Match = records.find(r => 
-//                    r.name && 
-//                    r.name.toLowerCase().startsWith(normalizedName) && 
-//                    r.type === 'SRV'
-//                 );
-//                 if (Match && Match.data != undefined ) {
-//                    console.log("Initial;",Match.data);
-//                    console.log(typeof Match.data)
-//                    try {
-//                         const bb = Match.data.target;
-//                         console.log("We have a target!!!",bb);
-//                    }
-//                    catch (err) {console.log("error in json.parse:",err)}
-
-//             if (Match1 && Array.isArray(Match1.data)) {
-//                 // Avahi TXT data is vaak een array van buffers of strings (bijv. [ <Buffer 69 70 3d 31... > ] of ["ip=192.168.73.95"])
-//                 for (const element of Match1.data) {
-//                     const row = Buffer.isBuffer(element) ? element.toString('utf8') : String(element);
-//                     if (row.startsWith('ip=')) {
-//                         const extractedIp = row.split('=')[1];
-//                         if (extractedIp) {
-//                             clearTimeout(timeoutId);
-//                             mdns.removeListener('response', onResponse);
-//                             if (FirstTime)
-//                                 CP6Functions(LogThis)("getBridgeIp").verbose("Got direct IP of border router bridge from TXT record:", extractedIp);
-//                             resolve(extractedIp);
-//                             return;
-//                         }
-//                     }
-//                 }
-//             }
-//             // attempt nr 2, now look for SRV or A-records
-//             const Match2 = records.find(r => 
-//                 r.name && 
-//                 r.name.toLowerCase().startsWith(normalizedName) &&
-//                 (r.type === 'SRV' || r.type === 'A'))
-//             if (Match2) {
-//                 clearTimeout(timeoutId);
-//                 mdns.removeListener('response', onResponse);
-//                 if (FirstTime)
-//                     CP6Functions(LogThis)("getBridgeIp").verbose("Got loction of border router bridge:",Match2.data.target);
-//                 resolve(Match2.data.target);
-//             }
-//         };
-
-//         mdns.on('response', onResponse);
-
-//         mdns.query({
-//             questions: [
-//                 { name: '_http._tcp.local', type: 'PTR' },
-//                 { name: `${normalizedName}._http._tcp.local`, type: 'SRV' }
-//             ]
-//         });
-//     });
-// }
 
 async function getCP6Settings(r) {
 
