@@ -13066,7 +13066,7 @@ return this._syncFileList();
         // For example NEEO-IR (power on in driver): "sendir,1:1,1,38000,4,1,343,172,21,21,21,21,21,64,21,21,21,21,21,21,21,21,21,21,21,64,21,64,21,21,21,64,21,64,21,64,21,64,21,64,21,21,21,21,
         // var t contains: i=0&f=38000&c=4&o=1&s=343.172.21.21.21.21.21.64.21.21.21.21.21.21.21.21.21.21.21.64.21.64.21.21.2
         // Broadlink payload (gc): "sendir,1:1,1,38000,4,1,343,172,21,21,21,21,21,64,21,21,21,21,21,21,21,21,21,21,21,64,21,64,21,21,21,64,21,64,21,64,21,64,21,64,21,21,21,21,>
-        // http://127.0.0.1:5384/xmitGC?host=<ip<broadlink-type>&mac=<Broadlink-mac>&stream=sendir,1:1,1,<f><c><o><s>
+        // http://127.0.0.1:5384/xmitGC?mac=<Broadlink-mac>&<broadlink-type>&&stream=sendir,1:1,1,<f><c><o><s>
         let IRf,IRc,IRo,IRs;
         let params=t.split("&")
         if (params.length!=5)
@@ -13074,9 +13074,9 @@ return this._syncFileList();
             return i.reject(new Error("BrainBroadLink incorrect number of IR-arguments"))
             }
 
-        // create Uri to call Broadlink-device. Address is obrtained from BrainBroadLink.json file, content is delivered by driver.
+        // create Uri to call Broadlink-device. Address is obtained from BrainBroadLink.json file, content is delivered by driver.
         // get Url and Bradlink-type (+mac) from json file first
-        var BrainBroadLinkUri=CloudReplacement+":5384/xmitGC?host="+BrainBroadLink.broadlinkIp+"&stream=sendir,1:1,1,"
+        var BrainBroadLinkUri=CloudReplacement+":5384/xmitGC?mac="+BrainBroadLink.broadlinkMac+"&ip="+BrainBroadLink.broadlinkIp+"&stream=sendir,1:1,1,"
         // Driver-part
         params.forEach((element) => 
             {let theVar=element.split("=")
