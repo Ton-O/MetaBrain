@@ -8442,7 +8442,7 @@ function n(payload, remoteInfo, socket) {
     CP6Functions(LogThis)("Function 174").verbose("TR2 directory-relted functiuons")
 
     function n(e, t) {
-CP6Functions(LogThis)("Function 174").verbose("checking uiAction e.uiAction",e);
+CP6Functions(LogThis)("Function 174").verbose("checking uiAction e.uiAction",e.uiAction);
         switch (e.uiAction) {
             case l:
                 return ";ReloadList(0)";
@@ -22016,7 +22016,6 @@ function ReplaceSettingsFile(newURL)
 }
 
  function searchMDNSRecord(r,records,normalizedName,thisType) {
-    console.log("records") 
     const Match = records.find(r => 
                    r.name && 
                    r.name.toLowerCase().startsWith(normalizedName) && 
@@ -22025,7 +22024,6 @@ function ReplaceSettingsFile(newURL)
     //processResult = processMDNSRecord(r,Match,records,normalizedName,thisType)
 
     if (Match) {
-        console.log("Found record for ",normalizedName)
         // Avahi TXT data is vaak een array van buffers of strings (bijv. [ <Buffer 69 70 3d 31... > ] of ["ip=192.168.73.95"])
         if (Array.isArray(Match.data))
             {for (const element of Match.data) 
@@ -22033,17 +22031,9 @@ function ReplaceSettingsFile(newURL)
                     var returnThis;
                     if (row.startsWith('ip=')) {
                         const extractedIp = row.split('=')[1];
-                        console.log("ip,",extractedIp);
                         if (extractedIp=="127.0.0.1")    // That's no good..
-                            {
-                                console.log("Genegeerd: TXT record geeft loopback (127.0.0.1)");
                                 continue; // Sla 127.0.0.1 over en zoek door in eventuele andere elementen
-                            }
                         return "IP,"+extractedIp
-                    }
-                    else
-                    {
-                        console.log("Not an IP:",row);
                     }
                 }
             }
@@ -22052,7 +22042,6 @@ function ReplaceSettingsFile(newURL)
                 return ""
 
         return returnThis+extractedIp
-        
         }
     }
     return "No-MATCH"
