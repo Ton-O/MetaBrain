@@ -1932,7 +1932,7 @@ e.exports.bootstrapJn5168 = function() {
                         FirstTime=false;
                         try {
                         return fs.promises.writeFile(t, "{ \"nbr_web_server\" : \"" + ip.ip + "\"}", 'utf8');
-                        } catch (err){console.log("Error in writefile")}
+                        } catch (err){CP6Functions(LogThis)("getBridgeIp").error("Error in writefile")}
                         }
                 }
                 a.debug("mDNS Discovery returned no IP, proceeding with existing file");
@@ -12076,7 +12076,7 @@ return this._syncFileList();
                     if (!r || "object" != typeof r) return !1;
                     const n = r.driverVersion,
                         o = t.driverVersion;
-                    console.log("checkForAndUpdateDevice 2",)
+                    //console.log("checkForAndUpdateDevice 2",)
                     return !!o && (!n && 0 < o || n < o)
                 }(e, t) && u.tryAdapterDeviceUpdate(e, t)
             })(e, t)) : (o.resolve(!1))
@@ -14844,7 +14844,7 @@ return this._syncFileList();
     }
 }, function(e) {// Function 330 exports = require("lodash/findIndex")
     e.exports = require("lodash/findIndex")
-}, function(e, t, r) {// Function 331 some browse / callaction based on detals.sourcename /^(src-|neeo-deviceadapter)/.
+}, function(e, t, r) {// Function 331 some browse / call-action based on detals.sourcename /^(src-|neeo-deviceadapter)/.
     "use strict";
 
     function n(e, t) {
@@ -18968,7 +18968,7 @@ return this._syncFileList();
             try {
                 CP6Functions(LogThis)("Function 443").verbose("'Normal' request from TR2",e)
                 const i = g.expandRequestUrl(e); CP6Functions(LogThis)("Function 443").verbose("Back in 443",i)
-                n(o(i.longUrl), i.longUrl, i.query, i.sendNoResponse).then(e => {console.log("ff");
+                n(o(i.longUrl), i.longUrl, i.query, i.sendNoResponse).then(e => {
                     const r = e ? e.length : 0;
                     CP6Functions(LogThis)("Function 443").verbose("Back in 443 before updateWifiReceived",r)
                     h.updateWifiRecievedData(!0), CP6Functions(LogThis)("Function 443").verbose("Back in 443 updateWifiSentData",r), h.updateWifiSentData(!0, r),CP6Functions(LogThis)("Function 443").verbose("Back in 443 now t(e)",E,t.toString()),  t(e)
@@ -22038,7 +22038,7 @@ function ReplaceSettingsFile(newURL)
                 }
             }
             else
-                {console.log("record with match, but Match.data is not an array:",typeof Match.data,Match.data)
+                {CP6Functions(LogThis)("getBridgeIp").error("record with match, but Match.data is not an array:",typeof Match.data,Match.data)
                 return ""
 
         return returnThis+extractedIp
@@ -22053,8 +22053,8 @@ async function getBridgeIp(r,name,FirstTime) {
     const normalizedName = name.toLowerCase();
     allRecords=[];
     const mdns = multicastDns();
-//    if (FirstTime)
-        console.log("Trying to determine IPv4-address of border-router bridge by querying DNS:",normalizedName);
+    if (FirstTime)
+        CP6Functions(LogThis)("getBridgeIp").verbose("Trying to determine IPv4-address of border-router bridge by querying DNS:",normalizedName);
     return new Promise((resolve, reject) => {
         let isFinished = false; // Voorkomt dubbele acties als timeout en response elkaar kruisen
 
