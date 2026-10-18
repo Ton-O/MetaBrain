@@ -22062,6 +22062,7 @@ async function getBridgeIp(r,name,FirstTime) {
         const finishAndResolve = (foundIp, logMessage) => {
             if (isFinished) return;
             isFinished = true;
+            FirstTime=false;
 
             clearTimeout(timeoutId);
             mdns.removeListener('response', onResponse);
@@ -22089,7 +22090,8 @@ async function getBridgeIp(r,name,FirstTime) {
             const myResult = searchMDNSRecord(r,allRecords,normalizedName,"TXT");
             if (myResult && myResult.startsWith("IP,")) {
                 const ip = myResult.split(',')[1];
-                finishAndResolve(ip, "Got loction of border router bridge from TXT:");
+                FirstTime=false;
+                finishAndResolve(ip, "Got loction of border router bridge from mDNS TXT-record:");
                 return;
             }
 
@@ -22100,7 +22102,8 @@ async function getBridgeIp(r,name,FirstTime) {
                 item.type === 'A'
             );
             if (directAMatch && directAMatch.data) {
-                finishAndResolve(directAMatch.data, "Direct A-record IP found:");
+                FirstTime=false;
+                finishAndResolve(directAMatch.data, "Direct mDNS A-record IP found:");
                 return;
             }
 
@@ -22120,11 +22123,13 @@ async function getBridgeIp(r,name,FirstTime) {
                     );
 
                     if (aRecordMatch && aRecordMatch.data) {
-                        finishAndResolve(aRecordMatch.data, "Got direct IP of border router bridge from TXT record: ");
+                        FirstTime=false;
+                        finishAndResolve(aRecordMatch.data, "Got direct IP of border router bridge from mDNS TXT record: ");
                         return;
                     }
                 } else if (Match2.type === 'A') {
-                    finishAndResolve(Match2.data, "Got location of border router bridge via A-record: ");
+                    FirstTime=false;
+                    finishAndResolve(Match2.data, "Got location of border router bridge via mDNS A-record: ");
                     return;
                 }
             }
