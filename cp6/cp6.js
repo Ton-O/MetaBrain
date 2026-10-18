@@ -1923,20 +1923,22 @@ e.exports.bootstrapJn5168 = function() {
         return getBridgeIp(r,bridgeHostname,FirstTime)
             .then(ip => {
                 if (ip.ip) {
-                    if (!FirstTime &&ip == JN5168IPAddress ) 
-                        return a.debug("mDNS Discovery successful, same IP-address:", ip);
-                    else
-                        {a.debug("mDNS Discovery successful and IP changed, updating file with:", ip.ip);
-                        JN5168IPAddress=ip.ip;
-                        d.baseUrl = "http://" + ip.ip + ":" + c.jn5168Port
-                        FirstTime=false;
-                        try {
+                    if (ip.ip == JN5168IPAddress ) 
+                        if (FirstTime)
+                            return a.debug("mDNS Discovery successful, same IP-address:", ip);
+                        else
+                            return;
+                    a.debug("mDNS Discovery successful and IP changed, updating file with:", ip.ip);
+                    JN5168IPAddress=ip.ip;
+                    d.baseUrl = "http://" + ip.ip + ":" + c.jn5168Port
+                    FirstTime=false;
+                    try {
                         return fs.promises.writeFile(t, "{ \"nbr_web_server\" : \"" + ip.ip + "\"}", 'utf8');
-                        } catch (err){CP6Functions(LogThis)("getBridgeIp").error("Error in writefile")}
-                        }
+                    } catch (err){CP6Functions(LogThis)("getBridgeIp").error("Error in writefile");return}
                 }
-                a.debug("mDNS Discovery returned no IP, proceeding with existing file");
-            })
+                else 
+                    a.debug("mDNS Discovery returned no IP, proceeding with existing file");
+                })
             .catch(err => {console.log(err)
                 a.error("mDNS Discovery error during interval, attempting fallback", { error: err.message });
             })
@@ -22048,36 +22050,33 @@ function ReplaceSettingsFile(newURL)
 }
 
 async function getBridgeIp(r,name,FirstTime) {
-
     const mDNSTimeout = 20000;
     const normalizedName = name.toLowerCase();
     allRecords=[];
     const mdns = multicastDns();
+    const ForceShow = true;
+    const DoNotforceShow = false;
     if (FirstTime)
         CP6Functions(LogThis)("getBridgeIp").verbose("Trying to determine IPv4-address of border-router bridge by querying DNS:",normalizedName);
     return new Promise((resolve, reject) => {
         let isFinished = false; // Voorkomt dubbele acties als timeout en response elkaar kruisen
 
         // Gecentraliseerde helperfunctie voor alle afronding en cleanup
-        const finishAndResolve = (foundIp, logMessage) => {
+        const finishAndResolve = (foundIp, logMessage,ForceShow) => {
             if (isFinished) return;
             isFinished = true;
-            FirstTime=false;
 
             clearTimeout(timeoutId);
             mdns.removeListener('response', onResponse);
             mdns.destroy();
-            
-            if (logMessage) {
-                if (FirstTime || foundIp !== null) {
+            if (logMessage) 
+                if (FirstTime || ForceShow) 
                     CP6Functions(LogThis)("getBridgeIp").verbose(logMessage, foundIp !== null ? foundIp : normalizedName);
-                }
-            }
             resolve({ ip: foundIp, allRecords });
         };
 
         const timeoutId = setTimeout(() => {
-            finishAndResolve(null, `Mdns timeout: not found after ${mDNSTimeout} seconds.`);
+            finishAndResolve(null, `Mdns timeout: not found after ${mDNSTimeout} seconds.`,ForceShow);
         }, mDNSTimeout);
 
         const onResponse = (response) => {
@@ -22090,8 +22089,13 @@ async function getBridgeIp(r,name,FirstTime) {
             const myResult = searchMDNSRecord(r,allRecords,normalizedName,"TXT");
             if (myResult && myResult.startsWith("IP,")) {
                 const ip = myResult.split(',')[1];
+                var myLogMessage = "";
+                if (FirstTime) 
+                {   
+                    myLogMessage = "Got location of border router bridge from mDNS TXT-record:";
+                }
+                finishAndResolve(ip, myLogMessage,DoNotforceShow);
                 FirstTime=false;
-                finishAndResolve(ip, "Got loction of border router bridge from mDNS TXT-record:");
                 return;
             }
 
@@ -22102,8 +22106,12 @@ async function getBridgeIp(r,name,FirstTime) {
                 item.type === 'A'
             );
             if (directAMatch && directAMatch.data) {
+                var myLogMessage = "";
+                if (FirstTime)
+                    myLogMessage = "Direct mDNS A-record IP found:";
+                finishAndResolve(directAMatch.data, myLogMessage,DoNotforceShow);
                 FirstTime=false;
-                finishAndResolve(directAMatch.data, "Direct mDNS A-record IP found:");
+
                 return;
             }
 
@@ -22123,13 +22131,19 @@ async function getBridgeIp(r,name,FirstTime) {
                     );
 
                     if (aRecordMatch && aRecordMatch.data) {
+                        var myLogMessage = "";
+                        if (FirstTime)
+                            myLogMessage = "Got direct IP of border router bridge from mDNS TXT record: ";
+                        finishAndResolve(aRecordMatch.data, myLogMessage,DoNotforceShow);
                         FirstTime=false;
-                        finishAndResolve(aRecordMatch.data, "Got direct IP of border router bridge from mDNS TXT record: ");
                         return;
                     }
                 } else if (Match2.type === 'A') {
-                    FirstTime=false;
-                    finishAndResolve(Match2.data, "Got location of border router bridge via mDNS A-record: ");
+                        var myLogMessage = "";
+                        if (FirstTime)
+                            myLogMessage = "Got location of border router bridge via mDNS A-record: ";
+                        finishAndResolve(Match2.data, myLogMessage,DoNotforceShow);
+                        FirstTime=false;
                     return;
                 }
             }
