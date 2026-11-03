@@ -10629,8 +10629,7 @@ CP6Functions(LogThis)("Function 174").verbose("checking uiAction e.uiAction",e.u
         CP6Functions(LogThis)("Function 223").verbose("DuiroSpecsSource: _getSpec",e)
         const t = this.devices[e];
         CP6Functions(LogThis)("Function 223").verbose("DuiroSpecsSource: _getSpec done t",t)
-
-        return t || o.reject(new Error("no such devicespec: " + e)), o.resolve(t)
+        return t || (CP6Functions(LogThis)("Function 223").error("Error: no such devicespec:", e), o.reject(new Error("no such devicespec: " + e))), o.resolve(t) 
     }, p.prototype._stripGenericCommandsets = function(e) { // added log
 
         if (!e.commandSets) return e;
@@ -21818,18 +21817,32 @@ catch (err) {console.log("Loglevel override in cp6:",err)}
 
             },
 
-        tmpdownload: 
-            function(e) {
-                CP6Functions(LogThis)("Function 505").verbose("noCloud - download",e)
-                const t = c.fileSync({
-                    dir: "/tmp"//,
-                    //mode: 0o666
+
+        tmpdownload: function(e) {
+            console.log("In 505 tmpdownload")
+            CP6Functions(LogThis)("Function 505").verbose("noCloud - tmpdownload", e);
+            const axios = r(507);
+            const Bluebird = r(1);
+
+            return Bluebird.resolve(axios({
+                method: 'get',
+                url: CloudReplacementUrl + "?type=" + e.type + "&name=" + e.name,
+                responseType: 'stream',
+                timeout: 10000
+            })).then(response => {
+                const t = c.fileSync({ dir: "/tmp" });
+                const writeStream = o.createWriteStream(t.name);
+                
+                response.data.pipe(writeStream);
+
+                return new Bluebird((resolve, reject) => {
+                    writeStream.on('finish', () => resolve(t));
+                    writeStream.on('error', (err) => reject(err));
+                    response.data.on('error', (err) => reject(err));
                 });
-                r = o.createWriteStream(t.name);
-                var url = CloudReplacementUrl  +"?type="+e.type+"&name="+e.name;
-                var dest = e.targetDir+"/"+e.name;
-                return s(i(url), r).then( () => (t) )
-            }, 
+            });
+        }, 
+
         download: 
             function(e) {
             const axios = r(507);
